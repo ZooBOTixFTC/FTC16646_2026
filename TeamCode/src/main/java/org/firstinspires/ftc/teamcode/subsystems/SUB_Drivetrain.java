@@ -57,6 +57,29 @@ public class SUB_Drivetrain extends SubsystemBase {
         m_drivebase.setDrivePowers(new PoseVelocity2d(new Vector2d(xSpeed, ySpeed), turnSpeed));
     }
 
+    //same as other drive() but allows you to pass in an offset to rotate the "forwards" direction
+    //usually used to rotate 90 degrees one way for red side and then 90 degrees the other way for blue
+    //such that pushing up on the joystick moves the bot into the field instead of towards the top
+    public void drive(double xSpeed, double ySpeed, double turnSpeed, double driverOffsetAng){
+        //clamp drivespeeds, constraining them to -1 to 1
+        xSpeed = MathUtils.clamp(xSpeed, -1, 1);
+        ySpeed = MathUtils.clamp(ySpeed, -1, 1);
+        turnSpeed = MathUtils.clamp(turnSpeed, -1, 1);
+
+        if (m_fieldCentric) {
+            double yawRad = (getYaw() + driverOffsetAng) * Math.PI / 180; // Convert yaw to radians
+
+            // Use temporary variables to avoid overwriting xSpeed before calculating ySpeed
+            double tempX = xSpeed * Math.cos(yawRad) - ySpeed * Math.sin(yawRad);
+            double tempY = xSpeed * Math.sin(yawRad) + ySpeed * Math.cos(yawRad);
+
+            xSpeed = tempX; // Update xSpeed with transformed value
+            ySpeed = tempY; // Update ySpeed with transformed value
+        }
+
+        m_drivebase.setDrivePowers(new PoseVelocity2d(new Vector2d(xSpeed, ySpeed), turnSpeed));
+    }
+
     public double getChassisSpeed() {
         //average the absolute value of all 4 drive motors
         double vel = (Math.abs(m_drivebase.leftFront.getVelocity()) + Math.abs(m_drivebase.rightFront.getVelocity())

@@ -65,7 +65,7 @@ public class RR_MecanumDriveDefault extends CommandBase {
         // positive strafe, move to the right
         // positive speed, move forward
         // positive turn, turn torward the right
-        m_drivetrain.drive(speed, strafe, turn);
+        m_drivetrain.drive(speed, strafe, turn, m_driverOffsetAngle);
     }
 
     private double handleDeadband(double value, double deadband) {
