@@ -12,11 +12,15 @@ public class RobotContainer {
      public boolean m_red = true;
      public Robot m_robot = new Robot();
      public MecanumDriveSubsystem drivetrain;
+     public SUB_Shooter shooter;
+     public SUB_Intake intake;
      public GlobalVariables GlobalVariables;
 
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
           GlobalVariables = new GlobalVariables();
+          intake = new SUB_Intake(p_opMode);
+          shooter = new SUB_Shooter(p_opMode);
      };
 
      public void run() {
