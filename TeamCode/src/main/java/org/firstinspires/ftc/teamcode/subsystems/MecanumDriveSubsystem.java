@@ -5,7 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import org.firstinspires.ftc.teamcode.ftclib.command.SubsystemBase;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * This periodically calls {@link SampleMecanumDrive#update()} which runs the internal
  * state machine for the mecanum drive. All movement/following is async to fit the paradigm.
  */
-public class MecanumDriveSubsystem extends SubsystemBase {
+public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.SubsystemBase {
 
     private final SampleMecanumDrive drive;
     private boolean fieldCentric;

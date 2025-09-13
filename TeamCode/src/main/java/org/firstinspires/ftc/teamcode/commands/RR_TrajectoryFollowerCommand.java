@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 

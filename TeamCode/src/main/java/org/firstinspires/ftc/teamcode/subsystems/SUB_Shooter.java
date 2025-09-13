@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
@@ -18,16 +19,15 @@ public class SUB_Shooter extends SubsystemBase {
     private final CRServo m_kickerRight;
     private final CRServo m_kickerLeft;
 
+    private double m_targetVelocity;
+
     public static double shooterP = 0;
     public static double shooterD = 0;
     public static double shooterF = 0;
-    public static int shooterVelocity = 0;
-
-    private final boolean tuning = true;
+    public static double shooterVelocity = 0;
 
 
     public SUB_Shooter(OpMode p_OpMode) {
-
         m_OpMode = p_OpMode;
         m_shooterMotorLeft = m_OpMode.hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
         m_shooterMotorRight = m_OpMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
@@ -38,8 +38,17 @@ public class SUB_Shooter extends SubsystemBase {
     }
 
     public void setVelocity(double velocity) {
+        m_targetVelocity = velocity;
         m_shooterMotorLeft.setVelocity(velocity, AngleUnit.DEGREES);
         m_shooterMotorRight.setVelocity(velocity, AngleUnit.DEGREES);
+    }
+
+    public double getVelocity (){
+        return m_shooterMotorLeft.getVelocity(AngleUnit.DEGREES);
+    }
+
+    public double getTargetVelocity(){
+        return m_targetVelocity;
     }
 
     public void kickRight(double power) {
@@ -52,7 +61,7 @@ public class SUB_Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (tuning) {
+        if(ShooterConstants.kTuningMode){
             m_shooterMotorLeft.setVelocityPIDFCoefficients(shooterP, 0, shooterD, shooterF);
             m_shooterMotorRight.setVelocityPIDFCoefficients(shooterP, 0, shooterD, shooterF);
 
