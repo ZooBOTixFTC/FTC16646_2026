@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.ftclib.command.Command;
@@ -12,12 +13,14 @@ public class RobotContainer {
      public boolean m_red = true;
      public Robot m_robot = new Robot();
      public MecanumDriveSubsystem drivetrain;
+     public ColorSubsystem colorsensor;
      public GlobalVariables GlobalVariables;
 
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
           GlobalVariables = new GlobalVariables();
-     };
+          colorsensor = new ColorSubsystem(p_opMode);
+     }
 
      public void run() {
           m_robot.run();
