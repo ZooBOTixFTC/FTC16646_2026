@@ -14,12 +14,14 @@ public class RobotContainer {
      public Robot m_robot = new Robot();
      public MecanumDriveSubsystem drivetrain;
      public ColorSubsystem colorsensor;
+     public VisionSubsystem vision;
      public GlobalVariables GlobalVariables;
 
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
           GlobalVariables = new GlobalVariables();
           colorsensor = new ColorSubsystem(p_opMode);
+          vision = new VisionSubsystem(p_opMode.hardwareMap);
      }
 
      public void run() {
