@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 

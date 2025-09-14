@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode.autos;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
-import org.firstinspires.ftc.teamcode.ftclib.command.SequentialCommandGroup;
 
 public class AUTO_Test extends Robot_Auto {
 

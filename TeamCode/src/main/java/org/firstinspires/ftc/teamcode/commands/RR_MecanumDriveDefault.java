@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.*;
-import org.firstinspires.ftc.teamcode.ftclib.command.CommandBase;
-import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadEx;
-import org.firstinspires.ftc.teamcode.ftclib.gamepad.GamepadKeys;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.arcrobotics.ftclib.command.CommandBase;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.util.Range;
 
 /**
