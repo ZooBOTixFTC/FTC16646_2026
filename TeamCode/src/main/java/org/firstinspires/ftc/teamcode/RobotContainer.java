@@ -14,13 +14,15 @@ public class RobotContainer {
      public MecanumDriveSubsystem drivetrain;
      public SUB_Shooter shooter;
      public SUB_Intake intake;
+     public SUB_ColorSensor colorSensor;
      public GlobalVariables GlobalVariables;
 
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
           GlobalVariables = new GlobalVariables();
-          intake = new SUB_Intake(p_opMode);
-          shooter = new SUB_Shooter(p_opMode);
+         // intake = new SUB_Intake(p_opMode);
+       //   shooter = new SUB_Shooter(p_opMode);
+          colorSensor = new SUB_ColorSensor(p_opMode);
      };
 
      public void run() {

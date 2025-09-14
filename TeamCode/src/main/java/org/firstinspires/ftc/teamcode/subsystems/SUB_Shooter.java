@@ -7,8 +7,12 @@ import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import org.firstinspires.ftc.teamcode.Constants;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class SUB_Shooter extends SubsystemBase {
+
 
     private final OpMode m_OpMode;
     private final DcMotorEx m_shooterMotorLeft;
@@ -27,13 +31,13 @@ public class SUB_Shooter extends SubsystemBase {
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void readyToShoot() {
+    public void readyToShoot(double power) {
 
-        m_shooterMotorRight.setPower(1);
-        m_shooterMotorLeft.setPower(1);
+        m_shooterMotorRight.setPower(power);
+        m_shooterMotorLeft.setPower(power);
     }
 
-    public void kickRight(double pos) {
+    public void kickRightServo(double pos) {
 
         m_kickerRight.setPosition(pos/300);
     }
@@ -43,9 +47,12 @@ public class SUB_Shooter extends SubsystemBase {
         m_kickerLeft.setPosition(pos/300);
     }
 
+
     @Override
     public void periodic() {
         telemetry.addData("kickerLeft", m_kickerLeft.getPosition());
         telemetry.addData("kickerRight", m_kickerRight.getPosition());
+        telemetry.addData("Shooter Speed", m_shooterMotorRight.getVelocity(AngleUnit.DEGREES));
+
     }
 }
