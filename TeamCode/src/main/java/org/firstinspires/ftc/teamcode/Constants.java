@@ -9,5 +9,21 @@ public class Constants {
         public static final double kShooterD = 0;
         public static final double kShooterF = 0;
 
+        public static final double[][] kShooterInterpolationTable = {
+            {36, 125},
+            {48, 150},
+            {60, 175},
+            {72, 200},
+            {84, 225},
+            {96, 250},
+            {108, 275},
+            {120, 300}
+        };
+    }
+
+    public static final class ColorConstants {
+        public static final double kOrange = .333;
+        public static final double kGreen = .45;
+        public static final double kPurple = .722;
     }
 }
