@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Constants.ColorConstants.ColorEnum;
+
 public class SUB_ColorSensor extends SubsystemBase {
     private final NormalizedColorSensor m_colorSensorLeft;
     private final NormalizedColorSensor m_colorSensorRight;
@@ -32,7 +34,7 @@ public class SUB_ColorSensor extends SubsystemBase {
     // Detect between green and purple
     NormalizedRGBA colorsLeft;
     NormalizedRGBA colorsRight;
-    public String detectColorLeft() {
+    public ColorEnum detectColorLeft() {
         colorsLeft = getColorLeft();
 
         float red = colorsLeft.red;
@@ -41,15 +43,15 @@ public class SUB_ColorSensor extends SubsystemBase {
 
         // Simple decision logic
         if (green > (red + blue) * 0.75) {
-            return "Green";
+            return ColorEnum.GREEN;
         } else if ((red + blue) > (green * 1.5)) {
-            return "Purple";
+            return ColorEnum.PURPLE;
         } else {
-            return "Unknown";
+            return ColorEnum.UNKNOWN;
         }
     }
 
-    public String detectColorRight() {
+    public ColorEnum detectColorRight() {
         colorsLeft = getColorRight();
 
         float red = colorsRight.red;
@@ -58,11 +60,11 @@ public class SUB_ColorSensor extends SubsystemBase {
 
         // Simple decision logic
         if (green > (red + blue) * 0.75) {
-            return "Green";
+            return ColorEnum.GREEN;
         } else if ((red + blue) > (green * 1.5)) {
-            return "Purple";
+            return ColorEnum.PURPLE;
         } else {
-            return "Unknown";
+            return ColorEnum.UNKNOWN;
         }
     }
 

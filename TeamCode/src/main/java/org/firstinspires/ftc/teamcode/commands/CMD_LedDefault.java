@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ColorConstants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensor;
 
 public class CMD_LedDefault extends CommandBase {
@@ -14,19 +14,26 @@ public class CMD_LedDefault extends CommandBase {
     }
     @Override
     public void execute () {
-
-        if (m_colorSensor.detectColorLeft() == "Green") {
-            m_colorSensor.setLEDLeftColor(Constants.ColorConstants.kGreen);
-        } else if (m_colorSensor.detectColorLeft() == "Purple") {
-            m_colorSensor.setLEDLeftColor(Constants.ColorConstants.kPurple);
-        } else {
-            m_colorSensor.setLEDLeftColor(Constants.ColorConstants.kOrange);
+        switch (m_colorSensor.detectColorLeft()){
+            case GREEN:
+                m_colorSensor.setLEDLeftColor(ColorConstants.kGreen);
+                break;
+            case PURPLE:
+                m_colorSensor.setLEDLeftColor(ColorConstants.kPurple);
+                break;
+            default:
+                break;
         }
 
-        if (m_colorSensor.detectColorRight() == "Green") {
-            m_colorSensor.setLEDRightColor(Constants.ColorConstants.kGreen);
-        } else if (m_colorSensor.detectColorRight() == "Purple") {
-            m_colorSensor.setLEDRightColor(Constants.ColorConstants.kPurple);
-        } else m_colorSensor.setLEDRightColor(Constants.ColorConstants.kOrange);
+        switch (m_colorSensor.detectColorRight()){
+            case GREEN:
+                m_colorSensor.setLEDRightColor(ColorConstants.kGreen);
+                break;
+            case PURPLE:
+                m_colorSensor.setLEDRightColor(ColorConstants.kPurple);
+                break;
+            default:
+                break;
+        }
     }
 }

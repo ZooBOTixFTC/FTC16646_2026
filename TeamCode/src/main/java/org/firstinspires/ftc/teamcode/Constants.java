@@ -25,5 +25,11 @@ public class Constants {
         public static final double kOrange = .333;
         public static final double kGreen = .45;
         public static final double kPurple = .722;
+
+        public static enum ColorEnum {
+            GREEN
+            ,PURPLE
+            ,UNKNOWN
+        }
     }
 }
