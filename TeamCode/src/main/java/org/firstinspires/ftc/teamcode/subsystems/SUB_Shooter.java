@@ -9,15 +9,16 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
+import org.firstinspires.ftc.teamcode.util.LinearInterpolator;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
-
     private final OpMode m_OpMode;
     private final DcMotorEx m_shooterMotorLeft;
     private final DcMotorEx m_shooterMotorRight;
     private final CRServo m_kickerRight;
     private final CRServo m_kickerLeft;
+    private final LinearInterpolator m_shooterInterpolator;
 
     private double m_targetVelocity;
 
@@ -25,7 +26,6 @@ public class SUB_Shooter extends SubsystemBase {
     public static double shooterD = 0;
     public static double shooterF = 0;
     public static double shooterVelocity = 0;
-
 
     public SUB_Shooter(OpMode p_OpMode) {
         m_OpMode = p_OpMode;
@@ -35,12 +35,19 @@ public class SUB_Shooter extends SubsystemBase {
         m_kickerRight = m_OpMode.hardwareMap.get(CRServo.class, "kickerRight");
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        m_shooterInterpolator = new LinearInterpolator(ShooterConstants.kShooterInterpolationTable);
     }
 
-    public void setVelocity(double velocity) {
+    public void setVelocity(int velocity) {
         m_targetVelocity = velocity;
         m_shooterMotorLeft.setVelocity(velocity, AngleUnit.DEGREES);
         m_shooterMotorRight.setVelocity(velocity, AngleUnit.DEGREES);
+    }
+
+    public void setVelocity (double distance){
+        int interpolatedVelocity = (int)m_shooterInterpolator.getInterpolatedValue(distance);
+        setVelocity(interpolatedVelocity);
     }
 
     public double getVelocity (){
@@ -51,11 +58,11 @@ public class SUB_Shooter extends SubsystemBase {
         return m_targetVelocity;
     }
 
-    public void kickRight(double power) {
+    public void setKickRightPower(double power) {
         m_kickerRight.setPower(power);
     }
 
-    public void kickLeft(double power) {
+    public void setKickLeftPower(double power) {
         m_kickerLeft.setPower(power);
     }
 
