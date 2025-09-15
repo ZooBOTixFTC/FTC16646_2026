@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.visionprocessor.AprilTagPipeline;
@@ -9,11 +10,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.apriltag.AprilTagDetection;
 
-import org.openftc.easyopencv.OpenCvPipeline;
-
 import java.util.ArrayList;
 
-public class VisionSubsystem {
+public class SUB_Vision {
     private OpenCvCamera webcam;
     private AprilTagPipeline aprilTagPipeline;
     private AprilTagDetection latestDetection = null;
@@ -27,13 +26,13 @@ public class VisionSubsystem {
     // Physical tag size (in meters)
     static final double TAG_SIZE = 0.166;  // 16.6 cm
 
-    public VisionSubsystem(HardwareMap hardwareMap) {
-        int cameraMonitorViewId = hardwareMap.appContext
+    public SUB_Vision(OpMode p_opMode) {
+        int cameraMonitorViewId = p_opMode.hardwareMap.appContext
                 .getResources()
-                .getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+                .getIdentifier("cameraMonitorViewId", "id", p_opMode.hardwareMap.appContext.getPackageName());
 
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
-                hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
+                p_opMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
 
         aprilTagPipeline = new AprilTagPipeline(TAG_SIZE, FX, FY, CX, CY) {
             @Override

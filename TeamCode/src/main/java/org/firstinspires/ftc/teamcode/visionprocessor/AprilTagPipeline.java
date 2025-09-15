@@ -49,11 +49,7 @@ public class AprilTagPipeline extends OpenCvPipeline
 
     public static ArrayList<AprilTagDetection> getDetections()
     {
-        if (detections.isEmpty()) {
-
-        } else {
-            return detections;
-        }
+        return detections;
     }
 
     public void release()

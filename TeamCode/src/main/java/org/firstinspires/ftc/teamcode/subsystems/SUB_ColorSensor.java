@@ -1,55 +1,89 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import android.graphics.Color;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class SUB_ColorSensor extends SubsystemBase {
-
-    private final NormalizedColorSensor colorSensor;
-    private final OpMode m_OpMode;
-    private double hue;
-    private NormalizedRGBA colors;
-    public SUB_ColorSensor(OpMode p_OpMode) {
-
-        m_OpMode = p_OpMode;
-        colorSensor = m_OpMode.hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+    private final NormalizedColorSensor m_colorSensorLeft;
+    private final NormalizedColorSensor m_colorSensorRight;
+    private final Servo m_LEDRight;
+    private final Servo m_LEDLeft;
+    private final OpMode m_opMode;
+    public SUB_ColorSensor(OpMode p_opMode) {
+        m_opMode = p_opMode;
+        m_colorSensorLeft = m_opMode.hardwareMap.get(NormalizedColorSensor.class, "colorSensorLeft");
+        m_colorSensorRight = m_opMode.hardwareMap.get(NormalizedColorSensor.class, "colorSensorRight");
+        m_LEDLeft = m_opMode.hardwareMap.get(Servo.class, "LEDLeft");
+        m_LEDRight = m_opMode.hardwareMap.get(Servo.class, "LEDRight");
     }
 
-    public void hsvColorDetection() {
-        float hsv[] = new float[3];
-        colors = colorSensor.getNormalizedColors();
-
-        Color.RGBToHSV(
-                (int)(colors.red * 255),
-        (int)(colors.green * 255),
-        (int)(colors.blue * 255),
-                hsv
-        );
-        hue = hsv[0];
+    // Get the raw color data
+    public NormalizedRGBA getColorLeft() {
+        return m_colorSensorLeft.getNormalizedColors();
     }
 
-    public String detectedColor() {
+    public NormalizedRGBA getColorRight() {
+        return m_colorSensorRight.getNormalizedColors();
+    }
 
-        if (hue >= 145 && hue <= 159) {
+    // Detect between green and purple
+    NormalizedRGBA colorsLeft;
+    NormalizedRGBA colorsRight;
+    public String detectColorLeft() {
+        colorsLeft = getColorLeft();
+
+        float red = colorsLeft.red;
+        float green = colorsLeft.green;
+        float blue = colorsLeft.blue;
+
+        // Simple decision logic
+        if (green > (red + blue) * 0.75) {
             return "Green";
-        } else if (hue >= 170 && hue <= 237) {
+        } else if ((red + blue) > (green * 1.5)) {
             return "Purple";
+        } else {
+            return "Unknown";
         }
-        else return "Unknown";
     }
 
+    public String detectColorRight() {
+        colorsLeft = getColorRight();
+
+        float red = colorsRight.red;
+        float green = colorsRight.green;
+        float blue = colorsRight.blue;
+
+        // Simple decision logic
+        if (green > (red + blue) * 0.75) {
+            return "Green";
+        } else if ((red + blue) > (green * 1.5)) {
+            return "Purple";
+        } else {
+            return "Unknown";
+        }
+    }
+
+    public void setLEDLeftColor(double color) {
+        m_LEDLeft.setPosition(color);
+    }
+
+    public void setLEDRightColor(double color) {
+        m_LEDRight.setPosition(color);
+    }
+
+    // Telemetry for debugging
     @Override
     public void periodic() {
-        hsvColorDetection();
-        m_OpMode.telemetry.addData("detected color", detectedColor());
-        m_OpMode.telemetry.addData("Red", colors.red);
-        m_OpMode.telemetry.addData("Green", colors.green);
-        m_OpMode.telemetry.addData("Blue", colors.blue);
-        m_OpMode.telemetry.addData("Hue", hue);
-
+        m_opMode.telemetry.addData("Red", colorsLeft.red);
+        m_opMode.telemetry.addData("Green", colorsLeft.green);
+        m_opMode.telemetry.addData("Blue", colorsLeft.blue);
+        m_opMode.telemetry.addData("Detected Left", detectColorLeft());
+        m_opMode.telemetry.addData("Red", colorsRight.red);
+        m_opMode.telemetry.addData("Green", colorsRight.green);
+        m_opMode.telemetry.addData("Blue", colorsRight.blue);
+        m_opMode.telemetry.addData("Detected Right", detectColorRight());
     }
 }

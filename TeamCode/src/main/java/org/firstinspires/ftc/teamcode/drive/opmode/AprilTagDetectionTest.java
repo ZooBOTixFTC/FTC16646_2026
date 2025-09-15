@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.subsystems.VisionSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 import org.firstinspires.ftc.teamcode.visionprocessor.AprilTagPipeline;
 import org.openftc.apriltag.AprilTagDetection;
 
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 @TeleOp(name="AprilTag Detection Test", group="Test")
 public class AprilTagDetectionTest extends LinearOpMode
 {
-    private VisionSubsystem vision;
+    private SUB_Vision vision;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         // Initialize the vision subsystem (opens webcam + sets pipeline)
-        vision = new VisionSubsystem(hardwareMap);
+        vision = new SUB_Vision(this);
 
         telemetry.addLine("AprilTag Vision Initialized");
         telemetry.addLine("Waiting for start...");
