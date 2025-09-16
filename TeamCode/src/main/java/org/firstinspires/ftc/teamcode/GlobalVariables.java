@@ -1,23 +1,29 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 public class GlobalVariables {
-     public enum RobotState {
-          HOME
+     public enum RobotShootState {
+          PATTERN,
+          FULL
      }
 
-     RobotState m_robotState = RobotState.HOME;
-
-     public RobotState getRobotState() {
-          return m_robotState;
+     public enum NextChamber {
+          LEFT,
+          RIGHT,
+          UNKNOWN
      }
 
-     public void setRobotState(RobotState p_robotState) {
-          m_robotState = p_robotState;
+     RobotShootState m_robotShootState = RobotShootState.PATTERN;
+     NextChamber m_NextChamber = NextChamber.UNKNOWN;
+
+     public RobotShootState getRobotShootState() {
+          return m_robotShootState;
      }
 
-     public boolean isRobotState(RobotState p_robotState) {
-          return m_robotState == p_robotState;
+     public void setRobotShootState(RobotShootState p_robotShootState) {
+          m_robotShootState = p_robotShootState;
+     }
+
+     public boolean isRobotState(RobotShootState p_robotShootState) {
+          return m_robotShootState == p_robotShootState;
      }
 }
