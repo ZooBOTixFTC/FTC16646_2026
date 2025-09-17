@@ -46,7 +46,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(),
                        poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
 
-               telemetry.addData("RobotState", m_robot.GlobalVariables.getRobotState().name());
+               telemetry.addData("Robot Shoot state", m_robot.GlobalVariables.m_robotShootState);
                telemetry.update();
           }
 

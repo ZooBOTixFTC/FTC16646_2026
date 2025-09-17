@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -12,7 +13,7 @@ import org.openftc.apriltag.AprilTagDetection;
 
 import java.util.ArrayList;
 
-public class SUB_Vision {
+public class SUB_Vision extends SubsystemBase {
     private OpenCvCamera webcam;
     private AprilTagPipeline aprilTagPipeline;
     private AprilTagDetection latestDetection = null;
@@ -25,14 +26,16 @@ public class SUB_Vision {
 
     // Physical tag size (in meters)
     static final double TAG_SIZE = 0.166;  // 16.6 cm
+    private final OpMode m_OpMode;
 
     public SUB_Vision(OpMode p_opMode) {
-        int cameraMonitorViewId = p_opMode.hardwareMap.appContext
+        m_OpMode = p_opMode;
+        int cameraMonitorViewId = m_OpMode.hardwareMap.appContext
                 .getResources()
-                .getIdentifier("cameraMonitorViewId", "id", p_opMode.hardwareMap.appContext.getPackageName());
+                .getIdentifier("cameraMonitorViewId", "id", m_OpMode.hardwareMap.appContext.getPackageName());
 
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
-                p_opMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
+                m_OpMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
 
         aprilTagPipeline = new AprilTagPipeline(TAG_SIZE, FX, FY, CX, CY) {
             @Override
@@ -86,4 +89,25 @@ public class SUB_Vision {
         webcam.stopStreaming();    // stops webcam
         webcam.closeCameraDevice(); // fully releases camera
     }
-}
+
+    public String decodePatternTags() {
+
+        if (getDetectedTagID() == 21) return "G,P,P";
+        else if (getDetectedTagID() == 22)  return "P,G,P";
+        else if (getDetectedTagID() == 23) return "P,P,G";
+        else return "Unknown";
+
+        }
+
+    @Override
+    public void periodic() {
+        m_OpMode.telemetry.addData("Detected ID",getDetectedTagID());
+    }
+
+    }
+
+
+
+
+
+
