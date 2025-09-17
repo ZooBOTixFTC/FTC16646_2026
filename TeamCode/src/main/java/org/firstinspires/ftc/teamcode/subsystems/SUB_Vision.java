@@ -104,7 +104,7 @@ public class SUB_Vision extends SubsystemBase {
         m_OpMode.telemetry.addData("Detected ID",getDetectedTagID());
     }
 
-    }
+}
 
 
 
