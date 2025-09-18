@@ -4,7 +4,9 @@ import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
+import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensor;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 
 public class CMD_ShootPattern extends SequentialCommandGroup {
     public CMD_ShootPattern(SUB_Shooter p_shooter, boolean p_leftChamber){

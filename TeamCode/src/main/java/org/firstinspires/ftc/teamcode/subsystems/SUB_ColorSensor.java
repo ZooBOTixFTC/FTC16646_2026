@@ -76,6 +76,10 @@ public class SUB_ColorSensor extends SubsystemBase {
         m_LEDRight.setPosition(color);
     }
 
+    public void setNextChamber() {
+
+    }
+
     // Telemetry for debugging
     @Override
     public void periodic() {

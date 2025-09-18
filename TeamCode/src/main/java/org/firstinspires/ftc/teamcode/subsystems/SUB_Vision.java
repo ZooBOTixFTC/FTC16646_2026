@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.visionprocessor.AprilTagPipeline;
 import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -96,16 +97,34 @@ public class SUB_Vision extends SubsystemBase {
         else if (getDetectedTagID() == 22)  return "P,G,P";
         else if (getDetectedTagID() == 23) return "P,P,G";
         else return "Unknown";
+    }
 
+        public String getNextColor() {
+
+            if (decodePatternTags().equals("G,P,P")) {
+                if (GlobalVariables.inPatternAlready == 0) return "Green";
+                else if (GlobalVariables.inPatternAlready == 1) return "Purple";
+                else if (GlobalVariables.inPatternAlready == 2) return "Purple";
+            }
+            else if (decodePatternTags().equals("P,G,P")) {
+                if (GlobalVariables.inPatternAlready == 0) return "Purple";
+                else if (GlobalVariables.inPatternAlready == 1) return "Green";
+                else if (GlobalVariables.inPatternAlready == 2) return "Purple";
+            }
+            else if (decodePatternTags().equals("P,P,G")) {
+                if (GlobalVariables.inPatternAlready == 0) return "Green";
+                else if (GlobalVariables.inPatternAlready == 1) return "Purple";
+                else if (GlobalVariables.inPatternAlready == 2) return "Green";
+            }
+            return "UnKnown";
         }
 
     @Override
     public void periodic() {
-        m_OpMode.telemetry.addData("Detected ID",getDetectedTagID());
+        m_OpMode.telemetry.addData("Detected ID", getDetectedTagID());
+        m_OpMode.telemetry.addData("Pattern", decodePatternTags());
     }
-
 }
-
 
 
 

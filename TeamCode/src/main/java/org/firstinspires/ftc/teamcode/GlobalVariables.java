@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 public class GlobalVariables {
+
+     public static int inPatternAlready = 0;
      public enum RobotShootState {
           PATTERN,
           FULL
@@ -25,5 +27,20 @@ public class GlobalVariables {
 
      public boolean isRobotState(RobotShootState p_robotShootState) {
           return m_robotShootState == p_robotShootState;
+     }
+     public void setInPatternAlready(int alreadyInPattern) {
+          inPatternAlready = alreadyInPattern;
+     }
+
+     public int getAlreadyInPattern() {
+          return inPatternAlready;
+     }
+     public void setNextChamber(String side) {
+          if (side.equals("left")) m_NextChamber = NextChamber.LEFT;
+          else if(side.equals("right")) m_NextChamber = NextChamber.RIGHT;
+          else m_NextChamber = NextChamber.UNKNOWN;
+     }
+     public NextChamber getNextChamber() {
+          return m_NextChamber;
      }
 }
