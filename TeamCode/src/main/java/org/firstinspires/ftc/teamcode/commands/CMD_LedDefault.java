@@ -3,12 +3,12 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 
 import org.firstinspires.ftc.teamcode.Constants.ColorConstants;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensor;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensors;
 
 public class CMD_LedDefault extends CommandBase {
 
-    private final SUB_ColorSensor m_colorSensor;
-    public CMD_LedDefault(SUB_ColorSensor p_colorSensor) {
+    private final SUB_ColorSensors m_colorSensor;
+    public CMD_LedDefault(SUB_ColorSensors p_colorSensor) {
         addRequirements(p_colorSensor);
         m_colorSensor = p_colorSensor;
     }

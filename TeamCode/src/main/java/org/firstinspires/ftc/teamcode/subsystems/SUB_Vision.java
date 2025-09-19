@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.visionprocessor.AprilTagPipeline;
@@ -27,16 +26,18 @@ public class SUB_Vision extends SubsystemBase {
 
     // Physical tag size (in meters)
     static final double TAG_SIZE = 0.166;  // 16.6 cm
-    private final OpMode m_OpMode;
+    private final OpMode m_opMode;
+    private final GlobalVariables m_variables;
 
-    public SUB_Vision(OpMode p_opMode) {
-        m_OpMode = p_opMode;
-        int cameraMonitorViewId = m_OpMode.hardwareMap.appContext
+    public SUB_Vision(OpMode p_opMode, GlobalVariables p_variables) {
+        m_opMode = p_opMode;
+        m_variables = p_variables;
+        int cameraMonitorViewId = m_opMode.hardwareMap.appContext
                 .getResources()
-                .getIdentifier("cameraMonitorViewId", "id", m_OpMode.hardwareMap.appContext.getPackageName());
+                .getIdentifier("cameraMonitorViewId", "id", m_opMode.hardwareMap.appContext.getPackageName());
 
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
-                m_OpMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
+                m_opMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
 
         aprilTagPipeline = new AprilTagPipeline(TAG_SIZE, FX, FY, CX, CY) {
             @Override
@@ -91,38 +92,18 @@ public class SUB_Vision extends SubsystemBase {
         webcam.closeCameraDevice(); // fully releases camera
     }
 
-    public String decodePatternTags() {
+    public void decodePatternTags() {
 
-        if (getDetectedTagID() == 21) return "G,P,P";
-        else if (getDetectedTagID() == 22)  return "P,G,P";
-        else if (getDetectedTagID() == 23) return "P,P,G";
-        else return "Unknown";
+        if (getDetectedTagID() == 21) m_variables.setPatternType(GlobalVariables.patternTypes.GPP);
+        else if (getDetectedTagID() == 22)  m_variables.setPatternType(GlobalVariables.patternTypes.PGP);
+        else if (getDetectedTagID() == 23) m_variables.setPatternType(GlobalVariables.patternTypes.PPG);
     }
 
-        public String getNextColor() {
 
-            if (decodePatternTags().equals("G,P,P")) {
-                if (GlobalVariables.inPatternAlready == 0) return "Green";
-                else if (GlobalVariables.inPatternAlready == 1) return "Purple";
-                else if (GlobalVariables.inPatternAlready == 2) return "Purple";
-            }
-            else if (decodePatternTags().equals("P,G,P")) {
-                if (GlobalVariables.inPatternAlready == 0) return "Purple";
-                else if (GlobalVariables.inPatternAlready == 1) return "Green";
-                else if (GlobalVariables.inPatternAlready == 2) return "Purple";
-            }
-            else if (decodePatternTags().equals("P,P,G")) {
-                if (GlobalVariables.inPatternAlready == 0) return "Green";
-                else if (GlobalVariables.inPatternAlready == 1) return "Purple";
-                else if (GlobalVariables.inPatternAlready == 2) return "Green";
-            }
-            return "UnKnown";
-        }
 
     @Override
     public void periodic() {
-        m_OpMode.telemetry.addData("Detected ID", getDetectedTagID());
-        m_OpMode.telemetry.addData("Pattern", decodePatternTags());
+        m_opMode.telemetry.addData("Detected ID", getDetectedTagID());
     }
 }
 

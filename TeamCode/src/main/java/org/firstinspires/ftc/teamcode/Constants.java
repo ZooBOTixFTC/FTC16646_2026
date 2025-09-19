@@ -33,6 +33,12 @@ public class Constants {
             ,PURPLE
             ,UNKNOWN
         }
+
+        public static final ColorEnum[][] patterns = {
+            {ColorEnum.GREEN, ColorEnum.PURPLE, ColorEnum.PURPLE},
+            {ColorEnum.PURPLE, ColorEnum.GREEN, ColorEnum.PURPLE},
+            {ColorEnum.PURPLE, ColorEnum.PURPLE, ColorEnum.GREEN}
+        };
     }
 }
 

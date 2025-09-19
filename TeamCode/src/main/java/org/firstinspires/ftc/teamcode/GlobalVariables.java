@@ -2,20 +2,28 @@ package org.firstinspires.ftc.teamcode;
 
 public class GlobalVariables {
 
-     public static int inPatternAlready = 0;
+     public int inPatternAlready = 0;
+     public enum patternTypes {
+          GPP,
+          PGP,
+          PPG
+     }
+     public static patternTypes m_patternType = patternTypes.PGP;
+
+     public void setPatternType(patternTypes p_patternType) {
+          m_patternType = p_patternType;
+     }
+
+     public patternTypes getPatternType() {
+          return m_patternType;
+     }
+
      public enum RobotShootState {
           PATTERN,
           FULL
      }
 
-     public enum NextChamber {
-          LEFT,
-          RIGHT,
-          UNKNOWN
-     }
-
      RobotShootState m_robotShootState = RobotShootState.PATTERN;
-     NextChamber m_NextChamber = NextChamber.UNKNOWN;
 
      public RobotShootState getRobotShootState() {
           return m_robotShootState;
@@ -34,13 +42,5 @@ public class GlobalVariables {
 
      public int getAlreadyInPattern() {
           return inPatternAlready;
-     }
-     public void setNextChamber(String side) {
-          if (side.equals("left")) m_NextChamber = NextChamber.LEFT;
-          else if(side.equals("right")) m_NextChamber = NextChamber.RIGHT;
-          else m_NextChamber = NextChamber.UNKNOWN;
-     }
-     public NextChamber getNextChamber() {
-          return m_NextChamber;
      }
 }

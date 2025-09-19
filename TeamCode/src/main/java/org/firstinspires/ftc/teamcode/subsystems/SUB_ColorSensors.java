@@ -8,13 +8,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants.ColorConstants.ColorEnum;
 
-public class SUB_ColorSensor extends SubsystemBase {
+public class SUB_ColorSensors extends SubsystemBase {
     private final NormalizedColorSensor m_colorSensorLeft;
     private final NormalizedColorSensor m_colorSensorRight;
     private final Servo m_LEDRight;
     private final Servo m_LEDLeft;
     private final OpMode m_opMode;
-    public SUB_ColorSensor(OpMode p_opMode) {
+    public SUB_ColorSensors(OpMode p_opMode) {
         m_opMode = p_opMode;
         m_colorSensorLeft = m_opMode.hardwareMap.get(NormalizedColorSensor.class, "colorSensorLeft");
         m_colorSensorRight = m_opMode.hardwareMap.get(NormalizedColorSensor.class, "colorSensorRight");

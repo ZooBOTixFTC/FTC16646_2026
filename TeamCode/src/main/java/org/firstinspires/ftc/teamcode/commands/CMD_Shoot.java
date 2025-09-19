@@ -1,26 +1,30 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.ConditionalCommand;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 
-import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensor;
+import org.firstinspires.ftc.teamcode.Constants.ColorConstants.ColorEnum;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_ColorSensors;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 
 public class CMD_Shoot extends SequentialCommandGroup {
-    public CMD_Shoot(SUB_Shooter p_Shooter, SUB_ColorSensor p_colorSensor, GlobalVariables p_Variables, GlobalVariables.RobotShootState p_ShootState, SUB_Vision p_Vision) {
+    public CMD_Shoot(SUB_Shooter p_shooter, SUB_ColorSensors p_colorSensor){
 
-            if (p_colorSensor.detectColorLeft().equals(p_Vision.getNextColor())) p_Variables.setNextChamber("LEFT");
-            else if (p_colorSensor.detectColorRight().equals(p_Vision.getNextColor())) p_Variables.setNextChamber("RIGHT");
-
+        addRequirements(p_shooter);
         addCommands(
-                    new ConditionalCommand(
-                    new CMD_ShootFull(p_Shooter, p_colorSensor),
-                    new CMD_ShootPattern(p_Shooter, (p_Variables.getNextChamber() == GlobalVariables.NextChamber.LEFT)),
-                    ()->p_ShootState == GlobalVariables.RobotShootState.FULL
-                    )
-            );
-    }
+                new InstantCommand(()-> p_shooter.setVelocity(0.0)),
+                new CMD_GetShooterAtVelocity(p_shooter),
+                new CMD_KickLeft(p_shooter),
+                new CMD_GetShooterAtVelocity(p_shooter),
+                new CMD_KickRight(p_shooter),
+                new CMD_GetShooterAtVelocity(p_shooter),
+                new ConditionalCommand(
+                        new CMD_KickLeft(p_shooter),
+                        new CMD_KickRight(p_shooter),
+                        ()-> p_colorSensor.detectColorLeft() == ColorEnum.GREEN || p_colorSensor.detectColorLeft() == ColorEnum.PURPLE
+                )
 
+        );
+    }
 }
