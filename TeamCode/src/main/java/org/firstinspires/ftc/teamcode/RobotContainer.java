@@ -21,10 +21,10 @@ public class RobotContainer {
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
           GlobalVariables = new GlobalVariables();
-          m_intake = new SUB_Intake(p_opMode);
-          m_shooter = new SUB_Shooter(p_opMode);
-          m_lift = new SUB_Lift(p_opMode);
-          m_colorSensor = new SUB_ColorSensors(p_opMode);
+//          m_intake = new SUB_Intake(p_opMode);
+//          m_shooter = new SUB_Shooter(p_opMode);
+//          m_lift = new SUB_Lift(p_opMode);
+//          m_colorSensor = new SUB_ColorSensors(p_opMode);
           m_vision = new SUB_Vision(p_opMode, GlobalVariables);
      };
 
@@ -46,6 +46,10 @@ public class RobotContainer {
 
      public void setBlueSide() {
           m_red = false;
+     }
+
+     public boolean getRedSide(){
+          return m_red;
      }
 }
 

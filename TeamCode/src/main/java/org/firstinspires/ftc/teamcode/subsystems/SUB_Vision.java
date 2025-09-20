@@ -2,112 +2,86 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.visionprocessor.AprilTagPipeline;
-import org.opencv.core.Mat;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.teamcode.GlobalVariables.patternTypes;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SUB_Vision extends SubsystemBase {
-    private OpenCvCamera webcam;
-    private AprilTagPipeline aprilTagPipeline;
-    private AprilTagDetection latestDetection = null;
-
-    // Camera intrinsics (tune these for your LifeCam & resolution)
-    static final double FX = 578.272;
-    static final double FY = 578.272;
-    static final double CX = 402.145;
-    static final double CY = 221.506;
-
-    // Physical tag size (in meters)
-    static final double TAG_SIZE = 0.166;  // 16.6 cm
     private final OpMode m_opMode;
+    private final AprilTagProcessor m_aprilTagProcessor;
+    private final VisionPortal m_visionPortal;
     private final GlobalVariables m_variables;
+    private List<AprilTagDetection> m_detections;
 
     public SUB_Vision(OpMode p_opMode, GlobalVariables p_variables) {
         m_opMode = p_opMode;
         m_variables = p_variables;
-        int cameraMonitorViewId = m_opMode.hardwareMap.appContext
-                .getResources()
-                .getIdentifier("cameraMonitorViewId", "id", m_opMode.hardwareMap.appContext.getPackageName());
 
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(
-                m_opMode.hardwareMap.get(WebcamName.class, "camera1"), cameraMonitorViewId);
+        m_aprilTagProcessor = new AprilTagProcessor.Builder()
+                .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
+                .build();
 
-        aprilTagPipeline = new AprilTagPipeline(TAG_SIZE, FX, FY, CX, CY) {
-            @Override
-            public Mat processFrame(Mat input) {
-                return null;
-            }
-        };
-        webcam.setPipeline(aprilTagPipeline);
+        m_aprilTagProcessor.setDecimation(1);
 
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-            @Override
-            public void onOpened() {
-                webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-            }
+        m_visionPortal = new VisionPortal.Builder()
+                .setCamera(m_opMode.hardwareMap.get(WebcamName.class, "camera1"))
+                .addProcessor(m_aprilTagProcessor)
+                .build();
 
-            @Override
-            public void onError(int errorCode) {
-                // handle errors here
-            }
-        });
+        m_visionPortal.setProcessorEnabled(m_aprilTagProcessor, true);
     }
 
-    /** Updates and returns the latest AprilTag detection, or null if none */
-    public AprilTagDetection getLatestDetection() {webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-        @Override
-        public void onOpened() {
-            webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+    public void stream(boolean stream){
+        if(stream){
+            m_visionPortal.resumeStreaming();
+        }else{
+            m_visionPortal.stopStreaming();
         }
+    }
 
-        @Override
-        public void onError(int errorCode) {
-            // handle errors here
+    public void readPattern(){
+        for (AprilTagDetection detection : getDetections()){
+            switch (detection.id){
+                case 21:
+                    m_variables.setPatternType(patternTypes.GPP);
+                    break;
+                case 22:
+                    m_variables.setPatternType(patternTypes.PGP);
+                    break;
+                case 23:
+                    m_variables.setPatternType(patternTypes.PPG);
+                    break;
+                default:
+                    break;
+            }
         }
-    });
-        ArrayList<AprilTagDetection> detections = aprilTagPipeline.getDetections();
-
-        if (!detections.isEmpty()) {
-            latestDetection = detections.get(0); // Take the first detected tag
-        }
-        return latestDetection;
     }
 
-    /** Returns the ID of the detected AprilTag, or -1 if none */
-    public int getDetectedTagID() {
-        AprilTagDetection detection = getLatestDetection();
-        return (detection != null) ? detection.id : -1;
+    public List<AprilTagDetection> getDetections(){
+        return m_detections;
     }
-
-    public void shutdown() {
-        aprilTagPipeline.release();        // frees native AprilTag detector
-        webcam.stopStreaming();    // stops webcam
-        webcam.closeCameraDevice(); // fully releases camera
-    }
-
-    public void decodePatternTags() {
-
-        if (getDetectedTagID() == 21) m_variables.setPatternType(GlobalVariables.patternTypes.GPP);
-        else if (getDetectedTagID() == 22)  m_variables.setPatternType(GlobalVariables.patternTypes.PGP);
-        else if (getDetectedTagID() == 23) m_variables.setPatternType(GlobalVariables.patternTypes.PPG);
-    }
-
-
 
     @Override
-    public void periodic() {
-        m_opMode.telemetry.addData("Detected ID", getDetectedTagID());
+    public void periodic(){
+        m_detections = m_aprilTagProcessor.getDetections();
+
+        if(m_detections != null) {
+            m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
+
+            for (AprilTagDetection detection : m_detections) {
+                m_opMode.telemetry.addData("ID", detection.id);
+                m_opMode.telemetry.addData("distance", detection.ftcPose.range);
+                m_opMode.telemetry.addData("yaw", detection.ftcPose.yaw);
+            }
+        }
+
+        m_opMode.telemetry.addData("vision portal status", m_visionPortal.getCameraState());
+        m_opMode.telemetry.addData("fps", m_visionPortal.getFps());
     }
 }
-
-
-
-
-

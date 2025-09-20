@@ -20,7 +20,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
      private GamepadEx m_driverOp;
      private GamepadEx m_toolOp;
 
-     private static ElapsedTime m_runTime = new ElapsedTime();
+     private static final ElapsedTime m_runTime = new ElapsedTime();
 
      public void initialize() {
           telemetry.clearAll();
@@ -46,7 +46,6 @@ public class Teleop_Field_Centric extends LinearOpMode {
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(),
                        poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
 
-               telemetry.addData("Robot Shoot state", m_robot.GlobalVariables.m_robotShootState);
                telemetry.update();
           }
 
@@ -65,6 +64,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_toolOp = new GamepadEx(gamepad2);
 
           setSide();
+          m_robot.GlobalVariables.m_red = m_robot.getRedSide();
 
           //drivetrain initialization
           m_robot.drivetrain.setFieldCentric(true);
@@ -72,13 +72,14 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_toolOp, 0.0,0.01, m_robot.GlobalVariables));
 
-          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
+//          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
           //button bindings and global variables initialization
           configureButtonBindings();
      }
 
      public void configureButtonBindings() {
-
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
+                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
      }
 
      public void setSide() {

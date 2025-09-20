@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 public class GlobalVariables {
+     public boolean m_red;
 
-     public int inPatternAlready = 0;
      public enum patternTypes {
           GPP,
           PGP,
@@ -16,31 +16,5 @@ public class GlobalVariables {
 
      public patternTypes getPatternType() {
           return m_patternType;
-     }
-
-     public enum RobotShootState {
-          PATTERN,
-          FULL
-     }
-
-     RobotShootState m_robotShootState = RobotShootState.PATTERN;
-
-     public RobotShootState getRobotShootState() {
-          return m_robotShootState;
-     }
-
-     public void setRobotShootState(RobotShootState p_robotShootState) {
-          m_robotShootState = p_robotShootState;
-     }
-
-     public boolean isRobotState(RobotShootState p_robotShootState) {
-          return m_robotShootState == p_robotShootState;
-     }
-     public void setInPatternAlready(int alreadyInPattern) {
-          inPatternAlready = alreadyInPattern;
-     }
-
-     public int getAlreadyInPattern() {
-          return inPatternAlready;
      }
 }
