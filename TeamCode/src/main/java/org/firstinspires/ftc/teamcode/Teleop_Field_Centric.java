@@ -79,7 +79,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
 
      public void configureButtonBindings() {
           AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
-                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
+                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables));
      }
 
      public void setSide() {
