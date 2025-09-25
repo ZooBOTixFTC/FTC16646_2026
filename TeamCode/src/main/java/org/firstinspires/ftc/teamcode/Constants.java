@@ -7,8 +7,8 @@ public class Constants {
         public static final double kShooterP = 0;
         public static final double kShooterD = 0;
         public static final double kShooterF = 0;
-        public static final double kickOn = 1;
-        public static final double kickOff = 0;
+        public static final double kKickOn = 1;
+        public static final double kKickOff = 0;
         public static final double kickDuration = 0.5;
 
         public static final double[][] kShooterInterpolationTable = {

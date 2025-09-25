@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -70,7 +71,7 @@ public abstract class Robot_Auto extends LinearOpMode {
           return m_startingPose;
      }
 
-     public abstract void buildTasks();
+     public abstract SequentialCommandGroup buildTasks();
      public abstract void prebuildTasks();
 
 }
