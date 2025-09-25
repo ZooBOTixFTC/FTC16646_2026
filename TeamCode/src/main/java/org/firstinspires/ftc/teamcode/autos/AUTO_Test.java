@@ -22,13 +22,12 @@ public class AUTO_Test extends Robot_Auto {
     }
 
     @Override
-    public SequentialCommandGroup buildTasks() {
+    public void buildTasks() {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
             new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_testTrajectory)
         );
 
-        return completeTasks;
     }
 }

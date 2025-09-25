@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -32,7 +33,9 @@ public class Teleop_Field_Centric extends LinearOpMode {
      @Override
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
-          // waitForStart();
+
+          m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autoEndPose);
+
           while (!opModeIsActive() && !isStopRequested()) {
                telemetry.update();
           }
@@ -49,7 +52,6 @@ public class Teleop_Field_Centric extends LinearOpMode {
                telemetry.update();
           }
 
-          //
           endOfOpMode();
           m_robot.reset();
      }
@@ -66,20 +68,30 @@ public class Teleop_Field_Centric extends LinearOpMode {
           setSide();
           m_robot.GlobalVariables.m_red = m_robot.getRedSide();
 
-          //drivetrain initialization
           m_robot.drivetrain.setFieldCentric(true);
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_toolOp, m_robot.GlobalVariables.m_red ? 90 : -90,0.05, m_robot.GlobalVariables));
 
+          m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
 //          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
-          //button bindings and global variables initialization
+
           configureButtonBindings();
      }
 
      public void configureButtonBindings() {
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootRight(m_robot.m_shooter));
+
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_Shoot(m_robot.m_shooter, m_robot.m_colorSensor));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
                   m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables));
+
+          //operator
+          AddButtonCommand(m_toolOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter));
+          AddButtonCommand(m_toolOp, GamepadKeys.Button.RIGHT_STICK_BUTTON, new CMD_ShootRight(m_robot.m_shooter));
+
+
      }
 
      public void setSide() {

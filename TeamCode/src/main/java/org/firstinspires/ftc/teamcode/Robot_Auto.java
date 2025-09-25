@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -11,12 +10,9 @@ public abstract class Robot_Auto extends LinearOpMode {
 
      public RobotContainer m_robot;
 
-     private boolean m_redAlliance;
-
      private Pose2d m_startingPose = new Pose2d(0, 0, 0);
-     SequentialCommandGroup tasks;
 
-     private ElapsedTime m_runTime = new ElapsedTime();
+     private final ElapsedTime m_runTime = new ElapsedTime();
 
      public void initialize() {
           telemetry.clearAll();
@@ -27,15 +23,18 @@ public abstract class Robot_Auto extends LinearOpMode {
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
 
+          m_robot.m_vision.stream(true);
+          m_robot.m_vision.readPattern();
+
           prebuildTasks();
-          // waitForStart();
+
           while (!opModeIsActive() && !isStopRequested()) {
                m_robot.run(); // run the scheduler
                telemetry.addData("Analysis: ", 1);
                telemetry.update();
           }
 
-//          m_robot.m_camera.resumeStreaming();
+          m_robot.m_vision.stream(false);
 
           buildTasks();
 
@@ -54,6 +53,8 @@ public abstract class Robot_Auto extends LinearOpMode {
      }
 
      public void endOfOpMode() {
+          GlobalVariables.m_autoEndPose = m_robot.drivetrain.getPoseEstimate();
+          m_robot.reset();
      }
 
      public void initializeSubsystems() {
@@ -69,7 +70,7 @@ public abstract class Robot_Auto extends LinearOpMode {
           return m_startingPose;
      }
 
-     public abstract SequentialCommandGroup buildTasks();
+     public abstract void buildTasks();
      public abstract void prebuildTasks();
 
 }

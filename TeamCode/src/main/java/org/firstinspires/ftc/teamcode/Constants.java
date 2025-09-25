@@ -23,22 +23,22 @@ public class Constants {
         };
     }
 
+    public static final class IntakeConstants {
+        public static final double kIntakeOn = 1;
+        public static final double kIntakeOff = 0;
+        public static final double kIntakeReverse = -1;
+    }
+
     public static final class ColorConstants {
         public static final double kOrange = .333;
         public static final double kGreen = .45;
         public static final double kPurple = .722;
 
-        public static enum ColorEnum {
+        public enum ColorEnum {
             GREEN
             ,PURPLE
             ,UNKNOWN
         }
-
-        public static final ColorEnum[][] patterns = {
-            {ColorEnum.GREEN, ColorEnum.PURPLE, ColorEnum.PURPLE},
-            {ColorEnum.PURPLE, ColorEnum.GREEN, ColorEnum.PURPLE},
-            {ColorEnum.PURPLE, ColorEnum.PURPLE, ColorEnum.GREEN}
-        };
     }
 }
 

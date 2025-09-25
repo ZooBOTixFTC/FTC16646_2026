@@ -74,6 +74,8 @@ public class SUB_Shooter extends SubsystemBase {
 
             m_shooterMotorLeft.setVelocity(shooterVelocity, AngleUnit.DEGREES);
             m_shooterMotorRight.setVelocity(shooterVelocity, AngleUnit.DEGREES);
+
+            shooterVelocity = m_shooterMotorLeft.getVelocity();
         }
     }
 }

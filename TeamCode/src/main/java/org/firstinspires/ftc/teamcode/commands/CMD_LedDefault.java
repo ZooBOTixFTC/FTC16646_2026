@@ -22,6 +22,7 @@ public class CMD_LedDefault extends CommandBase {
                 m_colorSensor.setLEDLeftColor(ColorConstants.kPurple);
                 break;
             default:
+                m_colorSensor.setLEDLeftColor(ColorConstants.kOrange);
                 break;
         }
 
@@ -33,6 +34,7 @@ public class CMD_LedDefault extends CommandBase {
                 m_colorSensor.setLEDRightColor(ColorConstants.kPurple);
                 break;
             default:
+                m_colorSensor.setLEDRightColor(ColorConstants.kOrange);
                 break;
         }
     }
