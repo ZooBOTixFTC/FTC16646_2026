@@ -64,6 +64,22 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
         );
     }
 
+    public void drive(double leftY, double leftX, double rightX, double driverOffsetAngle) {
+        Pose2d poseEstimate = getPoseEstimate();
+
+        Vector2d input = new Vector2d(-leftY, -leftX).rotated(
+                fieldCentric ? -poseEstimate.getHeading() + Math.toRadians(driverOffsetAngle) : 0
+        );
+
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        input.getX(),
+                        input.getY(),
+                        -rightX
+                )
+        );
+    }
+
     public void setDrivePower(Pose2d drivePower) {
         drive.setDrivePower(drivePower);
     }

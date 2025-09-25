@@ -70,7 +70,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setFieldCentric(true);
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
-                  m_toolOp, 0.0,0.01, m_robot.GlobalVariables));
+                  m_toolOp, m_robot.GlobalVariables.m_red ? 90 : -90,0.05, m_robot.GlobalVariables));
 
 //          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
           //button bindings and global variables initialization
