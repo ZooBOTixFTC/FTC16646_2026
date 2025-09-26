@@ -17,7 +17,7 @@ public class CMD_KickLeft extends CommandBase {
 
     @Override
     public void initialize() {
-        m_shooter.setKickLeftPower(Constants.ShooterConstants.kickOn);
+        m_shooter.setKickLeftPower(Constants.ShooterConstants.kKickOn);
         timer.reset();
     }
 

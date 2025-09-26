@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -90,8 +91,6 @@ public class Teleop_Field_Centric extends LinearOpMode {
           //operator
           AddButtonCommand(m_toolOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter));
           AddButtonCommand(m_toolOp, GamepadKeys.Button.RIGHT_STICK_BUTTON, new CMD_ShootRight(m_robot.m_shooter));
-
-
      }
 
      public void setSide() {
@@ -99,10 +98,14 @@ public class Teleop_Field_Centric extends LinearOpMode {
      }
 
      public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button, Command command) {
-          (new GamepadButton(gamepad, button)).whenPressed(command);
+          new GamepadButton(gamepad, button).whenPressed(command);
+     }
+
+     public void AddTriggerCommand(GamepadEx gamepad, Trigger trigger, Command command) {
+          trigger.whenActive(command);
      }
 
      public void AddButtonCommandNoInt(GamepadEx gamepad, GamepadKeys.Button button, Command command) {
-          (new GamepadButton(gamepad, button)).whenPressed(command, false);
+          new GamepadButton(gamepad, button).whenPressed(command, false);
      }
 }
