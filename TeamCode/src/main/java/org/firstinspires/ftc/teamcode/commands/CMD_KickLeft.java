@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 
@@ -17,17 +17,17 @@ public class CMD_KickLeft extends CommandBase {
 
     @Override
     public void initialize() {
-        m_shooter.setKickLeftPower(Constants.ShooterConstants.kKickOn);
+        m_shooter.setKickLeftPower(ShooterConstants.kKickOn);
         timer.reset();
     }
 
     @Override
     public boolean isFinished() {
-        return timer.seconds() >= Constants.ShooterConstants.kickDuration;
+        return timer.seconds() >= ShooterConstants.kickDuration;
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.setKickLeftPower(0);
+        m_shooter.setKickLeftPower(ShooterConstants.kKickOff);
     }
 }

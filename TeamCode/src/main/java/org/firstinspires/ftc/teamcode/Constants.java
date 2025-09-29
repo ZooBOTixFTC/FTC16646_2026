@@ -9,7 +9,8 @@ public class Constants {
         public static final double kShooterF = 0;
         public static final double kKickOn = 1;
         public static final double kKickOff = 0;
-        public static final double kickDuration = 0.5;
+        public static final double kKickReverse = -1;
+        public static final double kickDuration = 2;
 
         public static final double[][] kShooterInterpolationTable = {
                 {36, 125},
@@ -27,6 +28,10 @@ public class Constants {
         public static final double kIntakeOn = 1;
         public static final double kIntakeOff = 0;
         public static final double kIntakeReverse = -1;
+    }
+
+    public static final class LiftContsants {
+        public static final int kLiftUp = 100;
     }
 
     public static final class ColorConstants {
