@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
-import org.firstinspires.ftc.teamcode.util.LinearInterpolator;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
@@ -21,14 +21,15 @@ public class SUB_Shooter extends SubsystemBase {
     private final DcMotorEx m_shooterMotorRight;
     private final CRServo m_kickerRight;
     private final CRServo m_kickerLeft;
-    private final LinearInterpolator m_shooterInterpolator;
 
     private double m_targetVelocity;
 
-    public static double shooterP = 0;
-    public static double shooterD = 0;
-    public static double shooterF = 0;
-    public static double shooterVelocity = 0;
+    public static double shooterP, shooterD, shooterF, lastP, lastD, lastF = 0;
+    public static double shooterVelocity, lastVelocity = 25000;
+
+    private int lastPos = 0;
+    private long lastTime = System.nanoTime();
+    private double smoothedVelocity = 0;
 
     private final FtcDashboard dashboard;
 
@@ -43,43 +44,46 @@ public class SUB_Shooter extends SubsystemBase {
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-//        m_shooterMotorLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-//                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
-//        ));
-//        m_shooterMotorRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-//                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
-//        ));
+        m_shooterMotorLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
+                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
+        ));
+        m_shooterMotorRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
+                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
+        ));
 
         m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         m_shooterMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        m_shooterMotorLeft.setVelocity(0, AngleUnit.DEGREES);
-        m_shooterMotorRight.setVelocity(0, AngleUnit.DEGREES);
+        m_shooterMotorLeft.setVelocity(25000, AngleUnit.DEGREES);
+        m_shooterMotorRight.setVelocity(25000, AngleUnit.DEGREES);
 
-        m_shooterMotorLeft.setPower(0);
-        m_shooterMotorRight.setPower(0);
-
-        m_shooterInterpolator = new LinearInterpolator(ShooterConstants.kShooterInterpolationTable);
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(20);
     }
 
-    public void setVelocity(int velocity) {
+    public void setVelocity(double velocity) {
         m_targetVelocity = velocity;
         m_shooterMotorLeft.setVelocity(velocity, AngleUnit.DEGREES);
         m_shooterMotorRight.setVelocity(velocity, AngleUnit.DEGREES);
-
-        m_shooterMotorLeft.setPower(1);
-        m_shooterMotorRight.setPower(1);
     }
 
-    public void setVelocity (double distance){
-        int interpolatedVelocity = (int)m_shooterInterpolator.getInterpolatedValue(distance);
-        setVelocity(interpolatedVelocity);
-    }
+    public double getVelocity() {
+        long currentTime = System.nanoTime();
+        double deltaTimeSec = (currentTime - lastTime) / 1e9;
 
-    public double getVelocity (){
-        return m_shooterMotorLeft.getVelocity(AngleUnit.DEGREES);
+        if (deltaTimeSec >= 0.3) { // 100ms
+            int currentPos = m_shooterMotorLeft.getCurrentPosition();
+            int deltaTicks = currentPos - lastPos;
+
+            double ticksPerRev = 28.0; // adjust if needed
+            double revs = deltaTicks / ticksPerRev;
+            smoothedVelocity = (revs * 360.0) / deltaTimeSec;
+
+            lastPos = currentPos;
+            lastTime = currentTime;
+        }
+
+        return smoothedVelocity;
     }
 
     public double getTargetVelocity(){
@@ -96,21 +100,36 @@ public class SUB_Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        TelemetryPacket packet = new TelemetryPacket();
+
+        m_targetVelocity = shooterVelocity;
+
+        packet.put("targetVel", getTargetVelocity());
+        packet.put("currentVel", getVelocity());
+
+        dashboard.sendTelemetryPacket(packet);
+
         if(ShooterConstants.kTuningMode){
-            m_shooterMotorLeft.setVelocityPIDFCoefficients(shooterP, 0, shooterD, shooterF);
-            m_shooterMotorRight.setVelocityPIDFCoefficients(shooterP, 0, shooterD, shooterF);
+            if (shooterP != lastP ||
+                    shooterD != lastD ||
+                    shooterF != lastF) {
 
-            m_shooterMotorLeft.setVelocity(shooterVelocity, AngleUnit.DEGREES);
-            m_shooterMotorRight.setVelocity(shooterVelocity, AngleUnit.DEGREES);
+                m_shooterMotorLeft.setVelocityPIDFCoefficients(
+                        shooterP, 0, shooterD, shooterF);
+                m_shooterMotorRight.setVelocityPIDFCoefficients(
+                        shooterP, 0, shooterD, shooterF);
 
-            TelemetryPacket packet = new TelemetryPacket();
+                lastP = shooterP;
+                lastD = shooterD;
+                lastF = shooterF;
+            }
 
-            m_targetVelocity = shooterVelocity;
+            if(shooterVelocity != lastVelocity){
+                m_shooterMotorLeft.setVelocity(shooterVelocity, AngleUnit.DEGREES);
+                m_shooterMotorRight.setVelocity(shooterVelocity, AngleUnit.DEGREES);
 
-            packet.put("targetVel", getTargetVelocity());
-            packet.put("currentVel", getVelocity());
-
-            dashboard.sendTelemetryPacket(packet);
+                lastVelocity = shooterVelocity;
+            }
         }
     }
 }
