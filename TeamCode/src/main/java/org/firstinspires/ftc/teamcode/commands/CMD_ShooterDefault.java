@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 public class CMD_ShooterDefault extends CommandBase {
     private final SUB_Shooter m_shooter;
+    private final ElapsedTime timer = new ElapsedTime();
+    private boolean triggered;
     public CMD_ShooterDefault(SUB_Shooter p_shooter){
         m_shooter = p_shooter;
 
@@ -15,8 +18,18 @@ public class CMD_ShooterDefault extends CommandBase {
 
     @Override
     public void initialize(){
-        m_shooter.setVelocity(10);
-        m_shooter.setKickLeftPower(Constants.ShooterConstants.kKickReverse);
-        m_shooter.setKickRightPower(Constants.ShooterConstants.kKickReverse);
+        timer.reset();
+        triggered = false;
+    }
+
+    @Override
+    public void execute(){
+        if (timer.seconds() > 3 && !triggered) {
+            m_shooter.setVelocity(360);
+            m_shooter.setKickLeftPower(ShooterConstants.kKickOff);
+            m_shooter.setKickRightPower(ShooterConstants.kKickOff);
+            m_shooter.setFeederPower(ShooterConstants.kFeedPowerOff);
+            triggered = true;
+        }
     }
 }

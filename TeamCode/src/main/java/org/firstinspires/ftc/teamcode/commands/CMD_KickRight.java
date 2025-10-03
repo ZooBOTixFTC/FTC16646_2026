@@ -13,6 +13,7 @@ public class CMD_KickRight extends CommandBase {
 
     public CMD_KickRight(SUB_Shooter p_Shooter) {
         m_shooter = p_Shooter;
+        addRequirements(m_shooter);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class CMD_KickRight extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.seconds() >= ShooterConstants.kickDuration;
+        return timer.seconds() >= ShooterConstants.kKickDuration;
     }
 
     @Override

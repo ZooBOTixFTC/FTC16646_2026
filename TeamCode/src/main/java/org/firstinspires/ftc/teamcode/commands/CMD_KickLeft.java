@@ -11,8 +11,9 @@ public class CMD_KickLeft extends CommandBase {
     private final ElapsedTime timer = new ElapsedTime();
     private final SUB_Shooter m_shooter;
 
-    public CMD_KickLeft(SUB_Shooter p_Shooter) {
-        m_shooter = p_Shooter;
+    public CMD_KickLeft(SUB_Shooter p_shooter) {
+        m_shooter = p_shooter;
+        addRequirements(m_shooter);
     }
 
     @Override
@@ -20,10 +21,9 @@ public class CMD_KickLeft extends CommandBase {
         m_shooter.setKickLeftPower(ShooterConstants.kKickOn);
         timer.reset();
     }
-
     @Override
     public boolean isFinished() {
-        return timer.seconds() >= ShooterConstants.kickDuration;
+        return timer.seconds() >= ShooterConstants.kKickDuration;
     }
 
     @Override

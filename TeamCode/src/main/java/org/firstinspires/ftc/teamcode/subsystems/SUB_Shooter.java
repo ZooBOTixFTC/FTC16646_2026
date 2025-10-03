@@ -21,11 +21,13 @@ public class SUB_Shooter extends SubsystemBase {
     private final DcMotorEx m_shooterMotorRight;
     private final CRServo m_kickerRight;
     private final CRServo m_kickerLeft;
+    private final CRServo m_feederLeft;
+    private final CRServo m_feederRight;
 
     private double m_targetVelocity;
 
     public static double shooterP, shooterD, shooterF, lastP, lastD, lastF = 0;
-    public static double shooterVelocity, lastVelocity = 25000;
+    public static double shooterVelocity, lastVelocity = 0;
 
     private int lastPos = 0;
     private long lastTime = System.nanoTime();
@@ -40,6 +42,13 @@ public class SUB_Shooter extends SubsystemBase {
 
         m_kickerLeft = m_opMode.hardwareMap.get(CRServo.class, "kickerLeft");
         m_kickerRight = m_opMode.hardwareMap.get(CRServo.class, "kickerRight");
+        m_feederRight = m_opMode.hardwareMap.get(CRServo.class, "feederRight");
+        m_feederLeft = m_opMode.hardwareMap.get(CRServo.class, "feederLeft");
+
+        m_feederRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        m_kickerRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_feederLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_kickerLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -54,8 +63,8 @@ public class SUB_Shooter extends SubsystemBase {
         m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         m_shooterMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        m_shooterMotorLeft.setVelocity(25000, AngleUnit.DEGREES);
-        m_shooterMotorRight.setVelocity(25000, AngleUnit.DEGREES);
+        m_shooterMotorLeft.setVelocity(0, AngleUnit.DEGREES);
+        m_shooterMotorRight.setVelocity(0, AngleUnit.DEGREES);
 
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(20);
@@ -97,12 +106,16 @@ public class SUB_Shooter extends SubsystemBase {
     public void setKickLeftPower(double power) {
         m_kickerLeft.setPower(power);
     }
+    public void setFeederPower(double power) {
+        m_feederLeft.setPower(power);
+        m_feederRight.setPower(power);
+    }
 
     @Override
     public void periodic() {
-        TelemetryPacket packet = new TelemetryPacket();
+        m_opMode.telemetry.addData("Shooter vel", getVelocity());
 
-        m_targetVelocity = shooterVelocity;
+        TelemetryPacket packet = new TelemetryPacket();
 
         packet.put("targetVel", getTargetVelocity());
         packet.put("currentVel", getVelocity());
