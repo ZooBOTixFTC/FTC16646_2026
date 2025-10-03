@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -11,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.*;
-import org.firstinspires.ftc.teamcode.Constants.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -73,7 +71,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setFieldCentric(true);
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
-                  m_toolOp, m_robot.GlobalVariables.m_red ? 90 : -90,0.05, m_robot.GlobalVariables));
+                  m_robot.GlobalVariables.m_red ? 90 : -90,0.05, m_robot.GlobalVariables));
 
           m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
 //          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
@@ -86,7 +84,6 @@ public class Teleop_Field_Centric extends LinearOpMode {
           AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootRight(m_robot.m_shooter));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.m_shooter.setVelocity(0)));
 
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_Shoot(m_robot.m_shooter, m_robot.m_colorSensor));
 //          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
 //                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake));
