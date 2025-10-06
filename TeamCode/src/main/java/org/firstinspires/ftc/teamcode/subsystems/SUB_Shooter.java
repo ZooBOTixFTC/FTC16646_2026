@@ -126,6 +126,7 @@ public class SUB_Shooter extends SubsystemBase {
             setKickRightPower(1);
             setKickLeftPower(1);
             setFeederPower(1);
+
             if (shooterP != lastP ||
                     shooterD != lastD ||
                     shooterF != lastF) {
