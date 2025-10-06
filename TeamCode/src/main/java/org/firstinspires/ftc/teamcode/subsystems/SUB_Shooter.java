@@ -48,16 +48,16 @@ public class SUB_Shooter extends SubsystemBase {
         m_feederRight.setDirection(DcMotorSimple.Direction.REVERSE);
         m_kickerRight.setDirection(DcMotorSimple.Direction.FORWARD);
         m_feederLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        m_kickerLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_kickerLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         m_shooterMotorLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
+                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
         ));
         m_shooterMotorRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterF
+                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
         ));
 
         m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -123,6 +123,9 @@ public class SUB_Shooter extends SubsystemBase {
         dashboard.sendTelemetryPacket(packet);
 
         if(ShooterConstants.kTuningMode){
+            setKickRightPower(1);
+            setKickLeftPower(1);
+            setFeederPower(1);
             if (shooterP != lastP ||
                     shooterD != lastD ||
                     shooterF != lastF) {
