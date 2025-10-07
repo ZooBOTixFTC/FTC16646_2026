@@ -26,8 +26,8 @@ public class SUB_Shooter extends SubsystemBase {
 
     private double m_targetVelocity;
 
-    public static double shooterP, shooterD, shooterF, lastP, lastD, lastF = 0;
-    public static double shooterVelocity, lastVelocity = 0;
+    public static double shooterP, shooterD, shooterF, shooterVel, alpha = 0.2;
+    private double lastP, lastD, lastF, lastVelocity = 0;
 
     private int lastPos = 0;
     private long lastTime = System.nanoTime();
@@ -54,10 +54,10 @@ public class SUB_Shooter extends SubsystemBase {
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         m_shooterMotorLeft.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
+                ShooterConstants.kShooterFarP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
         ));
         m_shooterMotorRight.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
-                ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
+                ShooterConstants.kShooterFarP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
         ));
 
         m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -80,13 +80,15 @@ public class SUB_Shooter extends SubsystemBase {
         long currentTime = System.nanoTime();
         double deltaTimeSec = (currentTime - lastTime) / 1e9;
 
-        if (deltaTimeSec >= 0.3) { // 100ms
+        if (deltaTimeSec >= 0.02) { // 20ms loop
             int currentPos = m_shooterMotorLeft.getCurrentPosition();
             int deltaTicks = currentPos - lastPos;
 
             double ticksPerRev = 28.0; // adjust if needed
             double revs = deltaTicks / ticksPerRev;
-            smoothedVelocity = (revs * 360.0) / deltaTimeSec;
+            double rawVelocity = (revs * 360.0) / deltaTimeSec;
+
+            smoothedVelocity = alpha * rawVelocity + (1 - alpha) * smoothedVelocity;
 
             lastPos = currentPos;
             lastTime = currentTime;
@@ -113,12 +115,15 @@ public class SUB_Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        m_opMode.telemetry.addData("Shooter vel", getVelocity());
+        m_opMode.telemetry.addData("Shooter Vel", getVelocity());
+        m_opMode.telemetry.addData("Shooter Target Vel", getTargetVelocity());
+        m_opMode.telemetry.addData("Shooter Error", Math.abs(getVelocity() - getTargetVelocity()));
 
         TelemetryPacket packet = new TelemetryPacket();
 
         packet.put("targetVel", getTargetVelocity());
         packet.put("currentVel", getVelocity());
+        packet.put("ShooterError", Math.abs(getVelocity() - getTargetVelocity()));
 
         dashboard.sendTelemetryPacket(packet);
 
@@ -141,11 +146,10 @@ public class SUB_Shooter extends SubsystemBase {
                 lastF = shooterF;
             }
 
-            if(shooterVelocity != lastVelocity){
-                m_shooterMotorLeft.setVelocity(shooterVelocity, AngleUnit.DEGREES);
-                m_shooterMotorRight.setVelocity(shooterVelocity, AngleUnit.DEGREES);
+            if(shooterVel != lastVelocity){
+                setVelocity(shooterVel);
 
-                lastVelocity = shooterVelocity;
+                lastVelocity = shooterVel;
             }
         }
     }
