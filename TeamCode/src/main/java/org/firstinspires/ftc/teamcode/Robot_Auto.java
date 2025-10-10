@@ -31,7 +31,6 @@ public abstract class Robot_Auto extends LinearOpMode {
 
           while (!opModeIsActive() && !isStopRequested()) {
                m_robot.run(); // run the scheduler
-               telemetry.addData("Analysis: ", 1);
                telemetry.update();
           }
 

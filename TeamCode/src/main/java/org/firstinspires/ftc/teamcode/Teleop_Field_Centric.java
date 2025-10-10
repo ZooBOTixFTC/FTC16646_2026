@@ -73,7 +73,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_robot.GlobalVariables.m_red ? 90 : -90,0.05, m_robot.GlobalVariables));
 
-//          m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
+          m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
 //          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
 
           configureButtonBindings();

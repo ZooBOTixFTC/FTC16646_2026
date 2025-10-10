@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 public class Constants {
     public static final class ShooterConstants {
-        public static final boolean kTuningMode = true;
+        public static final boolean kTuningMode = false;
         public static final double kTolerance = 250;
         public static final double kShooterD = 0;
         public static final double kShooterFarF = 0.325;

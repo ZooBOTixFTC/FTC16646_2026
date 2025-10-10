@@ -53,8 +53,8 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 2.83465; //in  104mm wheels
-    public static double GEAR_RATIO = 1.0; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.5; // in
+    public static double GEAR_RATIO = 0.7244094488188976; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 23.46; // in
     public static double WHEEL_BASE = 12; //in
     public static double DIAGONAL=Math.sqrt(TRACK_WIDTH*TRACK_WIDTH+WHEEL_BASE*WHEEL_BASE);
 
@@ -64,9 +64,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.005;
-    public static double kA = 0.0;
-    public static double kStatic = 0.008;
+    public static double kV = 0.01;
+    public static double kA = 0.003;
+    public static double kStatic = 0.0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,
