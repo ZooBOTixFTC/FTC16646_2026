@@ -7,7 +7,7 @@ public class GlobalVariables {
      public static boolean m_intakeOn = false;
      public static boolean m_intakeReverse = false;
 
-     public boolean m_red;
+     public boolean m_red = true;
 
      public enum patternTypes {
           GPP,

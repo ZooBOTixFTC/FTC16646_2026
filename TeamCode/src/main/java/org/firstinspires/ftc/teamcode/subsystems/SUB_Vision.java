@@ -78,6 +78,7 @@ public class SUB_Vision extends SubsystemBase {
                 m_opMode.telemetry.addData("ID", detection.id);
                 m_opMode.telemetry.addData("distance", detection.ftcPose.range);
                 m_opMode.telemetry.addData("yaw", detection.ftcPose.yaw);
+                m_opMode.telemetry.addData("yaw", detection.ftcPose.bearing);
             }
         }
 

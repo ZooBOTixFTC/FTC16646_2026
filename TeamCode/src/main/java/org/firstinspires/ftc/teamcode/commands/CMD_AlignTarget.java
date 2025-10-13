@@ -26,7 +26,7 @@ public class CMD_AlignTarget extends CommandBase {
     @Override
     public void initialize() {
         isFinished = false;
-        int targetId = m_variables.m_red ? 24 : 20;
+        int targetId = m_variables.m_red ? 20 : 24;
 
         for (AprilTagDetection detection : m_vision.getDetections()) {
             if (detection.id == targetId) {

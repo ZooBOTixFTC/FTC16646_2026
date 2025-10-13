@@ -13,28 +13,14 @@ import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.CMD_Shoot;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryForwardFromCurrent;
+import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryLineFromCurrent;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectorySplineFromCurrent;
 
 @Autonomous(name = "Far Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_FarRed extends Robot_Auto {
-    private Trajectory m_ReadyToIntakeTrajectory;
-    private Trajectory m_IntakeTrajectory;
     @Override
     public void prebuildTasks() {
-        setStartingPose(new Pose2d(-63,0,Math.toRadians(315)));
-        m_ReadyToIntakeTrajectory = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
-                .lineToLinearHeading(new Pose2d(-36, -24, Math.toRadians(-90)))
-                .build();
-        m_IntakeTrajectory = m_robot.drivetrain.trajectoryBuilder(m_ReadyToIntakeTrajectory.end(), false)
-                .lineToConstantHeading(new Vector2d(-36,-60))
-                .build();
-
-        m_robot.schedule(new SequentialCommandGroup(
-                new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn)),
-                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_ReadyToIntakeTrajectory)),
-                new WaitCommand(200),
-                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_IntakeTrajectory)
-        );
+        setStartingPose(new Pose2d(-63,-9.5, Math.toRadians(0)));
     }
 
     @Override
@@ -42,8 +28,8 @@ public class AUTO_FarRed extends Robot_Auto {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
-//                new CMD_Shoot(m_robot.m_shooter,m_robot.m_colorSensor),
-//                SecondVolley()
+                new CMD_Shoot(m_robot.m_shooter),
+                SecondVolley()
         );
 
         return completeTasks;
@@ -51,12 +37,11 @@ public class AUTO_FarRed extends Robot_Auto {
 
     private SequentialCommandGroup SecondVolley() {
         return new SequentialCommandGroup(
-                new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-36,-24,Math.toRadians(-45)),0,false)
-//                new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn)),
-//                new RR_TrajectoryForwardFromCurrent(m_robot.drivetrain,30,false),
-//                new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)),
-//                new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-63,0,Math.toRadians(135)),135,true)
-//                ,new CMD_Shoot(m_robot.m_shooter,m_robot.m_colorSensor)
+                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+                ,new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-36,-24,Math.toRadians(-90)),0,false)
+                ,new RR_TrajectoryLineFromCurrent(m_robot.drivetrain, new Pose2d(-36, -60, Math.toRadians(-90)))
+                ,new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-63, 0, Math.toRadians(315)), Math.toRadians(315), true)
+                ,new CMD_Shoot(m_robot.m_shooter)
         );
     }
 }

@@ -94,7 +94,7 @@ public class SUB_Shooter extends SubsystemBase {
             lastTime = currentTime;
         }
 
-        return smoothedVelocity;
+        return Math.round(smoothedVelocity);
     }
 
     public double getTargetVelocity(){
