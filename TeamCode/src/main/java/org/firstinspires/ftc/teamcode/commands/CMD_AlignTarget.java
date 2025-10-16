@@ -21,6 +21,8 @@ public class CMD_AlignTarget extends CommandBase {
     private static final double MIN_SCORING_ANGLE = 5.0;   // Minimum acceptable scoring angle (degrees)
     private static final double SAFETY_MARGIN = 2.0;       // Safety margin from goal edges (inches)
     private static final boolean USE_OPTIMAL_AIMING = true; // Enable/disable optimal aiming
+    private static final int STABLE_COUNT = 5; // Number of consecutive stable cycles required to finish
+    private static final int MAX_LOST_FRAMES = 15; // Allow brief target loss before giving up
 
     // Manual override parameters - TUNE THESE FOR DRIVER COMFORT
     private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override (increased to prevent false triggers)
@@ -37,7 +39,6 @@ public class CMD_AlignTarget extends CommandBase {
     private double lastTime = 0.0;
     private int stableCount = 0;
     private int lostTargetCount = 0;
-    private static final int MAX_LOST_FRAMES = 10; // Allow brief target loss before giving up
 
     public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision, GlobalVariables variables, GamepadEx gamepad) {
         this.m_drive = drive;
@@ -113,7 +114,7 @@ public class CMD_AlignTarget extends CommandBase {
             stableCount++;
 
             // Require stability for several cycles before finishing
-            if (stableCount >= 7) {
+            if (stableCount >= STABLE_COUNT) {
                 isFinished = true;
             }
 
