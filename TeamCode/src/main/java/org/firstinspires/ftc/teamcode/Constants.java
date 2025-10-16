@@ -8,12 +8,6 @@ public class Constants {
         public static final double kShooterD = 0;
         public static final double kShooterFarF = 0.76;
         public static final double kShooterMidF = 0.55;
-        public static final double kKickOn = 1;
-        public static final double kKickOff = 0;
-        public static final double kKickReverse = -1;
-        public static final double kKickDuration = 1.5;
-        public static final double kFeedPowerOn = 1;
-        public static final double kFeedPowerOff = 0;
         public static final double kMaxVelDegPerSec = 24000;
         public static final double kMidFieldDegPerSec = 18500;
     }

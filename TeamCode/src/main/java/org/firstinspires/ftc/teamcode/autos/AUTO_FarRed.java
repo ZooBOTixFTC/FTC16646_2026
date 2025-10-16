@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
-import org.firstinspires.ftc.teamcode.commands.CMD_Shoot;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryForwardFromCurrent;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectorySplineFromCurrent;
 
