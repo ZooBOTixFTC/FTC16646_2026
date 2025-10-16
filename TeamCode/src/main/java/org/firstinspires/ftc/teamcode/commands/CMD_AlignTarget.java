@@ -23,7 +23,7 @@ public class CMD_AlignTarget extends CommandBase {
     private static final boolean USE_OPTIMAL_AIMING = true; // Enable/disable optimal aiming
 
     // Manual override parameters - TUNE THESE FOR DRIVER COMFORT
-    private static final double STICK_THRESHOLD = 0.1;     // Minimum stick movement to trigger override
+    private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override (increased to prevent false triggers)
 
     // =====================================================================
 
@@ -36,6 +36,8 @@ public class CMD_AlignTarget extends CommandBase {
     private double lastError = 0.0;
     private double lastTime = 0.0;
     private int stableCount = 0;
+    private int lostTargetCount = 0;
+    private static final int MAX_LOST_FRAMES = 10; // Allow brief target loss before giving up
 
     public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision, GlobalVariables variables, GamepadEx gamepad) {
         this.m_drive = drive;
@@ -52,6 +54,7 @@ public class CMD_AlignTarget extends CommandBase {
         lastError = 0.0;
         lastTime = System.currentTimeMillis() / 1000.0;
         stableCount = 0;
+        lostTargetCount = 0;
     }
 
     @Override
@@ -75,12 +78,23 @@ public class CMD_AlignTarget extends CommandBase {
             }
         }
 
-        // If no target tag detected, stop and finish
+        // If no target tag detected, handle gracefully
         if (currentDetection == null) {
-            m_drive.drive(0.0, 0.0, 0.0);
-            isFinished = true;
+            lostTargetCount++;
+            
+            // Only give up after losing target for multiple consecutive frames
+            if (lostTargetCount > MAX_LOST_FRAMES) {
+                m_drive.drive(0.0, 0.0, 0.0);
+                isFinished = true;
+            } else {
+                // Brief loss - hold position and wait for target to reappear
+                m_drive.drive(0.0, 0.0, 0.0);
+            }
             return;
         }
+        
+        // Target found - reset lost counter
+        lostTargetCount = 0;
 
         // Calculate optimal aiming angle (may be different from AprilTag bearing)
         double bearing = calculateOptimalAiming(currentDetection);
@@ -89,7 +103,7 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Control parameters
         double tolerance = 2.0; // degrees - target tolerance
-        double deadband = 0.75; // degrees - deadband to prevent oscillation (tightened)
+        double deadband = 1.25; // degrees - deadband to prevent oscillation
         double kP = 0.015;      // Proportional gain (reduced to prevent overshoot)
         double kD = 0.018;      // Derivative gain to reduce oscillation (increased for damping)
 
@@ -99,7 +113,7 @@ public class CMD_AlignTarget extends CommandBase {
             stableCount++;
 
             // Require stability for several cycles before finishing
-            if (stableCount >= 10) {
+            if (stableCount >= 7) {
                 isFinished = true;
             }
 
