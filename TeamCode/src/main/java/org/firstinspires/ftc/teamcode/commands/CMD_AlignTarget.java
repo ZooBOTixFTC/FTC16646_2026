@@ -89,9 +89,9 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Control parameters
         double tolerance = 2.0; // degrees - target tolerance
-        double deadband = 1.0;  // degrees - deadband to prevent oscillation
-        double kP = 0.02;       // Proportional gain (reduced)
-        double kD = 0.008;      // Derivative gain to reduce oscillation
+        double deadband = 0.75; // degrees - deadband to prevent oscillation (tightened)
+        double kP = 0.015;      // Proportional gain (reduced to prevent overshoot)
+        double kD = 0.018;      // Derivative gain to reduce oscillation (increased for damping)
 
         // Check if we're within the deadband (smaller than tolerance)
         if (Math.abs(bearing) < deadband) {
@@ -99,7 +99,7 @@ public class CMD_AlignTarget extends CommandBase {
             stableCount++;
 
             // Require stability for several cycles before finishing
-            if (stableCount >= 5) {
+            if (stableCount >= 10) {
                 isFinished = true;
             }
 
@@ -120,12 +120,12 @@ public class CMD_AlignTarget extends CommandBase {
         double turnPower = -(kP * bearing + kD * derivative);
 
         // Apply power limits
-        double maxTurnPower = 0.25; // Reduced max power
-        double minTurnPower = 0.08; // Reduced minimum power
+        double maxTurnPower = 0.20; // Maximum turn power (reduced to prevent overshoot)
+        double minTurnPower = 0.05; // Minimum power threshold (lowered for smoother approach)
 
         turnPower = Math.max(-maxTurnPower, Math.min(maxTurnPower, turnPower));
 
-        // Apply minimum power threshold only for larger errors
+        // Apply minimum power threshold only for larger errors (beyond tolerance)
         if (Math.abs(bearing) > tolerance && Math.abs(turnPower) > 0 && Math.abs(turnPower) < minTurnPower) {
             turnPower = Math.copySign(minTurnPower, turnPower);
         }
