@@ -88,8 +88,8 @@ public class Teleop_Field_Centric extends LinearOpMode {
 //          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y,
 //                  new InstantCommand(()-> m_robot.m_lift.setTargetPosition(LiftConstants.kLiftUp)));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_Shoot(m_robot.m_shooter));
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()->m_robot.m_turntable.changeTurntableTargetPos(120)));
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()->m_robot.m_turntable.changeTurntableTargetPos(-120)));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateRight()));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateLeft()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new CMD_IntakeReverse(m_robot.m_intake));
      }
 

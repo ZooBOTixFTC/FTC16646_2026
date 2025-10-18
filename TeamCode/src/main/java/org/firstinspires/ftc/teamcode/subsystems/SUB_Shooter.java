@@ -34,17 +34,18 @@ public class SUB_Shooter extends SubsystemBase {
     public SUB_Shooter(OpMode p_opMode) {
 
         m_opMode = p_opMode;
-        m_shooterMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
-        m_KickerServo = m_opMode.hardwareMap.get(Servo.class, "KickerServo");
-        m_shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        m_shooterMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotor");
+        m_KickerServo = m_opMode.hardwareMap.get(Servo.class, "kickServo");
+
 
         m_shooterMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
                 ShooterConstants.kShooterP, 0, ShooterConstants.kShooterD, ShooterConstants.kShooterFarF
         ));
 
+        m_shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_shooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-
         m_shooterMotor.setVelocity(0, AngleUnit.DEGREES);
+        m_shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(20);

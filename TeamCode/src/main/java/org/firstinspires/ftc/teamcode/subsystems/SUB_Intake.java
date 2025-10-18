@@ -17,7 +17,7 @@ public class SUB_Intake extends SubsystemBase {
         m_intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_intakeMotor.setPower(0);
         m_intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        m_intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
 

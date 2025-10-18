@@ -7,26 +7,22 @@ import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Intake;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_turnTable;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_turntable;
 
 public class CMD_IntakeToggle extends SequentialCommandGroup {
-    public CMD_IntakeToggle(SUB_Intake p_intake, SUB_turnTable p_turntable){
+    public CMD_IntakeToggle(SUB_Intake p_intake, SUB_turntable p_turntable){
         addCommands(
-                new ConditionalCommand(
-                        new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-                                .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = false)),
+            new ConditionalCommand(
+                new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+                        .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = false))
+                        .alongWith(new InstantCommand(p_turntable::endIntakeMode)),
 
-                        new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                                .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = true)),
+                new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+                        .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = true))
+                        .alongWith(new InstantCommand(p_turntable::setTurntableIntakeMode)),
 
-                        () -> GlobalVariables.m_intakeOn
-                ),
-
-                new ConditionalCommand(
-                        new InstantCommand(()->p_turntable.endIntakeMode()),
-                        new InstantCommand(()->p_turntable.setTurntableIntakeMode()),
-                        () -> GlobalVariables.m_intakeOn
-                )
+                () -> GlobalVariables.m_intakeOn
+            )
         );
     }
 }
