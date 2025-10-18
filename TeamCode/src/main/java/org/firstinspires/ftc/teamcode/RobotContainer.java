@@ -13,6 +13,7 @@ public class RobotContainer {
      public MecanumDriveSubsystem drivetrain;
      public GlobalVariables GlobalVariables;
      public SUB_Shooter m_shooter;
+     public SUB_turnTable m_turntable;
      public SUB_Intake m_intake;
      public SUB_Lift m_lift;
 //     public SUB_ColorSensors m_colorSensor;
@@ -23,6 +24,8 @@ public class RobotContainer {
           GlobalVariables = new GlobalVariables();
           m_intake = new SUB_Intake(p_opMode);
           m_shooter = new SUB_Shooter(p_opMode);
+          m_turntable = new SUB_turnTable(p_opMode);
+
 //          m_lift = new SUB_Lift(p_opMode);
 //          m_colorSensor = new SUB_ColorSensors(p_opMode);
 //          m_vision = new SUB_Vision(p_opMode, GlobalVariables);

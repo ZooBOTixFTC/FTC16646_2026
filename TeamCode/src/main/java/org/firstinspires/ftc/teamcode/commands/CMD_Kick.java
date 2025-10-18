@@ -23,11 +23,11 @@ public class CMD_Kick extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return timer.seconds() >= 0.5;
+        return timer.seconds() >= 0.25;
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
+        m_shooter.setKickerPosition(0);
     }
 }

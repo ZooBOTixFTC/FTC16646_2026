@@ -11,6 +11,7 @@ public class Constants {
         public static final double kMaxVelDegPerSec = 24000;
         public static final double kMidFieldDegPerSec = 18500;
         public static final double kKickPosition = 0.5;
+        public static final double kTicksPerRev = 537.7 * 4.83; // motor PPR × gear ratio
     }
 
     public static final class IntakeConstants {
