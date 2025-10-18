@@ -14,12 +14,12 @@ public class CMD_ShootLeft extends SequentialCommandGroup {
             new SequentialCommandGroup(
                 new InstantCommand(()-> p_shooter.setVelocity(ShooterConstants.kMaxVelDegPerSec)),
                 new CMD_GetShooterAtVelocity(p_shooter),
-                new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKick)),
+                new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKickLeft)),
                 new WaitCommand(200),
                 new InstantCommand(()-> p_shooter.setFeederPower(ShooterConstants.kFeedOn)),
                 new WaitCommand((long) ShooterConstants.kKickDuration * 1000),
                 new InstantCommand(()-> p_shooter.setFeederPower(ShooterConstants.kFeedOff)),
-                new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKickHome))
+                new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKickHomeLeft))
             )
         );
     }

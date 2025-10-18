@@ -4,8 +4,10 @@ public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
         public static final double kTolerance = 250;
-        public static final double kKick = 75;
-        public static final double kKickHome = 0;
+        public static final double kKickRight = 75;
+        public static final double kKickHomeRight = 0;
+        public static final double kKickLeft = 202;
+        public static final double kKickHomeLeft = 122;
         public static final double kKickDuration = 2;
         public static final double kFeedOn = 1;
         public static final double kFeedOff = 0;
