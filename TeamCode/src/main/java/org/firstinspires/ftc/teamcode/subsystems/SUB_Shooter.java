@@ -9,12 +9,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
+    private Servo m_KickerServo;
     private final OpMode m_opMode;
     private final DcMotorEx m_shooterMotor;
 
@@ -30,9 +32,10 @@ public class SUB_Shooter extends SubsystemBase {
     private final FtcDashboard dashboard;
 
     public SUB_Shooter(OpMode p_opMode) {
+
         m_opMode = p_opMode;
         m_shooterMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
-
+        m_KickerServo = m_opMode.hardwareMap.get(Servo.class, "KickerServo");
         m_shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         m_shooterMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
@@ -46,7 +49,12 @@ public class SUB_Shooter extends SubsystemBase {
         dashboard = FtcDashboard.getInstance();
         dashboard.setTelemetryTransmissionInterval(20);
     }
-
+    public void setKickerPosition(double position){
+        m_KickerServo.setPosition(position);
+    }
+    public double GetKickerPosition(){
+        return m_KickerServo.getPosition();
+    }
     public void setVelocity(double velocity) {
         m_targetVelocity = velocity;
         m_shooterMotor.setVelocity(velocity, AngleUnit.DEGREES);
