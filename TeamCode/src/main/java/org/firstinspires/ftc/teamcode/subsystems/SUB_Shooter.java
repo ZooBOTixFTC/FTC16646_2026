@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -10,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
@@ -19,8 +18,8 @@ public class SUB_Shooter extends SubsystemBase {
     private final OpMode m_opMode;
     private final DcMotorEx m_shooterMotorLeft;
     private final DcMotorEx m_shooterMotorRight;
-    private final CRServo m_kickerRight;
-    private final CRServo m_kickerLeft;
+    private final Servo m_kickerRight;
+    private final Servo m_kickerLeft;
     private final CRServo m_feederLeft;
     private final CRServo m_feederRight;
 
@@ -33,22 +32,18 @@ public class SUB_Shooter extends SubsystemBase {
     private long lastTime = System.nanoTime();
     private double smoothedVelocity = 0;
 
-    private final FtcDashboard dashboard;
-
     public SUB_Shooter(OpMode p_opMode) {
         m_opMode = p_opMode;
         m_shooterMotorLeft = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
         m_shooterMotorRight = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
 
-        m_kickerLeft = m_opMode.hardwareMap.get(CRServo.class, "kickerLeft");
-        m_kickerRight = m_opMode.hardwareMap.get(CRServo.class, "kickerRight");
+        m_kickerLeft = m_opMode.hardwareMap.get(Servo.class, "kickerLeft");
+        m_kickerRight = m_opMode.hardwareMap.get(Servo.class, "kickerRight");
         m_feederRight = m_opMode.hardwareMap.get(CRServo.class, "feederRight");
         m_feederLeft = m_opMode.hardwareMap.get(CRServo.class, "feederLeft");
 
         m_feederRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        m_kickerRight.setDirection(DcMotorSimple.Direction.FORWARD);
         m_feederLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        m_kickerLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -65,9 +60,6 @@ public class SUB_Shooter extends SubsystemBase {
 
         m_shooterMotorLeft.setVelocity(0, AngleUnit.DEGREES);
         m_shooterMotorRight.setVelocity(0, AngleUnit.DEGREES);
-
-        dashboard = FtcDashboard.getInstance();
-        dashboard.setTelemetryTransmissionInterval(20);
     }
 
     public void setVelocity(double velocity) {
@@ -101,12 +93,12 @@ public class SUB_Shooter extends SubsystemBase {
         return m_targetVelocity;
     }
 
-    public void setKickRightPower(double power) {
-        m_kickerRight.setPower(power);
+    public void setKickRightPos(double angDeg) {
+        m_kickerRight.setPosition(angDeg / 255);
     }
 
-    public void setKickLeftPower(double power) {
-        m_kickerLeft.setPower(power);
+    public void setKickLeftPos(double angDeg) {
+        m_kickerLeft.setPosition(angDeg / 255);
     }
     public void setFeederPower(double power) {
         m_feederLeft.setPower(power);
@@ -119,17 +111,7 @@ public class SUB_Shooter extends SubsystemBase {
         m_opMode.telemetry.addData("Shooter Target Vel", getTargetVelocity());
         m_opMode.telemetry.addData("Shooter Error", Math.abs(getVelocity() - getTargetVelocity()));
 
-        TelemetryPacket packet = new TelemetryPacket();
-
-        packet.put("targetVel", getTargetVelocity());
-        packet.put("currentVel", getVelocity());
-        packet.put("ShooterError", Math.abs(getVelocity() - getTargetVelocity()));
-
-        dashboard.sendTelemetryPacket(packet);
-
         if(ShooterConstants.kTuningMode){
-            setKickRightPower(1);
-            setKickLeftPower(1);
             setFeederPower(1);
 
             if (shooterP != lastP ||

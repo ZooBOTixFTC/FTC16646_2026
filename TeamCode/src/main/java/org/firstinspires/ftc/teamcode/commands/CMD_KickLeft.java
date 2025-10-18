@@ -18,7 +18,7 @@ public class CMD_KickLeft extends CommandBase {
 
     @Override
     public void initialize() {
-        m_shooter.setKickLeftPower(ShooterConstants.kKickOn);
+        m_shooter.setKickLeftPos(ShooterConstants.kKick);
         timer.reset();
     }
     @Override
@@ -28,6 +28,6 @@ public class CMD_KickLeft extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_shooter.setKickLeftPower(ShooterConstants.kKickOff);
+        m_shooter.setKickLeftPos(ShooterConstants.kKickHome);
     }
 }
