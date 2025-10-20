@@ -82,7 +82,7 @@ public class CMD_AlignTarget extends CommandBase {
         // If no target tag detected, handle gracefully
         if (currentDetection == null) {
             lostTargetCount++;
-            
+
             // Only give up after losing target for multiple consecutive frames
             if (lostTargetCount > MAX_LOST_FRAMES) {
                 m_drive.drive(0.0, 0.0, 0.0);
@@ -93,7 +93,7 @@ public class CMD_AlignTarget extends CommandBase {
             }
             return;
         }
-        
+
         // Target found - reset lost counter
         lostTargetCount = 0;
 
@@ -194,9 +194,8 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         // Optimal aiming point: aim at the center of the available scoring window
-        double optimalAngle = (angleToLeft + angleToRight) / 2.0;
 
-        return optimalAngle;
+        return (angleToLeft + angleToRight) / 2.0;
     }
 
     /**
