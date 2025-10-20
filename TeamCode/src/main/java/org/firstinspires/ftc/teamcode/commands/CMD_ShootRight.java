@@ -11,16 +11,13 @@ public class CMD_ShootRight extends SequentialCommandGroup {
     public CMD_ShootRight(SUB_Shooter p_shooter){
         addRequirements(p_shooter);
         addCommands(
-            new SequentialCommandGroup(
-                new InstantCommand(()-> p_shooter.setVelocity(ShooterConstants.kMaxVelDegPerSec)),
-                new CMD_GetShooterAtVelocity(p_shooter),
-                new InstantCommand(()-> p_shooter.setKickRightPos(ShooterConstants.kKickRight)),
-                new WaitCommand(200),
-                new InstantCommand(()-> p_shooter.setFeederPower(ShooterConstants.kFeedOn)),
-                new WaitCommand((long) ShooterConstants.kKickDuration * 1000),
-                new InstantCommand(()-> p_shooter.setFeederPower(ShooterConstants.kFeedOff)),
-                new InstantCommand(()-> p_shooter.setKickRightPos(ShooterConstants.kKickHomeRight))
-            )
+                new SequentialCommandGroup(
+                        new InstantCommand(()-> p_shooter.setVelocity(ShooterConstants.kMaxVelDegPerSec)),
+                        new CMD_GetShooterAtVelocity(p_shooter),
+                        new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKickLeft)),
+                        new WaitCommand((long) ShooterConstants.kKickDuration),
+                        new InstantCommand(()-> p_shooter.setKickLeftPos(ShooterConstants.kKickHomeLeft))
+                )
         );
     }
 }
