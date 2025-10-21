@@ -84,7 +84,7 @@ public class SUB_turntable extends SubsystemBase {
             }
         }
 
-        setPos(closestAng+60);
+        setPos(closestAng);
     }
 
     public void setTurntableIntakeMode() {
