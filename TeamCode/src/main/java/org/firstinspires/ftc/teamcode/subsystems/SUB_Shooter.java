@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
@@ -36,6 +37,7 @@ public class SUB_Shooter extends SubsystemBase {
         m_opMode = p_opMode;
         m_shooterMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotor");
         m_KickerServo = m_opMode.hardwareMap.get(Servo.class, "kickServo");
+        m_KickerServo.setDirection(Servo.Direction.REVERSE);
 
 
         m_shooterMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, new PIDFCoefficients(
@@ -43,7 +45,7 @@ public class SUB_Shooter extends SubsystemBase {
         ));
 
         m_shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        m_shooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         m_shooterMotor.setVelocity(0, AngleUnit.DEGREES);
         m_shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
@@ -53,9 +55,7 @@ public class SUB_Shooter extends SubsystemBase {
     public void setKickerPosition(double position){
         m_KickerServo.setPosition(position);
     }
-    public double GetKickerPosition(){
-        return m_KickerServo.getPosition();
-    }
+
     public void setVelocity(double velocity) {
         m_targetVelocity = velocity;
         m_shooterMotor.setVelocity(velocity, AngleUnit.DEGREES);

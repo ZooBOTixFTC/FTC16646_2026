@@ -3,11 +3,17 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class GlobalVariables {
+
      public static Pose2d m_autoEndPose = new Pose2d();
      public static boolean m_intakeOn = false;
      public static boolean m_intakeReverse = false;
+     public static boolean m_kickerHomed =true;
 
      public boolean m_red;
+
+     public void setKickerHomed(boolean p_kickerHomed) {
+          m_kickerHomed = p_kickerHomed;
+     }
 
      public enum patternTypes {
           GPP,
@@ -23,4 +29,5 @@ public class GlobalVariables {
      public patternTypes getPatternType() {
           return m_patternType;
      }
+
 }

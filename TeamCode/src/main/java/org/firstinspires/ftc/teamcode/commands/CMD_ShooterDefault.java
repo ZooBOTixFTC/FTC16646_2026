@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
@@ -26,6 +27,7 @@ public class CMD_ShooterDefault extends CommandBase {
     public void execute(){
         if (timer.seconds() > 3 && !triggered) {
             m_shooter.setVelocity(360);
+            m_shooter.setKickerPosition(ShooterConstants.kKickHome);
             triggered = true;
         }
     }

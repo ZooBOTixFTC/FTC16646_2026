@@ -13,12 +13,12 @@ public class CMD_IntakeToggle extends SequentialCommandGroup {
     public CMD_IntakeToggle(SUB_Intake p_intake, SUB_turntable p_turntable){
         addCommands(
             new ConditionalCommand(
-                new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-                        .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = false))
+                new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+                        .alongWith(new InstantCommand(()-> GlobalVariables.m_intakeOn = false))
                         .alongWith(new InstantCommand(p_turntable::endIntakeMode)),
 
-                new InstantCommand(()->p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                        .alongWith(new InstantCommand(() -> GlobalVariables.m_intakeOn = true))
+                new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+                        .alongWith(new InstantCommand(()-> GlobalVariables.m_intakeOn = true))
                         .alongWith(new InstantCommand(p_turntable::setTurntableIntakeMode)),
 
                 () -> GlobalVariables.m_intakeOn
