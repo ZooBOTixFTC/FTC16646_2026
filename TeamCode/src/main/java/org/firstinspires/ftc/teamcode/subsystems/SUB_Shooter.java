@@ -57,6 +57,8 @@ public class SUB_Shooter extends SubsystemBase {
     }
 
     public void setVelocity(double velocity) {
+//        m_shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        m_shooterMotor.setPower(1);
         m_targetVelocity = velocity;
         m_shooterMotor.setVelocity(velocity, AngleUnit.DEGREES);
     }
