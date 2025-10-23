@@ -25,8 +25,8 @@ public class CMD_ShooterDefault extends CommandBase {
 
     @Override
     public void execute(){
-        if (timer.seconds() > 3 && !triggered) {
-            m_shooter.setVelocity(360);
+        if (timer.seconds() > 2 && !triggered) {
+            m_shooter.setVelocity(0);
             m_shooter.setKickerPosition(ShooterConstants.kKickHome);
             triggered = true;
         }

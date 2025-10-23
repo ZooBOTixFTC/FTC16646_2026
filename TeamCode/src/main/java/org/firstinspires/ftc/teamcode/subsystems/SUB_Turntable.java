@@ -7,13 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 
-public class SUB_turntable extends SubsystemBase {
+public class SUB_Turntable extends SubsystemBase {
 
     private final DcMotorEx m_turntableMotor;
     private final OpMode m_opMode;
     private double m_targetDegs = 0;
+    private double m_targetDeg = 0;
 
-    public SUB_turntable(OpMode p_opMode){
+    public SUB_Turntable(OpMode p_opMode){
         m_opMode = p_opMode;
         m_turntableMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "turntableMotor");
 
@@ -68,38 +69,42 @@ public class SUB_turntable extends SubsystemBase {
             }
 
             m_turntableMotor.setTargetPosition(bestTarget);
+            m_targetDeg = bestTarget;
             m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             m_turntableMotor.setPower(1);
         }
     }
-
-    public void endIntakeMode() {
-        double[] angToCheck = {0, 120, 240};
-        double current = getPos();
-        double closestAng = angToCheck[0];
-
-        for (int i = 1; i < angToCheck.length; i++) {
-            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
-                closestAng = angToCheck[i];
-            }
-        }
-
-        setPos(closestAng);
+    
+    public double getTargetPos(){
+        return m_targetDeg;
     }
 
-    public void setTurntableIntakeMode() {
-        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.5);
-    }
+//    public void endIntakeMode() {
+//        double[] angToCheck = {0, 120, 240};
+//        double current = getPos();
+//        double closestAng = angToCheck[0];
+//
+//        for (int i = 1; i < angToCheck.length; i++) {
+//            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
+//                closestAng = angToCheck[i];
+//            }
+//        }
+//
+//        setPos(closestAng);
+//    }
 
-    public double getTurntableVelo() {
-        return m_turntableMotor.getVelocity();
-    }
+//    public void setTurntableIntakeMode() {
+//        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+//        m_turntableMotor.setPower(0.5);
+//    }
+
+//    public double getTurntableVelo() {
+//        return (m_turntableMotor.getVelocity() / ShooterConstants.kTicksPerRev) * 360.0;
+//    }
 
     @Override
     public void periodic(){
         m_opMode.telemetry.addData("turntable pos", getPos());
         m_opMode.telemetry.addData("turntable ticks", m_turntableMotor.getCurrentPosition());
-
     }
 }

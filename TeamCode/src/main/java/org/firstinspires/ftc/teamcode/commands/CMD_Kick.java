@@ -6,31 +6,28 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_turntable;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Turntable;
 
 
 public class CMD_Kick extends CommandBase {
     private final ElapsedTime timer = new ElapsedTime();
     private final SUB_Shooter m_shooter;
-    private final SUB_turntable m_turntable;
+    private final SUB_Turntable m_turntable;
     private final GlobalVariables m_variables;
     boolean isFinished;
 
-    public CMD_Kick(SUB_Shooter p_shooter, SUB_turntable p_turntable,GlobalVariables p_variables) {
+    public CMD_Kick(SUB_Shooter p_shooter, SUB_Turntable p_turntable, GlobalVariables p_variables) {
         m_shooter = p_shooter;
         m_turntable = p_turntable;
         m_variables = p_variables;
-        addRequirements(m_shooter);
     }
 
     @Override
     public void initialize() {
-        if (m_turntable.getTurntableVelo() == 0) {
-            m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
-            timer.reset();
-            m_variables.setKickerHomed(false);
-        }
-        else isFinished = true;
+        timer.reset();
+//        if(m_turntable.getPos() - m_turntable.getT)
+        m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
+        m_variables.setKickerHomed(false);
     }
     @Override
     public boolean isFinished() {
