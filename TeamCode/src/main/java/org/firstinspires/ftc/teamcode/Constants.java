@@ -3,17 +3,18 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
-        public static final double kTolerance = 250;
-        public static final double kKickRight = 90;
-        public static final double kKickHomeRight = 0;
-        public static final double kKickLeft = 90;
+        public static final double kTolerance = 640;
+        public static final double kKickRight = 55;
+        public static final double kKickHomeRight = 5;
+        public static final double kKickLeft = 45;
         public static final double kKickHomeLeft = 0;
-        public static final double kKickDuration = 1;
+        public static final double kKickDuration = 500;
 
-        public static final double kShooterFarP = 0.15;//.37 @ 22k
-        public static final double kShooterD = 0;
-        public static final double kShooterFarF = 0.5;//.325 @22k
+        public static final double kP = 0;//.15
+        public static final double kV = 0;//.5
+        public static final double kS = 0;
         public static final double kMaxVelDegPerSec = 21000;
+        public static final double kMaxAccelDegPerSecPerSec = 10000;
     }
 
     public static final class IntakeConstants {
