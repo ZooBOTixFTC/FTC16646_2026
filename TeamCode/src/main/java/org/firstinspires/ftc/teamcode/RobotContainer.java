@@ -23,7 +23,7 @@ public class RobotContainer {
           GlobalVariables = new GlobalVariables();
           m_intake = new SUB_Intake(p_opMode);
           m_shooter = new SUB_Shooter(p_opMode);
-          m_vision = new SUB_Vision(p_opMode, GlobalVariables);
+//          m_vision = new SUB_Vision(p_opMode, GlobalVariables);
 //          m_lift = new SUB_Lift(p_opMode);
 //          m_colorSensor = new SUB_ColorSensors(p_opMode);
      };

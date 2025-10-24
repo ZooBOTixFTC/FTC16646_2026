@@ -9,12 +9,15 @@ public class Constants {
         public static final double kKickLeft = 45;
         public static final double kKickHomeLeft = 0;
         public static final double kKickDuration = 500;
+        public static final double kAlpha = 0.1;
 
-        public static final double kP = 0;//.15
-        public static final double kV = 0;//.5
-        public static final double kS = 0;
+        public static final double kPLeft = 0;
+        public static final double kVLeft = 0;
+        public static final double kSLeft = 0;
+        public static final double kPRight = 0;
+        public static final double kVRight = 0;
+        public static final double kSRight = 0;
         public static final double kMaxVelDegPerSec = 21000;
-        public static final double kMaxAccelDegPerSecPerSec = 10000;
     }
 
     public static final class IntakeConstants {
