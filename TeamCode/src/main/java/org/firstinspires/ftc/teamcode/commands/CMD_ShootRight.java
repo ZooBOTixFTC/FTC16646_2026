@@ -14,8 +14,8 @@ public class CMD_ShootRight extends SequentialCommandGroup {
         addCommands(
             new SequentialCommandGroup(
                 new InstantCommand(()-> p_shooter.setTargetVelRight(ShooterConstants.kMaxVelDegPerSec)),
-//                new CMD_GetLeftShooterAtVelocity(p_shooter),
-                new WaitCommand(2000),
+                new WaitCommand(500),
+                new CMD_GetLeftShooterAtVelocity(p_shooter),
                 new CMD_Kick(p_lift)
             )
         );

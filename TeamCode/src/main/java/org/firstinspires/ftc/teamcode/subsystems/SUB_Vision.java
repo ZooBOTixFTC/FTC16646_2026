@@ -67,22 +67,42 @@ public class SUB_Vision extends SubsystemBase {
         return m_detections;
     }
 
-    @Override
-    public void periodic(){
-        m_detections = m_aprilTagProcessor.getDetections();
-
-        if(m_detections != null) {
-            m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
-
-            for (AprilTagDetection detection : m_detections) {
-                m_opMode.telemetry.addData("ID", detection.id);
-                m_opMode.telemetry.addData("distance", detection.ftcPose.range);
-                m_opMode.telemetry.addData("yaw", detection.ftcPose.yaw);
-                m_opMode.telemetry.addData("yaw", detection.ftcPose.bearing);
+    public double getDistToTag(){
+        double dist = 0;
+        if(!getDetections().isEmpty()){
+            for(AprilTagDetection detection: getDetections()){
+                if(detection.id == 20 && !GlobalVariables.m_red){
+                    dist = detection.ftcPose.range;
+                }
+                if(detection.id == 24 && GlobalVariables.m_red){
+                    dist = detection.ftcPose.range;
+                }
             }
         }
 
-        m_opMode.telemetry.addData("vision portal status", m_visionPortal.getCameraState());
-        m_opMode.telemetry.addData("fps", m_visionPortal.getFps());
+        return dist;
+    }
+
+    @Override
+    public void periodic(){
+        try {
+            m_detections = m_aprilTagProcessor.getDetections();
+
+            if (m_detections != null) {
+                m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
+
+                for (AprilTagDetection detection : m_detections) {
+                    m_opMode.telemetry.addData("ID", detection.id);
+                    m_opMode.telemetry.addData("distance", detection.ftcPose.range);
+                    m_opMode.telemetry.addData("yaw", detection.ftcPose.yaw);
+                    m_opMode.telemetry.addData("bearing", detection.ftcPose.bearing);
+                }
+            }
+
+            m_opMode.telemetry.addData("vision portal status", m_visionPortal.getCameraState());
+            m_opMode.telemetry.addData("fps", m_visionPortal.getFps());
+        } catch (Exception e) {
+            m_opMode.telemetry.addData("vision error", e.getStackTrace());
+        }
     }
 }

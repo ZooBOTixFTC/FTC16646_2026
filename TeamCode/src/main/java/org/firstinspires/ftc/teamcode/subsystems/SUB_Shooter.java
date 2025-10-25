@@ -58,6 +58,10 @@ public class SUB_Shooter extends SubsystemBase {
     public void setTargetVelRight(double velocity) {
         m_targetVelRight = velocity;
     }
+    public void setTargetVel(double velocity) {
+        m_targetVelLeft = velocity;
+        m_targetVelRight = velocity;
+    }
 
     public double getVelocityLeft() {
         long currentTime = System.nanoTime();
@@ -167,6 +171,9 @@ public class SUB_Shooter extends SubsystemBase {
 
         double leftCompensatedPower = MathUtils.clamp(leftVolts * (12 / m_voltageSensor.getVoltage()), -1, 1);
         double rightCompensatedPower = MathUtils.clamp(rightVolts * (12 / m_voltageSensor.getVoltage()), -1, 1);
+
+        if(m_targetVelLeft == 0) leftCompensatedPower = 0;
+        if(m_targetVelRight == 0) rightCompensatedPower = 0;
 
         m_shooterMotorLeft.setPower(leftCompensatedPower);
         m_shooterMotorRight.setPower(rightCompensatedPower);
