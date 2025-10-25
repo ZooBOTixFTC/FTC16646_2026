@@ -19,8 +19,8 @@ public class CMD_IntakeToggle extends SequentialCommandGroup {
 
                 new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                         .alongWith(new InstantCommand(()-> GlobalVariables.m_intakeOn = true))
-//                        .alongWith(new CMD_Intake(p_turntable)),
                         .alongWith(new InstantCommand(p_turntable::setTurntableIntakeMode)),
+//                        .alongWith(new CMD_Intake(p_turntable)),
 
                 () -> GlobalVariables.m_intakeOn
             )

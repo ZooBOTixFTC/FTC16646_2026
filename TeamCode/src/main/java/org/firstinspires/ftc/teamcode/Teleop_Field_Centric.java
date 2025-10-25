@@ -83,8 +83,8 @@ public class Teleop_Field_Centric extends LinearOpMode {
      public void configureButtonBindings() {
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.m_shooter.setVelocity(0)));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
-                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
+//                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake, m_robot.m_turntable));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_Kick(m_robot.m_shooter, m_robot.m_turntable, m_robot.GlobalVariables));
           AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable, m_robot.GlobalVariables));

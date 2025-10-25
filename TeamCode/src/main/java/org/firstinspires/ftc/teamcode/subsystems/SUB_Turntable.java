@@ -36,10 +36,18 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void rotateRight(){
-        if (m_targetDegs >= 360) setPos(120);
-        else if (m_targetDegs >= 240) setPos(360);
-        else if (m_targetDegs >= 120) setPos(240);
-        else if (m_targetDegs >= 0) setPos(120);
+//        if (!GlobalVariables.m_intakeOn) {
+            if (m_targetDegs >= 360) setPos(120);
+            else if (m_targetDegs >= 240) setPos(360);
+            else if (m_targetDegs >= 120) setPos(240);
+            else if (m_targetDegs >= 0) setPos(120);
+//        }
+//        else {
+//            if (m_targetDegs >= 360) setPos(60);
+//            else if (m_targetDegs >= 240) setPos(300);
+//            else if (m_targetDegs >= 120) setPos(180);
+//            else if (m_targetDegs >= 0) setPos(60);
+//        }
     }
 
     public void setPos(double targetDeg) {
@@ -89,7 +97,7 @@ public class SUB_Turntable extends SubsystemBase {
 
     public void setTurntableIntakeMode() {
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.5);
+        m_turntableMotor.setPower(0.4);
     }
 
     public double getTurntableVelo() {
