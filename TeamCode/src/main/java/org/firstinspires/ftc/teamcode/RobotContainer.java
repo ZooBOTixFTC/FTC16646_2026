@@ -17,7 +17,7 @@ public class RobotContainer {
      public SUB_Intake m_intake;
      public SUB_Lift m_lift;
 //     public SUB_ColorSensors m_colorSensor;
-//     public SUB_Vision m_vision;
+     public SUB_Vision m_vision;
 
      public RobotContainer(OpMode p_opMode) {
           drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
@@ -28,7 +28,7 @@ public class RobotContainer {
 
 //          m_lift = new SUB_Lift(p_opMode);
 //          m_colorSensor = new SUB_ColorSensors(p_opMode);
-//          m_vision = new SUB_Vision(p_opMode, GlobalVariables);
+          m_vision = new SUB_Vision(p_opMode, GlobalVariables);
      };
 
      public void run() {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Turntable;
 
 public class CMD_Intake extends CommandBase {
@@ -21,10 +22,12 @@ public class CMD_Intake extends CommandBase {
 
     @Override
     public void execute(){
-        if(m_timer.milliseconds() < 670){
-            m_turntable.rotateRight();
-        }else{
-            m_timer.reset();
+        if (GlobalVariables.m_intakeOn) {
+            if (m_timer.milliseconds() < 670) {
+                m_turntable.rotateRight();
+            } else {
+                m_timer.reset();
+            }
         }
     }
 }

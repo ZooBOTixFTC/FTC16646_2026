@@ -28,8 +28,8 @@ public class DriveConstants {
     /*
      * These are motor constants that should be listed online for your motors.
      */
-    public static final double TICKS_PER_REV = 384.5;
-    public static final double MAX_RPM = 435;
+    public static final double TICKS_PER_REV = 537.7;
+    public static final double MAX_RPM = 312;
 
     /*
      * Set RUN_USING_ENCODER to true to enable built-in hub velocity control using drive encoders.
@@ -53,9 +53,9 @@ public class DriveConstants {
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
     public static double WHEEL_RADIUS = 2.83465; //in  104mm wheels
-    public static double GEAR_RATIO = 1.0; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 15.5; // in
-    public static double WHEEL_BASE = 12; //in
+    public static double GEAR_RATIO = 0.902; // output (wheel) speed / input (motor) speed
+    public static double TRACK_WIDTH = 19; // in
+    public static double WHEEL_BASE = 15; //in
     public static double DIAGONAL=Math.sqrt(TRACK_WIDTH*TRACK_WIDTH+WHEEL_BASE*WHEEL_BASE);
 
     /*
@@ -64,9 +64,9 @@ public class DriveConstants {
      * motor encoders or have elected not to use them for velocity control, these values should be
      * empirically tuned.
      */
-    public static double kV = 0.005;
-    public static double kA = 0.0;
-    public static double kStatic = 0.008;
+    public static double kV = 0.0165;
+    public static double kA = 0.0025;
+    public static double kStatic = 0;
 
     /*
      * These values are used to generate the trajectories for you robot. To ensure proper operation,

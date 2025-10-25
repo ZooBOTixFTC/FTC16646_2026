@@ -7,10 +7,10 @@ public class Constants {
         public static final double kP = 0.4;
         public static final double kF = 0.5;
         public static final double kMaxVelDegPerSec = 26000;
-        public static final double kKickPosition = 0.8;
+        public static final double kKickPosition = 0.9;
         public static final double kKickHome = 0.55;
-        public static final double kKickDuration = 0.5;
-        public static final double kTicksPerRev = 2075; // motor PPR × gear ratio old ratio 537.7 * (331 / 64.0)
+        public static final double kKickDuration = 175;
+        public static final double kTicksPerRev = 2077.5; // motor PPR × gear ratio old ratio 537.7 * (331 / 64.0)
     }
 
     public static final class IntakeConstants {

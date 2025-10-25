@@ -31,7 +31,7 @@ public class CMD_Kick extends CommandBase {
     }
     @Override
     public boolean isFinished() {
-        return isFinished || timer.seconds() >= ShooterConstants.kKickDuration;
+        return isFinished || timer.milliseconds() >= ShooterConstants.kKickDuration;
     }
 
     @Override
