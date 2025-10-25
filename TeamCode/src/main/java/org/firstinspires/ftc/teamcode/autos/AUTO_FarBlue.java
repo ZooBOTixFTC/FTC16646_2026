@@ -7,9 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
-import org.firstinspires.ftc.teamcode.commands.CMD_Shoot;
-import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryForwardFromCurrent;
-import org.firstinspires.ftc.teamcode.commands.RR_TrajectorySplineFromCurrent;
 
 @Autonomous(name = "Far Blue", preselectTeleOp = "Teleop Blue", group = "Auto Blue")
 public class AUTO_FarBlue extends Robot_Auto {
@@ -23,7 +20,6 @@ public class AUTO_FarBlue extends Robot_Auto {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
-//                new CMD_Shoot(m_robot.m_shooter,m_robot.m_colorSensor),
                 SecondVolley()
         );
 
@@ -32,12 +28,8 @@ public class AUTO_FarBlue extends Robot_Auto {
 
     private SequentialCommandGroup SecondVolley() {
         return new SequentialCommandGroup(
-                new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-36,-42,Math.toRadians(180)),0,false),
                 new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn)),
-                new RR_TrajectoryForwardFromCurrent(m_robot.drivetrain,30,false),
-                new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)),
-                new RR_TrajectorySplineFromCurrent(m_robot.drivetrain, new Pose2d(-63,0,Math.toRadians(45)),45,true)
-//                ,new CMD_Shoot(m_robot.m_shooter,m_robot.m_colorSensor)
+                new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
         );
     }
 }

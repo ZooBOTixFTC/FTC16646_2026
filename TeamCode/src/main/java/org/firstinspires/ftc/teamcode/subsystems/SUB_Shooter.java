@@ -2,13 +2,14 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import androidx.core.math.MathUtils;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
@@ -18,86 +19,90 @@ public class SUB_Shooter extends SubsystemBase {
     private final OpMode m_opMode;
     private final DcMotorEx m_shooterMotorLeft;
     private final DcMotorEx m_shooterMotorRight;
-    private final Servo m_kickerRight;
-    private final Servo m_kickerLeft;
     private final VoltageSensor m_voltageSensor;
-    private double m_targetVelLeft;
-    private double m_targetVelRight;
+    private final FtcDashboard m_dashboard;
+    private double m_targetVelLeft, m_targetVelRight;
+    private double leftVelError, lastLeftVelError, rightVelError, lastRightVelError = 0;
 
-    public static double leftP, leftV, leftS, leftVel, rightP, rightV, rightS, rightVel;
+    public static double leftP, leftD, leftV, leftS, leftVel, rightP, rightD, rightV, rightS, rightVel;
 
-    private int lastPos = 0;
-    private long lastTime = System.nanoTime();
-    private double smoothedVelocity = 0;
+    private int lastLeftPos = 0;
+    private int lastRightPos = 0;
+    private long lastTimeLeft, lastTimeRight = System.nanoTime();
+    private double smoothedVelocityLeft, smoothedVelocityRight = 0;
 
     public SUB_Shooter(OpMode p_opMode) {
         m_opMode = p_opMode;
         m_shooterMotorLeft = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
         m_shooterMotorRight = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
 
-        m_kickerLeft = m_opMode.hardwareMap.get(Servo.class, "kickerLeft");
-        m_kickerRight = m_opMode.hardwareMap.get(Servo.class, "kickerRight");
-
         m_voltageSensor = m_opMode.hardwareMap.voltageSensor.iterator().next();
 
-        m_kickerLeft.setDirection(Servo.Direction.FORWARD);
-        m_kickerRight.setDirection(Servo.Direction.REVERSE);
+        m_dashboard = FtcDashboard.getInstance();
+        m_dashboard.setTelemetryTransmissionInterval(20);
 
         m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         m_shooterMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        m_shooterMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        m_shooterMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setTargetVelLeft(double velocity) {
         m_targetVelLeft = velocity;
+//        m_shooterMotorLeft.setVelocityPIDFCoefficients(.4, 0, 0, .45);
+//        m_shooterMotorLeft.setVelocity(velocity, AngleUnit.DEGREES);
     }
 
     public void setTargetVelRight(double velocity) {
         m_targetVelRight = velocity;
+//        m_shooterMotorRight.setVelocityPIDFCoefficients(.4, 0, 0, .45);
+//        m_shooterMotorRight.setVelocity(velocity, AngleUnit.DEGREES);
     }
 
     public double getVelocityLeft() {
         long currentTime = System.nanoTime();
-        double deltaTimeSec = (currentTime - lastTime) / 1e9; // convert nanoseconds to milliseconds
+        double deltaTimeSec = (currentTime - lastTimeLeft) / 1e9; // convert nanoseconds to milliseconds
 
         if (deltaTimeSec >= 0.02) { // 20ms loop
             int currentPos = m_shooterMotorLeft.getCurrentPosition();
-            int deltaTicks = currentPos - lastPos;
+            int deltaTicks = currentPos - lastLeftPos;
 
-            double ticksPerRev = 28.0;
+            double ticksPerRev = 28.0; // 1:1 GoBilda motor
             double revs = deltaTicks / ticksPerRev;
             double rawVelocity = (revs * 360.0) / deltaTimeSec;
 
-            smoothedVelocity = ShooterConstants.kAlpha * rawVelocity + (1 - ShooterConstants.kAlpha) * smoothedVelocity;
+            smoothedVelocityLeft = ShooterConstants.kAlpha * rawVelocity + (1 - ShooterConstants.kAlpha) * smoothedVelocityLeft;
 
-            lastPos = currentPos;
-            lastTime = currentTime;
+            lastLeftPos = currentPos;
+            lastTimeLeft = currentTime;
         }
 
-        return Math.round(smoothedVelocity);
+        return Math.round(smoothedVelocityLeft);
     }
 
     public double getVelocityRight() {
         long currentTime = System.nanoTime();
-        double deltaTimeSec = (currentTime - lastTime) / 1e9; // convert nanoseconds to milliseconds
+        double deltaTimeSec = (currentTime - lastTimeRight) / 1e9; // convert nanoseconds to milliseconds
 
         if (deltaTimeSec >= 0.02) { // 20ms loop
             int currentPos = m_shooterMotorRight.getCurrentPosition();
-            int deltaTicks = currentPos - lastPos;
+            int deltaTicks = currentPos - lastRightPos;
 
-            double ticksPerRev = 28.0;
+            double ticksPerRev = 28.0; // 1:1 GoBilda motor
             double revs = deltaTicks / ticksPerRev;
             double rawVelocity = (revs * 360.0) / deltaTimeSec;
 
-            smoothedVelocity = ShooterConstants.kAlpha * rawVelocity + (1 - ShooterConstants.kAlpha) * smoothedVelocity;
+            smoothedVelocityRight = ShooterConstants.kAlpha * rawVelocity + (1 - ShooterConstants.kAlpha) * smoothedVelocityRight;
 
-            lastPos = currentPos;
-            lastTime = currentTime;
+            lastRightPos = currentPos;
+            lastTimeRight = currentTime;
         }
 
-        return Math.round(smoothedVelocity);
+        return Math.round(smoothedVelocityRight);
     }
 
     public double getTargetVelLeft(){
@@ -108,14 +113,6 @@ public class SUB_Shooter extends SubsystemBase {
         return m_targetVelRight;
     }
 
-    public void setKickPosLeft(double angDeg) {
-        m_kickerLeft.setPosition(angDeg / 300);
-    }
-
-    public void setKickPosRight(double angDeg) {
-        m_kickerRight.setPosition(angDeg / 300);
-    }
-
     @Override
     public void periodic() {
         m_opMode.telemetry.addData("Shooter Vel Left", getVelocityLeft());
@@ -123,8 +120,25 @@ public class SUB_Shooter extends SubsystemBase {
         m_opMode.telemetry.addData("Shooter Vel Right", getVelocityRight());
         m_opMode.telemetry.addData("Shooter Target Vel Right", getTargetVelRight());
 
-        double leftVolts;
-        double rightVolts;
+        TelemetryPacket packet = new TelemetryPacket();
+
+        packet.put("left vel", getVelocityLeft());
+        packet.put("left target vel", getTargetVelLeft());
+        packet.put("right vel", getVelocityRight());
+        packet.put("right target vel", getTargetVelRight());
+
+        m_dashboard.sendTelemetryPacket(packet);
+
+        double leftVolts, rightVolts;
+
+        leftVelError = getTargetVelLeft() - getVelocityLeft();
+        rightVelError = getTargetVelRight() - getVelocityRight();
+
+        double leftErrorRate = (leftVelError - lastLeftVelError) / .02;
+        double rightErrorRate = (rightVelError - lastRightVelError) / .02;
+
+        lastLeftVelError = leftVelError;
+        lastRightVelError = rightVelError;
 
         if(ShooterConstants.kTuningMode){
             setTargetVelLeft(leftVel);
@@ -133,29 +147,30 @@ public class SUB_Shooter extends SubsystemBase {
             leftVolts =
                 leftS +
                 leftV * getTargetVelLeft() +
-                leftP * getTargetVelLeft() - getVelocityLeft();
+                leftP * (getTargetVelLeft() - getVelocityLeft()) +
+                leftD * leftErrorRate;
 
             rightVolts =
                 rightS +
                 rightV * getTargetVelRight() +
-                rightP * getTargetVelRight() - getVelocityRight();
+                rightP * (getTargetVelRight() - getVelocityRight()) +
+                rightD * rightErrorRate;
         }else{
             leftVolts =
                 ShooterConstants.kSLeft +
                 ShooterConstants.kVLeft * getTargetVelLeft() +
-                ShooterConstants.kPLeft * getTargetVelLeft() - getVelocityLeft();
+                ShooterConstants.kPLeft * (getTargetVelLeft() - getVelocityLeft()) +
+                ShooterConstants.kDLeft * leftErrorRate;
 
             rightVolts =
                 ShooterConstants.kSRight +
                 ShooterConstants.kVRight * getTargetVelRight() +
-                ShooterConstants.kPRight * getTargetVelRight() - getVelocityRight();
+                ShooterConstants.kPRight * (getTargetVelRight() - getVelocityRight()) +
+                ShooterConstants.kDRight * rightErrorRate;
         }
 
-        leftVolts = MathUtils.clamp(leftVolts, 0, 12);
-        double leftCompensatedPower = MathUtils.clamp(leftVolts * (12 / m_voltageSensor.getVoltage()), 0, 1);
-
-        rightVolts = MathUtils.clamp(rightVolts, 0, 12);
-        double rightCompensatedPower = MathUtils.clamp(rightVolts * (12 / m_voltageSensor.getVoltage()), 0, 1);
+        double leftCompensatedPower = MathUtils.clamp(leftVolts * (12 / m_voltageSensor.getVoltage()), -1, 1);
+        double rightCompensatedPower = MathUtils.clamp(rightVolts * (12 / m_voltageSensor.getVoltage()), -1, 1);
 
         m_shooterMotorLeft.setPower(leftCompensatedPower);
         m_shooterMotorRight.setPower(rightCompensatedPower);

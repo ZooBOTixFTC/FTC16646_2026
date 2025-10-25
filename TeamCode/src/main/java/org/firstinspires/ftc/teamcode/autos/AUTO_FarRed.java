@@ -55,7 +55,7 @@ public class AUTO_FarRed extends Robot_Auto {
         return new SequentialCommandGroup(
             new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_lineUpFirstVolley)
             ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(IntakeConstants.kIntakeOn))
-            ,new CMD_Shoot(m_robot.m_shooter)
+            ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift)
         );
     }
 
@@ -69,7 +69,7 @@ public class AUTO_FarRed extends Robot_Auto {
     private SequentialCommandGroup SecondVolley() {
         return new SequentialCommandGroup(
             new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_backToLaunchZone)
-            ,new CMD_Shoot(m_robot.m_shooter)
+            ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift)
             ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(IntakeConstants.kIntakeOff))
             ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, m_leave)
         );

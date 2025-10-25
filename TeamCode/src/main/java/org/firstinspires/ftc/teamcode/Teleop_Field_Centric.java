@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -73,23 +74,26 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_robot.GlobalVariables.m_red ? -90 : 90,0.05, m_robot.GlobalVariables));
 
-//          m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
+          if (!Constants.ShooterConstants.kTuningMode) m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter));
 //          m_robot.m_colorSensor.setDefaultCommand(new CMD_LedDefault(m_robot.m_colorSensor));
 
           configureButtonBindings();
      }
 
      public void configureButtonBindings() {
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter));
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootRight(m_robot.m_shooter));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_IntakeToggle(m_robot.m_intake));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter, m_robot.m_lift));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootRight(m_robot.m_shooter, m_robot.m_lift));
 
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
-//                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y,
-//                  new InstantCommand(()-> m_robot.m_lift.setTargetPosition(LiftConstants.kLiftUp)));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_AlignTarget(
+                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new CMD_IntakeReverse(m_robot.m_intake));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
+               new InstantCommand(()-> m_robot.m_shooter.setTargetVelLeft(0))
+               .alongWith(new InstantCommand(()-> m_robot.m_shooter.setTargetVelRight(0)))
+          );
      }
 
      public void setSide() {
@@ -98,5 +102,9 @@ public class Teleop_Field_Centric extends LinearOpMode {
 
      public void AddButtonCommand(GamepadEx gamepad, GamepadKeys.Button button, Command command) {
           new GamepadButton(gamepad, button).whenPressed(command);
+     }
+
+     public void AddTriggerCommand(GamepadEx gamepad, GamepadKeys.Trigger trigger, Command command){
+          new Trigger(()-> gamepad.getTrigger(trigger) >= .5).whenActive(command);
      }
 }
