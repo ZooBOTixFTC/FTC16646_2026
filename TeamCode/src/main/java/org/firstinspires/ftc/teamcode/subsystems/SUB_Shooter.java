@@ -22,7 +22,7 @@ public class SUB_Shooter extends SubsystemBase {
     private final VoltageSensor m_voltageSensor;
     private final FtcDashboard m_dashboard;
     private double m_targetVelLeft, m_targetVelRight;
-    private double leftVelError, lastLeftVelError, rightVelError, lastRightVelError = 0;
+    private double lastLeftVelError, lastRightVelError = 0;
 
     public static double leftP, leftD, leftV, leftS, leftVel, rightP, rightD, rightV, rightS, rightVel;
 
@@ -53,14 +53,10 @@ public class SUB_Shooter extends SubsystemBase {
 
     public void setTargetVelLeft(double velocity) {
         m_targetVelLeft = velocity;
-//        m_shooterMotorLeft.setVelocityPIDFCoefficients(.4, 0, 0, .45);
-//        m_shooterMotorLeft.setVelocity(velocity, AngleUnit.DEGREES);
     }
 
     public void setTargetVelRight(double velocity) {
         m_targetVelRight = velocity;
-//        m_shooterMotorRight.setVelocityPIDFCoefficients(.4, 0, 0, .45);
-//        m_shooterMotorRight.setVelocity(velocity, AngleUnit.DEGREES);
     }
 
     public double getVelocityLeft() {
@@ -131,8 +127,8 @@ public class SUB_Shooter extends SubsystemBase {
 
         double leftVolts, rightVolts;
 
-        leftVelError = getTargetVelLeft() - getVelocityLeft();
-        rightVelError = getTargetVelRight() - getVelocityRight();
+        double leftVelError = getTargetVelLeft() - getVelocityLeft();
+        double rightVelError = getTargetVelRight() - getVelocityRight();
 
         double leftErrorRate = (leftVelError - lastLeftVelError) / .02;
         double rightErrorRate = (rightVelError - lastRightVelError) / .02;
