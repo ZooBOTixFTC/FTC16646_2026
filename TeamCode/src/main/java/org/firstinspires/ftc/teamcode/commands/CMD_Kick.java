@@ -14,7 +14,7 @@ public class CMD_Kick extends CommandBase {
     private final SUB_Shooter m_shooter;
     private final SUB_Turntable m_turntable;
     private final GlobalVariables m_variables;
-    boolean isFinished;
+    private boolean isFinished;
 
     public CMD_Kick(SUB_Shooter p_shooter, SUB_Turntable p_turntable, GlobalVariables p_variables) {
         m_shooter = p_shooter;
@@ -24,8 +24,8 @@ public class CMD_Kick extends CommandBase {
 
     @Override
     public void initialize() {
+        isFinished = false;
         timer.reset();
-//        if(m_turntable.getPos() - m_turntable.getT)
         m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
         m_variables.setKickerHomed(false);
     }

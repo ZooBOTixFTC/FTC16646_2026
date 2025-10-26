@@ -37,7 +37,7 @@ public abstract class Robot_Auto extends LinearOpMode {
 
 //          m_robot.m_vision.stream(false);
 
-          buildTasks();
+          buildTasks().schedule();
 
           m_runTime.reset();
 

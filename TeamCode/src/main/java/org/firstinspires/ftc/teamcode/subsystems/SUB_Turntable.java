@@ -97,7 +97,7 @@ public class SUB_Turntable extends SubsystemBase {
 
     public void setTurntableIntakeMode() {
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.4);
+        m_turntableMotor.setPower(0.3);
     }
 
     public double getTurntableVelo() {
