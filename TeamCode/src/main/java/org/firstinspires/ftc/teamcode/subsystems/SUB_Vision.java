@@ -90,7 +90,6 @@ public class SUB_Vision extends SubsystemBase {
 
             if (m_detections != null) {
                 m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
-
                 for (AprilTagDetection detection : m_detections) {
                     m_opMode.telemetry.addData("ID", detection.id);
                     m_opMode.telemetry.addData("distance", detection.ftcPose.range);

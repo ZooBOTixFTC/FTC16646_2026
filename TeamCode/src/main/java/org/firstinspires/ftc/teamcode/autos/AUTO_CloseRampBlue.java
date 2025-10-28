@@ -33,10 +33,10 @@ public class AUTO_CloseRampBlue extends Robot_Auto {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
-                new CMD_Kick(m_robot.m_shooter, m_robot.m_turntable, m_robot.GlobalVariables)
+                new CMD_Kick(m_robot.m_shooter)
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain,firstVolley)
                 ,new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable,m_robot.GlobalVariables)
-                ,new InstantCommand(()-> m_robot.m_shooter.setVelocity(0))
+                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
         );
         return completeTasks;

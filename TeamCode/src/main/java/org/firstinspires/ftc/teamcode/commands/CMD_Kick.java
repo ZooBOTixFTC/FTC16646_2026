@@ -12,31 +12,23 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Turntable;
 public class CMD_Kick extends CommandBase {
     private final ElapsedTime timer = new ElapsedTime();
     private final SUB_Shooter m_shooter;
-    private final SUB_Turntable m_turntable;
-    private final GlobalVariables m_variables;
-    private boolean isFinished;
 
-    public CMD_Kick(SUB_Shooter p_shooter, SUB_Turntable p_turntable, GlobalVariables p_variables) {
+    public CMD_Kick(SUB_Shooter p_shooter) {
         m_shooter = p_shooter;
-        m_turntable = p_turntable;
-        m_variables = p_variables;
     }
 
     @Override
     public void initialize() {
-        isFinished = false;
         timer.reset();
         m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
-        m_variables.setKickerHomed(false);
     }
     @Override
     public boolean isFinished() {
-        return isFinished || timer.milliseconds() >= ShooterConstants.kKickDuration;
+        return timer.milliseconds() >= ShooterConstants.kKickDuration;
     }
 
     @Override
     public void end(boolean interrupted) {
         m_shooter.setKickerPosition(ShooterConstants.kKickHome);
-        m_variables.setKickerHomed(true);
     }
 }

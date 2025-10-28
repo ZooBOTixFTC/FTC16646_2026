@@ -51,34 +51,32 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void setPos(double targetDeg) {
-        if (GlobalVariables.m_kickerHomed) {
-            m_targetDegs = targetDeg;
-            int currentTicks = m_turntableMotor.getCurrentPosition();
-            double currentRev = (double) currentTicks / ShooterConstants.kTicksPerRev;
+        m_targetDegs = targetDeg;
+        int currentTicks = m_turntableMotor.getCurrentPosition();
+        double currentRev = (double) currentTicks / ShooterConstants.kTicksPerRev;
 
-            // Convert target angle to ticks within one revolution
-            int targetTicksInRev = (int) ((targetDeg / 360.0) * ShooterConstants.kTicksPerRev);
+        // Convert target angle to ticks within one revolution
+        int targetTicksInRev = (int) ((targetDeg / 360.0) * ShooterConstants.kTicksPerRev);
 
-            // Find the closest tick position to currentTicks that matches targetDeg
-            int baseRev = (int) Math.round(currentRev); // Nearest full revolution
-            int candidateTicks = (int) (baseRev * ShooterConstants.kTicksPerRev + targetTicksInRev);
+        // Find the closest tick position to currentTicks that matches targetDeg
+        int baseRev = (int) Math.round(currentRev); // Nearest full revolution
+        int candidateTicks = (int) (baseRev * ShooterConstants.kTicksPerRev + targetTicksInRev);
 
-            // If candidate is too far, adjust by ±1 rev to get closest match
-            int alt1 = (int) (candidateTicks + ShooterConstants.kTicksPerRev);
-            int alt2 = (int) (candidateTicks - ShooterConstants.kTicksPerRev);
+        // If candidate is too far, adjust by ±1 rev to get closest match
+        int alt1 = (int) (candidateTicks + ShooterConstants.kTicksPerRev);
+        int alt2 = (int) (candidateTicks - ShooterConstants.kTicksPerRev);
 
-            int bestTarget = candidateTicks;
-            if (Math.abs(alt1 - currentTicks) < Math.abs(bestTarget - currentTicks)) {
-                bestTarget = alt1;
-            }
-            if (Math.abs(alt2 - currentTicks) < Math.abs(bestTarget - currentTicks)) {
-                bestTarget = alt2;
-            }
-
-            m_turntableMotor.setTargetPosition(bestTarget);
-            m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            m_turntableMotor.setPower(0.75);
+        int bestTarget = candidateTicks;
+        if (Math.abs(alt1 - currentTicks) < Math.abs(bestTarget - currentTicks)) {
+            bestTarget = alt1;
         }
+        if (Math.abs(alt2 - currentTicks) < Math.abs(bestTarget - currentTicks)) {
+            bestTarget = alt2;
+        }
+
+        m_turntableMotor.setTargetPosition(bestTarget);
+        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        m_turntableMotor.setPower(0.75);
     }
 
     public void endIntakeMode() {
