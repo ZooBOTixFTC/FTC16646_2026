@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
+import androidx.core.math.MathUtils;
+
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
@@ -101,10 +103,9 @@ public class CMD_AlignTarget extends CommandBase {
         double deltaTime = currentTime - lastTime;
 
         // Control parameters
-        double tolerance = 2.0; // degrees - target tolerance
-        double deadband = 1.25; // degrees - deadband to prevent oscillation
-        double kP = 0.015;      // Proportional gain (reduced to prevent overshoot)
-        double kD = 0.018;      // Derivative gain to reduce oscillation (increased for damping)
+        double deadband = 2; // degrees - deadband to prevent oscillation
+        double kP = 0.012;// Proportional gain (reduced to prevent overshoot)
+        double kD = 0.0;// Derivative gain to reduce oscillation (increased for damping)
 
         // Check if we're within the deadband (smaller than tolerance)
         if (Math.abs(bearing) < deadband) {
@@ -133,21 +134,21 @@ public class CMD_AlignTarget extends CommandBase {
         double turnPower = -(kP * bearing + kD * derivative);
 
         // Apply power limits
-        double maxTurnPower = 0.20; // Maximum turn power (reduced to prevent overshoot)
-        double minTurnPower = 0.05; // Minimum power threshold (lowered for smoother approach)
+        double maxTurnPower = 0.2; // Maximum turn power (reduced to prevent overshoot)
+        double minTurnPower = 0.1; // Minimum power threshold (lowered for smoother approach)
 
-        turnPower = Math.max(-maxTurnPower, Math.min(maxTurnPower, turnPower));
+        turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower), minTurnPower, maxTurnPower), turnPower);
 
         // Apply minimum power threshold only for larger errors (beyond tolerance)
-        if (Math.abs(bearing) > tolerance && Math.abs(turnPower) > 0 && Math.abs(turnPower) < minTurnPower) {
-            turnPower = Math.copySign(minTurnPower, turnPower);
-        }
+//        if (Math.abs(bearing) > tolerance && Math.abs(turnPower) > 0 && Math.abs(turnPower) < minTurnPower) {
+//            turnPower = Math.copySign(minTurnPower, turnPower);
+//        }
 
         // Store values for next cycle
         lastError = bearing;
         lastTime = currentTime;
 
-        m_drive.drive(0.05, 0.0, turnPower);
+        m_drive.drive(-.018, 0.0, turnPower);
     }
 
     /**

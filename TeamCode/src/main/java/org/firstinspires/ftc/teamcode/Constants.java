@@ -32,18 +32,6 @@ public class Constants {
         public static final int kHome = 0;
         public static final int kKick = -14;
     }
-
-    public static final class ColorConstants {
-        public static final double kOrange = .333;
-        public static final double kGreen = .45;
-        public static final double kPurple = .722;
-
-        public enum ColorEnum {
-            GREEN
-            ,PURPLE
-            ,UNKNOWN
-        }
-    }
 }
 
 
