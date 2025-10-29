@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.GlobalVariables.patternTypes;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -16,12 +15,10 @@ public class SUB_Vision extends SubsystemBase {
     private final OpMode m_opMode;
     private final AprilTagProcessor m_aprilTagProcessor;
     private final VisionPortal m_visionPortal;
-    private final GlobalVariables m_variables;
     private List<AprilTagDetection> m_detections;
 
-    public SUB_Vision(OpMode p_opMode, GlobalVariables p_variables) {
+    public SUB_Vision(OpMode p_opMode) {
         m_opMode = p_opMode;
-        m_variables = p_variables;
 
         m_aprilTagProcessor = new AprilTagProcessor.Builder()
                 .setTagFamily(AprilTagProcessor.TagFamily.TAG_36h11)
@@ -35,32 +32,7 @@ public class SUB_Vision extends SubsystemBase {
                 .build();
 
         m_visionPortal.setProcessorEnabled(m_aprilTagProcessor, true);
-    }
-
-    public void stream(boolean stream){
-        if(stream){
-            m_visionPortal.resumeStreaming();
-        }else{
-            m_visionPortal.stopStreaming();
-        }
-    }
-
-    public void readPattern(){
-        for (AprilTagDetection detection : getDetections()){
-            switch (detection.id){
-                case 21:
-                    m_variables.setPatternType(patternTypes.GPP);
-                    break;
-                case 22:
-                    m_variables.setPatternType(patternTypes.PGP);
-                    break;
-                case 23:
-                    m_variables.setPatternType(patternTypes.PPG);
-                    break;
-                default:
-                    break;
-            }
-        }
+        m_visionPortal.resumeStreaming();
     }
 
     public List<AprilTagDetection> getDetections(){

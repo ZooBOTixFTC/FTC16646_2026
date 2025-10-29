@@ -12,7 +12,7 @@ public class CMD_Shoot extends SequentialCommandGroup {
         addCommands(
                 new WaitCommand(350)
                 ,new CMD_GetShooterAtVelocity(p_Shooter)
-                ,new CMD_Kick(p_Shooter)
+                ,new CMD_Kick(p_Shooter, p_turntable)
                 ,new WaitCommand(500)
                 ,new InstantCommand(p_turntable::rotateRight)
         );

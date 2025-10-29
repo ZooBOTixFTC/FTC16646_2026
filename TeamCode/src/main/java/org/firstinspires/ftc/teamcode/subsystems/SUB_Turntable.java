@@ -36,21 +36,15 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void rotateRight(){
-//        if (!GlobalVariables.m_intakeOn) {
             if (m_targetDegs >= 360) setPos(120);
             else if (m_targetDegs >= 240) setPos(360);
             else if (m_targetDegs >= 120) setPos(240);
             else if (m_targetDegs >= 0) setPos(120);
-//        }
-//        else {
-//            if (m_targetDegs >= 360) setPos(60);
-//            else if (m_targetDegs >= 240) setPos(300);
-//            else if (m_targetDegs >= 120) setPos(180);
-//            else if (m_targetDegs >= 0) setPos(60);
-//        }
     }
 
     public void setPos(double targetDeg) {
+        if(!GlobalVariables.m_kickerHomed) return;
+
         m_targetDegs = targetDeg;
         int currentTicks = m_turntableMotor.getCurrentPosition();
         double currentRev = (double) currentTicks / ShooterConstants.kTicksPerRev;
@@ -94,11 +88,12 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void setTurntableIntakeMode() {
+        if(!GlobalVariables.m_kickerHomed) return;
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         m_turntableMotor.setPower(0.3);
     }
 
-    public double getTurntableVelo() {
+    public double getVelo() {
         return m_turntableMotor.getVelocity();
     }
 
@@ -107,6 +102,5 @@ public class SUB_Turntable extends SubsystemBase {
         m_opMode.telemetry.addData("turntable pos", getPos());
         m_opMode.telemetry.addData("turntable ticks", m_turntableMotor.getCurrentPosition());
         m_opMode.telemetry.addData("kicker Homed",GlobalVariables.m_kickerHomed);
-
     }
 }
