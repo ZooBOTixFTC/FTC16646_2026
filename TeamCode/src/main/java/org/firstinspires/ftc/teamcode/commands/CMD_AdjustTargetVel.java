@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 
@@ -16,7 +15,7 @@ public class CMD_AdjustTargetVel extends CommandBase {
 
     @Override
     public void initialize() {
-        m_shooter.setTargetVel(Constants.ShooterConstants.kMaxVelDegPerSec+100*(m_vision.getDistToTag()-80));
+        m_shooter.setTargetVel(22000 + (100 * m_vision.getDistToTag()));
     }
 
     @Override

@@ -94,13 +94,13 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public double getVelo() {
-        return m_turntableMotor.getVelocity();
+        return (m_turntableMotor.getVelocity() / ShooterConstants.kTicksPerRev) * 360;
     }
 
     @Override
     public void periodic(){
         m_opMode.telemetry.addData("turntable pos", getPos());
         m_opMode.telemetry.addData("turntable ticks", m_turntableMotor.getCurrentPosition());
-        m_opMode.telemetry.addData("kicker Homed",GlobalVariables.m_kickerHomed);
+        m_opMode.telemetry.addData("kicker homed",GlobalVariables.m_kickerHomed);
     }
 }

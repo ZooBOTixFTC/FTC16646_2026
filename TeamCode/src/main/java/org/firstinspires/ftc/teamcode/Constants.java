@@ -13,7 +13,7 @@ public class Constants {
         public static final double kMaxVelDegPerSec = 30000;
         public static final double kKickPosition = 0.8;
         public static final double kKickHome = 0.5;
-        public static final double kKickDuration = 175;
+        public static final double kKickDuration = 333;
         public static final double kTicksPerRev = 2077.5; // motor PPR × gear ratio old ratio 537.7 * (331 / 64.0)
     }
 

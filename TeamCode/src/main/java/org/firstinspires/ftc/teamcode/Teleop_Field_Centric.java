@@ -81,14 +81,18 @@ public class Teleop_Field_Centric extends LinearOpMode {
      }
 
      public void configureButtonBindings() {
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable));
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
+               new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp)
+               .andThen(new CMD_AdjustTargetVel(m_robot.m_shooter, m_robot.m_vision))
+               .andThen(new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable)));
+
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
+             new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp)
+             .andThen(new CMD_AdjustTargetVel(m_robot.m_shooter, m_robot.m_vision))
+             .andThen(new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable)));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateRight()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateLeft()));
-
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new CMD_AlignTarget(
-                  m_robot.drivetrain, m_robot.m_vision, m_driverOp));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake, m_robot.m_turntable));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0)));

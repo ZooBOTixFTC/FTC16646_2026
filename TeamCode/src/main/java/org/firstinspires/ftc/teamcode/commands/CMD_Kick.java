@@ -21,7 +21,7 @@ public class CMD_Kick extends CommandBase {
 
     @Override
     public void initialize() {
-        if(m_turntable.getVelo() > 0 || GlobalVariables.m_intakeReverse || GlobalVariables.m_intakeOn) return;
+        if(m_turntable.getVelo() > 3 || GlobalVariables.m_intakeReverse || GlobalVariables.m_intakeOn) return;
         GlobalVariables.m_kickerHomed = false;
         timer.reset();
         m_shooter.setKickerPosition(ShooterConstants.kKickPosition);
