@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Turntable;
 
 public class CMD_ShootAll extends SequentialCommandGroup {
 
-    public CMD_ShootAll(SUB_Shooter p_Shooter, SUB_Turntable p_Turntable, GlobalVariables p_Variables) {
+    public CMD_ShootAll(SUB_Shooter p_Shooter, SUB_Turntable p_Turntable) {
         addCommands(
-                new CMD_Shoot(p_Shooter,p_Turntable,p_Variables)
-                ,new CMD_Shoot(p_Shooter,p_Turntable,p_Variables)
-                ,new CMD_Shoot(p_Shooter,p_Turntable,p_Variables)
+                new CMD_Shoot(p_Shooter,p_Turntable)
+                ,new CMD_Shoot(p_Shooter,p_Turntable)
+                ,new CMD_Shoot(p_Shooter,p_Turntable)
         );
     }
 }

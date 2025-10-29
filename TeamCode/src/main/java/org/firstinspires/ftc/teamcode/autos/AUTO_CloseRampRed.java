@@ -4,27 +4,51 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
-import org.firstinspires.ftc.teamcode.commands.CMD_Kick;
+import org.firstinspires.ftc.teamcode.commands.CMD_AutoColorSwap;
+import org.firstinspires.ftc.teamcode.commands.CMD_ReadMotif;
 import org.firstinspires.ftc.teamcode.commands.CMD_ShootAll;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
+import org.firstinspires.ftc.teamcode.commands.RR_TurnCommand;
 
 @Autonomous(name = "Close Ramp Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_CloseRampRed extends Robot_Auto {
 
 
-    private Trajectory firstVolley, secondVolley;
+    private Trajectory readMotif, lineUpSpikeMark, intakeBallOne, intakeBallTwo, secondVolley, park;
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(41.5,-65,Math.toRadians(0)));
 
-        firstVolley = m_robot.drivetrain.trajectoryBuilder(getStartingPose(),true)
-                .lineToLinearHeading(new Pose2d(20,-10,Math.toRadians(-37.5)))
+        readMotif = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
+                .lineToLinearHeading(new Pose2d(12, -12, Math.toRadians(0)))
                 .build();
-        secondVolley = m_robot.drivetrain.trajectoryBuilder(firstVolley.end(), false)
-                .strafeLeft(36)
+
+        Pose2d lineUpSpikeMarkStartPose = new Pose2d(readMotif.end().getX(), readMotif.end().getY(),
+                readMotif.end().getHeading() + Math.toRadians(-30));
+
+        lineUpSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineUpSpikeMarkStartPose, false)
+                .lineToLinearHeading(new Pose2d(12, -36, Math.toRadians(-90)))
+                .build();
+
+        intakeBallOne = m_robot.drivetrain.trajectoryBuilder(lineUpSpikeMark.end(), false)
+                .forward(5)
+                .build();
+
+        intakeBallTwo = m_robot.drivetrain.trajectoryBuilder(intakeBallOne.end(), false)
+                .forward(5)
+                .build();
+
+        secondVolley = m_robot.drivetrain.trajectoryBuilder(intakeBallTwo.end(), false)
+                .lineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-30)))
+                .build();
+
+        park = m_robot.drivetrain.trajectoryBuilder(secondVolley.end(), false)
+                .lineToLinearHeading(new Pose2d(-12, 36, Math.toRadians(-90)))
                 .build();
     }
 
@@ -33,12 +57,49 @@ public class AUTO_CloseRampRed extends Robot_Auto {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
-                new CMD_Kick(m_robot.m_shooter)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain,firstVolley)
-                ,new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable,m_robot.GlobalVariables)
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
+            firstVolley()
+            ,intakeSpikeMark()
+            ,secondVolley()
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
         );
         return completeTasks;
+    }
+
+    private SequentialCommandGroup firstVolley(){
+        return new SequentialCommandGroup(
+            new InstantCommand(()-> m_robot.m_shooter.setKickerPosition(Constants.ShooterConstants.kKickHome))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, readMotif)
+            ,new CMD_ReadMotif(m_robot.m_vision)
+            ,new CMD_AutoColorSwap(m_robot.m_turntable)
+            ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(-30))
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(Constants.ShooterConstants.kMaxVelDegPerSec))
+            ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
+        );
+    }
+
+    private SequentialCommandGroup intakeSpikeMark(){
+        return new SequentialCommandGroup(
+            new InstantCommand(()-> m_robot.m_turntable.setPos(0))
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineUpSpikeMark)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_turntable.setPos(120))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallOne)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_turntable.setPos(240))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallTwo)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+        );
+    }
+
+    private SequentialCommandGroup secondVolley(){
+        return new SequentialCommandGroup(
+            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(Constants.ShooterConstants.kMaxVelDegPerSec))
+            ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
+        );
     }
 }

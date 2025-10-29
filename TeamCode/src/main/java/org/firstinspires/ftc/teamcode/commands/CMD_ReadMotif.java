@@ -8,16 +8,13 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
 
-public class CMD_ReadPattern extends CommandBase {
+public class CMD_ReadMotif extends CommandBase {
 
-    private List<AprilTagDetection> m_detections;
     private final SUB_Vision m_vision;
     private final ElapsedTime m_elapsedTime = new ElapsedTime();
 
-    public CMD_ReadPattern(SUB_Vision p_vision) {
+    public CMD_ReadMotif(SUB_Vision p_vision) {
         m_vision = p_vision;
     }
 
@@ -28,9 +25,8 @@ public class CMD_ReadPattern extends CommandBase {
 
     @Override
     public void execute() {
-        m_detections = m_vision.getDetections();
         try {
-            for (AprilTagDetection detection : m_detections) {
+            for (AprilTagDetection detection : m_vision.getDetections()) {
                 switch (detection.id) {
                     case 21:
                         GlobalVariables.m_patternType = GlobalVariables.patternTypes.GPP;
@@ -50,6 +46,6 @@ public class CMD_ReadPattern extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_elapsedTime.milliseconds()>500;
+        return m_elapsedTime.milliseconds() > 250;
     }
 }

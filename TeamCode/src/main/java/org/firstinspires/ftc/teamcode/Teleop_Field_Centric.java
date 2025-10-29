@@ -87,8 +87,8 @@ public class Teleop_Field_Centric extends LinearOpMode {
 //                  m_robot.drivetrain, m_robot.m_vision, m_robot.GlobalVariables, m_driverOp));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake, m_robot.m_turntable));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_Kick(m_robot.m_shooter));
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable, m_robot.GlobalVariables));
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable,m_robot.GlobalVariables));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateRight()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateLeft()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new CMD_IntakeReverse(m_robot.m_intake));
