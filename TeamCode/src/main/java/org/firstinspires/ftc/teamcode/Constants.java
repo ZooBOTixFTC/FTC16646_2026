@@ -13,18 +13,14 @@ public class Constants {
         public static final double kMaxVelDegPerSec = 30000;
         public static final double kKickPosition = 0.8;
         public static final double kKickHome = 0.5;
-        public static final double kKickDuration = 333;
-        public static final double kTicksPerRev = 2077.5; // motor PPR × gear ratio old ratio 537.7 * (331 / 64.0)
+        public static final double kKickDuration = 250;
+        public static final double kTicksPerRev = 2077; // motor PPR × gear ratio old ratio 537.7 * (331 / 64.0)
     }
 
     public static final class IntakeConstants {
         public static final double kIntakeOn = 1;
         public static final double kIntakeOff = 0;
         public static final double kIntakeReverse = -1;
-    }
-
-    public static final class LiftConstants {
-        public static final int kLiftUp = 100;
     }
 
     public static final class ColorConstants {

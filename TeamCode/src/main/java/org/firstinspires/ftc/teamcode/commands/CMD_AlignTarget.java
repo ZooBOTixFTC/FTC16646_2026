@@ -104,7 +104,7 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Control parameters
         double deadband = 2; // degrees - deadband to prevent oscillation
-        double kP = 0.012;// Proportional gain (reduced to prevent overshoot)
+        double kP = 0.01;// Proportional gain (reduced to prevent overshoot)
         double kD = 0.0;// Derivative gain to reduce oscillation (increased for damping)
 
         // Check if we're within the deadband (smaller than tolerance)
@@ -135,7 +135,7 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Apply power limits
         double maxTurnPower = 0.2; // Maximum turn power (reduced to prevent overshoot)
-        double minTurnPower = 0.1; // Minimum power threshold (lowered for smoother approach)
+        double minTurnPower = 0.05; // Minimum power threshold (lowered for smoother approach)
 
         turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower), minTurnPower, maxTurnPower), turnPower);
 

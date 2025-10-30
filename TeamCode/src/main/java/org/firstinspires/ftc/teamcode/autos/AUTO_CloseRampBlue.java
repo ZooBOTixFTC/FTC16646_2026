@@ -29,26 +29,26 @@ public class AUTO_CloseRampBlue extends Robot_Auto {
                 .build();
 
         Pose2d lineUpSpikeMarkStartPose = new Pose2d(readMotif.end().getX(), readMotif.end().getY(),
-                readMotif.end().getHeading() + Math.toRadians(30));
+                readMotif.end().getHeading() + Math.toRadians(45));
 
         lineUpSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineUpSpikeMarkStartPose, false)
-                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(7, 33, Math.toRadians(90)))
                 .build();
 
         intakeBallOne = m_robot.drivetrain.trajectoryBuilder(lineUpSpikeMark.end(), false)
-                .forward(5)
+                .forward(6)
                 .build();
 
         intakeBallTwo = m_robot.drivetrain.trajectoryBuilder(intakeBallOne.end(), false)
-                .forward(5)
+                .forward(13)
                 .build();
 
         secondVolley = m_robot.drivetrain.trajectoryBuilder(intakeBallTwo.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(30)))
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(42.5)))
                 .build();
 
         park = m_robot.drivetrain.trajectoryBuilder(secondVolley.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 36, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-12, 36, Math.toRadians(90)))
                 .build();
     }
 
@@ -71,23 +71,24 @@ public class AUTO_CloseRampBlue extends Robot_Auto {
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, readMotif)
                 ,new CMD_ReadMotif(m_robot.m_vision)
                 ,new CMD_AutoColorSwap(m_robot.m_turntable)
-                ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(30))
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(Constants.ShooterConstants.kMaxVelDegPerSec))
+                ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(45))
+                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(27000))
                 ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+                ,new WaitCommand(250)
                 ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
         );
     }
 
     private SequentialCommandGroup intakeSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_turntable.setPos(0))
+                new InstantCommand(()-> m_robot.m_turntable.setPos(60))
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineUpSpikeMark)
                 ,new WaitCommand(500)
-                ,new InstantCommand(()-> m_robot.m_turntable.setPos(120))
+                ,new InstantCommand(()-> m_robot.m_turntable.setPos(180))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallOne)
                 ,new WaitCommand(500)
-                ,new InstantCommand(()-> m_robot.m_turntable.setPos(240))
+                ,new InstantCommand(()-> m_robot.m_turntable.setPos(300))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallTwo)
                 ,new WaitCommand(500)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
@@ -96,9 +97,13 @@ public class AUTO_CloseRampBlue extends Robot_Auto {
 
     private SequentialCommandGroup secondVolley(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(Constants.ShooterConstants.kMaxVelDegPerSec))
+                new InstantCommand(()->m_robot.m_turntable.setPos(120))
+                ,new WaitCommand(200)
+                ,new CMD_AutoColorSwap(m_robot.m_turntable)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
+                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(27000))
                 ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+                ,new WaitCommand(250)
                 ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
         );
     }

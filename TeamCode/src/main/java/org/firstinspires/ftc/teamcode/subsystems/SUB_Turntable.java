@@ -43,8 +43,6 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void setPos(double targetDeg) {
-        if(!GlobalVariables.m_kickerHomed) return;
-
         m_targetDegs = targetDeg;
         int currentTicks = m_turntableMotor.getCurrentPosition();
         double currentRev = (double) currentTicks / ShooterConstants.kTicksPerRev;
@@ -88,7 +86,6 @@ public class SUB_Turntable extends SubsystemBase {
     }
 
     public void setTurntableIntakeMode() {
-        if(!GlobalVariables.m_kickerHomed) return;
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         m_turntableMotor.setPower(0.3);
     }
@@ -101,6 +98,7 @@ public class SUB_Turntable extends SubsystemBase {
     public void periodic(){
         m_opMode.telemetry.addData("turntable pos", getPos());
         m_opMode.telemetry.addData("turntable ticks", m_turntableMotor.getCurrentPosition());
+        m_opMode.telemetry.addData("turntable vel", getVelo());
         m_opMode.telemetry.addData("kicker homed",GlobalVariables.m_kickerHomed);
     }
 }

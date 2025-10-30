@@ -41,17 +41,18 @@ public class SUB_Vision extends SubsystemBase {
 
     public double getDistToTag(){
         double dist = 0;
-        if(!getDetections().isEmpty()){
-            for(AprilTagDetection detection: getDetections()){
-                if(detection.id == 20 && !GlobalVariables.m_red){
+        try {
+            for (AprilTagDetection detection : getDetections()) {
+                if (detection.id == 20 && !GlobalVariables.m_red) {
                     dist = detection.ftcPose.range;
                 }
-                if(detection.id == 24 && GlobalVariables.m_red){
+                if (detection.id == 24 && GlobalVariables.m_red) {
                     dist = detection.ftcPose.range;
                 }
             }
+        }catch (Exception e){
+            m_opMode.telemetry.addData("vision error", e.getStackTrace());
         }
-
         return dist;
     }
 
@@ -75,5 +76,7 @@ public class SUB_Vision extends SubsystemBase {
         } catch (Exception e) {
             m_opMode.telemetry.addData("vision error", e.getStackTrace());
         }
+
+        if(getDistToTag() != 0) GlobalVariables.m_distToTag = getDistToTag();
     }
 }

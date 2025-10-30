@@ -8,6 +8,7 @@ public class GlobalVariables {
      public static boolean m_intakeOn, m_intakeReverse = false;
      public static boolean m_kickerHomed = true;
      public static boolean m_red;
+     public static double m_distToTag = 0;
 
      public enum patternTypes {
           GPP,
