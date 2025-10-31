@@ -13,7 +13,7 @@ public class CMD_AdjustTargetVel extends CommandBase {
 
     @Override
     public void initialize() {
-        m_shooter.setTargetVel(22000 + (100 * GlobalVariables.m_distToTag));
+        m_shooter.setTargetVel(21000 + (105 * GlobalVariables.m_distToTag));
     }
 
     @Override

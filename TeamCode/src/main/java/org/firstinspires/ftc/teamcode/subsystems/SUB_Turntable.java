@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
@@ -87,7 +88,19 @@ public class SUB_Turntable extends SubsystemBase {
 
     public void setTurntableIntakeMode() {
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.3);
+        m_turntableMotor.setPower(0.4);
+    }
+
+    public void setResetMode() {
+        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        m_turntableMotor.setPower(0.05);
+    }
+
+    public void setReset(){
+        m_turntableMotor.setPower(0);
+        m_turntableMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_turntableMotor.setTargetPosition(0);
+        m_turntableMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public double getVelo() {

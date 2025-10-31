@@ -57,54 +57,52 @@ public class AUTO_CloseRampBlue extends Robot_Auto {
         SequentialCommandGroup completeTasks = new SequentialCommandGroup();
 
         completeTasks.addCommands(
-                firstVolley()
-                ,intakeSpikeMark()
-                ,secondVolley()
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
+            firstVolley()
+            ,intakeSpikeMark()
+            ,secondVolley()
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
         );
         return completeTasks;
     }
 
     private SequentialCommandGroup firstVolley(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_shooter.setKickerPosition(Constants.ShooterConstants.kKickHome))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, readMotif)
-                ,new CMD_ReadMotif(m_robot.m_vision)
-                ,new CMD_AutoColorSwap(m_robot.m_turntable)
-                ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(45))
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(27000))
-                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
-                ,new WaitCommand(250)
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
+            new InstantCommand(()-> m_robot.m_shooter.setKickerPosition(Constants.ShooterConstants.kKickHome))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, readMotif)
+            ,new CMD_ReadMotif(m_robot.m_vision)
+            ,new CMD_AutoColorSwap(m_robot.m_turntable)
+            ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(45))
+            ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable, 27000)
+            ,new WaitCommand(250)
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
         );
     }
 
     private SequentialCommandGroup intakeSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_turntable.setPos(60))
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineUpSpikeMark)
-                ,new WaitCommand(500)
-                ,new InstantCommand(()-> m_robot.m_turntable.setPos(180))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallOne)
-                ,new WaitCommand(500)
-                ,new InstantCommand(()-> m_robot.m_turntable.setPos(300))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallTwo)
-                ,new WaitCommand(500)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+            new InstantCommand(()-> m_robot.m_turntable.setPos(60))
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineUpSpikeMark)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_turntable.setPos(180))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallOne)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_turntable.setPos(300))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeBallTwo)
+            ,new WaitCommand(500)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
         );
     }
 
     private SequentialCommandGroup secondVolley(){
         return new SequentialCommandGroup(
-                new InstantCommand(()->m_robot.m_turntable.setPos(120))
-                ,new WaitCommand(200)
-                ,new CMD_AutoColorSwap(m_robot.m_turntable)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(27000))
-                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
-                ,new WaitCommand(250)
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
+            new InstantCommand(()->m_robot.m_turntable.setPos(120))
+            ,new WaitCommand(200)
+            ,new CMD_AutoColorSwap(m_robot.m_turntable)
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
+            ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable, 27000)
+            ,new WaitCommand(250)
+            ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
         );
     }
 }

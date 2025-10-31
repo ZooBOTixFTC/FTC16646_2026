@@ -24,9 +24,6 @@ public abstract class Robot_Auto extends LinearOpMode {
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
 
-//          m_robot.m_vision.stream(true);
-//          m_robot.m_vision.readPattern();
-
           prebuildTasks();
 
           while (!opModeIsActive() && !isStopRequested()) {
@@ -34,8 +31,6 @@ public abstract class Robot_Auto extends LinearOpMode {
                telemetry.addData("Analysis: ", 1);
                telemetry.update();
           }
-
-//          m_robot.m_vision.stream(false);
 
           buildTasks().schedule();
 
@@ -47,6 +42,7 @@ public abstract class Robot_Auto extends LinearOpMode {
                Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
                telemetry.update();
+               GlobalVariables.m_autoEndPose = m_robot.drivetrain.getPoseEstimate();
           }
 
           endOfOpMode();

@@ -45,8 +45,7 @@ public class AUTO_CloseWallRed extends Robot_Auto {
                 ,new CMD_ReadMotif(m_robot.m_vision)
                 ,new CMD_AutoColorSwap(m_robot.m_turntable)
                 ,new RR_TurnCommand(m_robot.drivetrain,Math.toRadians(-110))
-                ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(24000))
-                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable, 24000)
                 ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
         );
