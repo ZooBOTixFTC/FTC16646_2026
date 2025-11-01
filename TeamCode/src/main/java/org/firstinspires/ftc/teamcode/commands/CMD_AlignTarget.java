@@ -109,7 +109,7 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Check if we're within the deadband (smaller than tolerance)
         if (Math.abs(bearing) < deadband) {
-            m_drive.drive(-0.03, 0.0, -0.08);
+            m_drive.drive(-0.03, 0.0, GlobalVariables.m_red ? .08 : -.08);
             stableCount++;
 
             // Require stability for several cycles before finishing
