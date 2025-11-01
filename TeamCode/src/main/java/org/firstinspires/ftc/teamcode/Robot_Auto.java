@@ -20,7 +20,6 @@ public abstract class Robot_Auto extends LinearOpMode {
      public void initialize() {
           telemetry.clearAll();
           telemetry.addData("init complete", "BaseRobot");
-          m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter, m_robot.m_intake));
      }
 
      @Override

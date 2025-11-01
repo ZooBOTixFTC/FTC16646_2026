@@ -3,19 +3,22 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
-        public static final double kTolerance = 640;
+        public static final double kTolerance = 50;
         public static final double kAlpha = 0.1;
 
-        public static final double kPLeft = 0.0001;
-        public static final double kDLeft = 0.00001;
-        public static final double kVLeft = 0.0000284;
-        public static final double kSLeft = 0.037;
-        public static final double kPRight = 0.0001;
-        public static final double kDRight = 0.000005;
-        public static final double kSRight = 0.047;
-        public static final double kVRight = 0.00003;
-        public static final double kMaxVelDegPerSec = 25000;
-        public static final double kMidFieldVel = 21000;
+        public static final double kPLeft = 0.0005;
+        public static final double kDLeft = 0.0;
+        public static final double kVLeft = 0.00019;
+        public static final double kSLeft = 0.0;
+
+        public static final double kPRight = 0.0005;
+        public static final double kDRight = 0.0;
+        public static final double kSRight = 0.0;
+        public static final double kVRight = 0.00019;
+
+        public static final double kMaxVel = 4000;
+        public static final double kMaxAccel = 1000;
+        public static final double kMidFieldVel = 3500;
     }
 
     public static final class IntakeConstants {

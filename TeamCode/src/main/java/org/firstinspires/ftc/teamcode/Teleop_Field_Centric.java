@@ -75,32 +75,43 @@ public class Teleop_Field_Centric extends LinearOpMode {
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_robot.getRedSide() ? -90 : 90,0.05, m_robot.GlobalVariables));
 
-          if (!Constants.ShooterConstants.kTuningMode) m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter, m_robot.m_intake));
+          if (!Constants.ShooterConstants.kTuningMode) m_robot.m_shooterLeft.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_intake));
 
           configureButtonBindings();
      }
 
      public void configureButtonBindings() {
           AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.drivetrain,
-                  m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp));
+                  m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp));
           AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
           );
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new CMD_ShootLeft(m_robot.m_shooter, m_robot.m_lift));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootRight(m_robot.m_shooter, m_robot.m_lift));
-
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_AlignTarget(
-                  m_robot.drivetrain, m_robot.m_vision, m_driverOp));
 
           AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.BACK,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
-               new InstantCommand(()-> m_robot.m_shooter.setTargetVelLeft(0))
-               .alongWith(new InstantCommand(()-> m_robot.m_shooter.setTargetVelRight(0)))
+                  new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(0))
+                  .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.setGoal(0)))
           );
+
+          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,
+                  new InstantCommand(()-> m_robot.m_shooterLeft.unjam())
+                     .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.unjam())),
+
+                  new InstantCommand(()-> m_robot.m_shooterLeft.stop())
+                     .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.stop()))
+          );
+
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(Constants.ShooterConstants.kMaxVel)));
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(Constants.ShooterConstants.kMidFieldVel)));
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(0)));
+
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(Constants.ShooterConstants.kMaxVel)));
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(Constants.ShooterConstants.kMidFieldVel)));
+//          AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(0)));
      }
 
      public void setSide() {
