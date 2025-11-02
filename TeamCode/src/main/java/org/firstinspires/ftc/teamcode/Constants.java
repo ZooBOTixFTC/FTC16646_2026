@@ -18,7 +18,7 @@ public class Constants {
     }
 
     public static final class IntakeConstants {
-        public static final double kIntakeOn = 1;
+        public static final double kIntakeOn = 1.0;
         public static final double kIntakeOff = 0;
         public static final double kIntakeReverse = -1;
     }

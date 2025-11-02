@@ -91,6 +91,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
           AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateRight()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateLeft()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_IntakeToggle(m_robot.m_intake, m_robot.m_turntable));
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0)));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new CMD_IntakeReverse(m_robot.m_intake));
@@ -108,6 +109,7 @@ public class Teleop_Field_Centric extends LinearOpMode {
              new InstantCommand(()-> m_robot.m_turntable.setReset()));
 
           AddButtonCommand(m_toolOp, GamepadKeys.Button.A, new CMD_AutoColorSwap(m_robot.m_turntable));
+          AddButtonCommand(m_toolOp, GamepadKeys.Button.X, new InstantCommand(()-> m_robot.m_shooter.setTargetVel(25000)));
      }
 
      public void setSide() {

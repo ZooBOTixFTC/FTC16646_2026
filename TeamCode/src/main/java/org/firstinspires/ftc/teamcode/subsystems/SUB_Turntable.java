@@ -93,7 +93,7 @@ public class SUB_Turntable extends SubsystemBase {
 
     public void setResetMode() {
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.05);
+        m_turntableMotor.setPower(0.1);
     }
 
     public void setReset(){

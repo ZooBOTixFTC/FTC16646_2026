@@ -104,12 +104,12 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Control parameters
         double deadband = 2; // degrees - deadband to prevent oscillation
-        double kP = 0.01;// Proportional gain (reduced to prevent overshoot)
+        double kP = 0.012;// Proportional gain (reduced to prevent overshoot)
         double kD = 0.0;// Derivative gain to reduce oscillation (increased for damping)
 
         // Check if we're within the deadband (smaller than tolerance)
         if (Math.abs(bearing) < deadband) {
-            m_drive.drive(0.0, 0.0, 0.0);
+            m_drive.drive(-0.03, 0.0, GlobalVariables.m_red ? .08 : -.08);
             stableCount++;
 
             // Require stability for several cycles before finishing
@@ -134,8 +134,8 @@ public class CMD_AlignTarget extends CommandBase {
         double turnPower = -(kP * bearing + kD * derivative);
 
         // Apply power limits
-        double maxTurnPower = 0.2; // Maximum turn power (reduced to prevent overshoot)
-        double minTurnPower = 0.05; // Minimum power threshold (lowered for smoother approach)
+        double maxTurnPower = 0.15; // Maximum turn power (reduced to prevent overshoot)
+        double minTurnPower = 0.08; // Minimum power threshold (lowered for smoother approach)
 
         turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower), minTurnPower, maxTurnPower), turnPower);
 
@@ -148,7 +148,7 @@ public class CMD_AlignTarget extends CommandBase {
         lastError = bearing;
         lastTime = currentTime;
 
-        m_drive.drive(-.018, 0.0, turnPower);
+        m_drive.drive(-.03, 0.0, turnPower);
     }
 
     /**
