@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name = "Teleop Red", group ="Teleop Red")
-public class Teleop_Field_Centric extends LinearOpMode {
+public class TELEOP_FieldCentric extends LinearOpMode {
 
      public RobotContainer m_robot;
      private GamepadEx m_driverOp;
@@ -104,14 +104,6 @@ public class Teleop_Field_Centric extends LinearOpMode {
                   new InstantCommand(()-> m_robot.m_shooterLeft.stop())
                      .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.stop()))
           );
-
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(Constants.ShooterConstants.kMaxVel)));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(Constants.ShooterConstants.kMidFieldVel)));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new InstantCommand(()-> m_robot.m_shooterRight.setGoal(0)));
-
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(Constants.ShooterConstants.kMaxVel)));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(Constants.ShooterConstants.kMidFieldVel)));
-//          AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(0)));
      }
 
      public void setSide() {
