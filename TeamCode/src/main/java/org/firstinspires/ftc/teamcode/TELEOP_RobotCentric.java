@@ -36,7 +36,6 @@ public class TELEOP_RobotCentric extends LinearOpMode {
         initializeSubsystems();
 
         m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autoEndPose);
-        m_robot.m_vision.stream(true);
 
         while (!opModeIsActive() && !isStopRequested()) {
             telemetry.update();

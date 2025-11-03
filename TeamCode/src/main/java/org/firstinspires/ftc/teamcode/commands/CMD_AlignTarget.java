@@ -4,6 +4,8 @@ import androidx.core.math.MathUtils;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+
+import org.firstinspires.ftc.teamcode.Constants.AutoAlignConstants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
@@ -87,7 +89,9 @@ public class CMD_AlignTarget extends CommandBase {
             if (lostTargetCount > MAX_LOST_FRAMES) {
                 m_drive.drive(0.0, 0.0, 0.0);
                 isFinished = true;
-            } else {
+                return;
+            }
+            else {
                 // Brief loss - hold position and wait for target to reappear
                 m_drive.drive(0.0, 0.0, 0.0);
             }
@@ -99,17 +103,18 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Calculate optimal aiming angle (may be different from AprilTag bearing)
         double bearing = calculateOptimalAiming(currentDetection) - 1;
+
         double currentTime = System.currentTimeMillis() / 1000.0;
         double deltaTime = currentTime - lastTime;
 
         // Control parameters
-        double deadband = 2; // degrees - deadband to prevent oscillation
-        double kP = 0.012;// Proportional gain (reduced to prevent overshoot)
-        double kD = 0.0;// Derivative gain to reduce oscillation (increased for damping)
+        double deadband = GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold
+                ? AutoAlignConstants.kCloseTolerance : AutoAlignConstants.kFarTolerance;
 
         // Check if we're within the deadband (smaller than tolerance)
         if (Math.abs(bearing) < deadband) {
-            m_drive.drive(-0.03, 0.0, GlobalVariables.m_red ? .08 : -.08);
+            m_drive.drive(AutoAlignConstants.kDrive, 0.0,
+                    GlobalVariables.m_red ? AutoAlignConstants.kTurn : -AutoAlignConstants.kTurn);
             stableCount++;
 
             // Require stability for several cycles before finishing
@@ -131,24 +136,16 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         // PD control calculation
-        double turnPower = -(kP * bearing + kD * derivative);
+        double turnPower = -(AutoAlignConstants.kP * bearing + AutoAlignConstants.kD * derivative);
 
-        // Apply power limits
-        double maxTurnPower = 0.15; // Maximum turn power (reduced to prevent overshoot)
-        double minTurnPower = 0.08; // Minimum power threshold (lowered for smoother approach)
-
-        turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower), minTurnPower, maxTurnPower), turnPower);
-
-        // Apply minimum power threshold only for larger errors (beyond tolerance)
-//        if (Math.abs(bearing) > tolerance && Math.abs(turnPower) > 0 && Math.abs(turnPower) < minTurnPower) {
-//            turnPower = Math.copySign(minTurnPower, turnPower);
-//        }
+        turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower),
+                AutoAlignConstants.kMinTurn, AutoAlignConstants.kMaxTurn), turnPower);
 
         // Store values for next cycle
         lastError = bearing;
         lastTime = currentTime;
 
-        m_drive.drive(-.03, 0.0, turnPower);
+        m_drive.drive(AutoAlignConstants.kDrive, 0.0, turnPower);
     }
 
     /**

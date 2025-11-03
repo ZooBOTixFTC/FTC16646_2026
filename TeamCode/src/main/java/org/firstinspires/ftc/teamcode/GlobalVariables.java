@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 public class GlobalVariables {
      public static Pose2d m_autoEndPose = new Pose2d();
+     public static double m_distToTag = 0;
 
      public static boolean m_red = true;
 

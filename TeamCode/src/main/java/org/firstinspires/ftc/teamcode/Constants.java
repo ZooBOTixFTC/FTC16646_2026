@@ -6,11 +6,6 @@ public class Constants {
         public static final double kTolerance = 50;
         public static final double kAlpha = 0.1;
 
-        public static final double kPLeft = 0.0005;
-        public static final double kDLeft = 0.0;
-        public static final double kVLeft = 0.00019;
-        public static final double kSLeft = 0.0;
-
         public static final double kPRight = 0.0005;
         public static final double kDRight = 0.0;
         public static final double kSRight = 0.0;
@@ -33,7 +28,19 @@ public class Constants {
 
         public static final int kLift = 10;
         public static final int kHome = 0;
-        public static final int kKick = -14;
+        public static final int kKick = -13;
+    }
+
+    public static final class AutoAlignConstants{
+        public static final double kP = 0.01;
+        public static final double kD = 0.0;
+        public static final double kTurn = .07;
+        public static final double kDrive = -.03;
+        public static final double kMinTurn = .1;
+        public static final double kMaxTurn = .15;
+        public static final double kCloseTolerance = 5; // deg
+        public static final double kFarTolerance = 2; // deg
+        public static final double kDistanceThreshold = 90; // close vs. far, in.
     }
 }
 

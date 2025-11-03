@@ -22,7 +22,7 @@ public class CMD_Shoot extends SequentialCommandGroup {
                 ,new CMD_AdjustTargetVel(p_shooterLeft, p_shooterRight, p_vision)
                 ,new CMD_GetShooterAtVelocity(p_shooterLeft, p_shooterRight)
                 ,new InstantCommand(()-> p_lift.setTargetPos(Constants.LiftConstants.kKick))
-                ,new WaitCommand(500)
+                ,new WaitCommand(1000)
                 ,new CMD_GetShooterAtVelocity(p_shooterLeft, p_shooterRight)
                 ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new WaitCommand(750)

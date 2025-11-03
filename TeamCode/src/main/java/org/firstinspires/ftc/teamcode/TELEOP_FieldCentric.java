@@ -36,7 +36,6 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           initializeSubsystems();
 
           m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autoEndPose);
-          m_robot.m_vision.stream(true);
 
           while (!opModeIsActive() && !isStopRequested()) {
                telemetry.update();
@@ -81,8 +80,12 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      }
 
      public void configureButtonBindings() {
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_Shoot(m_robot.drivetrain,
-                  m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
+               new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(2500))
+               .andThen(new InstantCommand(()-> m_robot.m_shooterRight.setGoal(2500)))
+               .andThen(new CMD_Shoot(m_robot.drivetrain,
+                  m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp)));
+
           AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))

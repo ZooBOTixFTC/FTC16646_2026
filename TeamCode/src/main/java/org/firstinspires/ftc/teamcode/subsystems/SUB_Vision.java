@@ -35,14 +35,7 @@ public class SUB_Vision extends SubsystemBase {
                 .build();
 
         m_visionPortal.setProcessorEnabled(m_aprilTagProcessor, true);
-    }
-
-    public void stream(boolean stream){
-        if(stream){
-            m_visionPortal.resumeStreaming();
-        }else{
-            m_visionPortal.stopStreaming();
-        }
+        m_visionPortal.resumeStreaming();
     }
 
     public void readPattern(){
@@ -69,14 +62,13 @@ public class SUB_Vision extends SubsystemBase {
 
     public double getDistToTag(){
         double dist = 0;
-        if(!getDetections().isEmpty()){
-            for(AprilTagDetection detection: getDetections()){
-                if(detection.id == 20 && !GlobalVariables.m_red){
-                    dist = detection.ftcPose.range;
-                }
-                if(detection.id == 24 && GlobalVariables.m_red){
-                    dist = detection.ftcPose.range;
-                }
+
+        for(AprilTagDetection detection: getDetections()){
+            if(detection.id == 20 && !GlobalVariables.m_red){
+                dist = detection.ftcPose.range;
+            }
+            if(detection.id == 24 && GlobalVariables.m_red){
+                dist = detection.ftcPose.range;
             }
         }
 
@@ -87,6 +79,7 @@ public class SUB_Vision extends SubsystemBase {
     public void periodic(){
         try {
             m_detections = m_aprilTagProcessor.getDetections();
+            GlobalVariables.m_distToTag = getDistToTag();
 
             if (m_detections != null) {
                 m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());

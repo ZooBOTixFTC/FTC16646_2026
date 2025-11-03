@@ -109,6 +109,7 @@ public class SUB_ShooterRight extends SubsystemBase {
         power = MathUtils.clamp(power, 0, 1);
 
         if(!unjamming) m_shooter.setPower(power);
+        if(targetVel == 0) m_shooter.setPower(0);
     }
 
     public double getTargetVel(){

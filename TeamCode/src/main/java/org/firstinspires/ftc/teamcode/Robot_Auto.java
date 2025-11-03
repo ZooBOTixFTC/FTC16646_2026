@@ -26,8 +26,6 @@ public abstract class Robot_Auto extends LinearOpMode {
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
 
-          m_robot.m_vision.stream(true);
-
           prebuildTasks();
 
           while (!opModeIsActive() && !isStopRequested()) {
