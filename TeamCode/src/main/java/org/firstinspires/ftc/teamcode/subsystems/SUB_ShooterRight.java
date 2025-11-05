@@ -26,9 +26,9 @@ public class SUB_ShooterRight extends SubsystemBase {
     private double targetVel, lastTime, smoothedVel, lastError, volts, deltaTime = 0;
     private int lastPos = 0;
 
-    public static double kP, kD, kS, kV = 0;
+    public static double kP, kD, kS, kV, vel = 0;
 
-    private boolean unjamming = false;
+    private boolean unjamming;
 
     public SUB_ShooterRight(OpMode p_opMode) {
         m_opMode = p_opMode;
@@ -56,43 +56,45 @@ public class SUB_ShooterRight extends SubsystemBase {
 
     public void stop(){
         m_shooter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        m_shooter.setPower(0);
+        m_shooter.setPower(-1);
         unjamming = false;
     }
 
     public double getVel() {
         double currentTime = m_time.seconds();
-        deltaTime = (currentTime - lastTime); // convert nanoseconds to milliseconds
+        deltaTime = (currentTime - lastTime);
 
-        int currentPos = m_shooter.getCurrentPosition();
-        int deltaTicks = currentPos - lastPos;
+        if(deltaTime > .1) {
+            int currentPos = m_shooter.getCurrentPosition();
+            int deltaTicks = currentPos - lastPos;
 
-        double ticksPerRev = 28.0; // 1:1 GoBilda motor
-        double revs = deltaTicks / ticksPerRev;
-        double rawVelocity = (revs * 60) / deltaTime;
+            double ticksPerRev = 28.0; // 1:1 GoBilda motor
+            double revs = deltaTicks / ticksPerRev;
+            double rawVelocity = (revs * 60) / deltaTime;
 
-        smoothedVel = Constants.ShooterConstants.kAlpha * rawVelocity + (1 - Constants.ShooterConstants.kAlpha) * smoothedVel;
+            smoothedVel = Constants.ShooterConstants.kAlpha * rawVelocity + (1 - Constants.ShooterConstants.kAlpha) * smoothedVel;
 
-        lastPos = currentPos;
-        lastTime = currentTime;
+            lastPos = currentPos;
+            lastTime = currentTime;
+        }
 
-        return Math.round(smoothedVel);
+        return smoothedVel;
     }
-    
+
     public void setGoal(double targetVel){
         this.targetVel = targetVel;
     }
-    
+
     public void setVel(){
-        double error = targetVel - getVel();
-        double errorRate = (error - lastError) / .02;
+        double error = (Constants.ShooterConstants.kTuningMode ? vel : targetVel) - getVel();
+        double errorRate = (error - lastError) / deltaTime;
 
         lastError = error;
 
         if(Constants.ShooterConstants.kTuningMode){
             volts =
                 kS +
-                kV * targetVel +
+                kV * vel +
                 kP * error +
                 kD * errorRate;
         }else {
@@ -108,8 +110,8 @@ public class SUB_ShooterRight extends SubsystemBase {
         power = volts * (12 / m_voltageSensor.getVoltage());
         power = MathUtils.clamp(power, 0, 1);
 
-        if(!unjamming) m_shooter.setPower(power);
-        if(targetVel == 0) m_shooter.setPower(0);
+        if (!unjamming) m_shooter.setPower(power);
+        if(targetVel == 0 && vel == 0 && !unjamming) m_shooter.setPower(0);
     }
 
     public double getTargetVel(){
@@ -121,11 +123,11 @@ public class SUB_ShooterRight extends SubsystemBase {
         setVel();
 
         TelemetryPacket packet = new TelemetryPacket();
-        
+
         packet.put("Right Vel", getVel());
+        packet.put("Right Target Vel", Constants.ShooterConstants.kTuningMode ? vel : targetVel);
         packet.put("Right Volts", volts * m_voltageSensor.getVoltage());
-        packet.put("System millis", deltaTime);
-        
+
         m_dashboard.sendTelemetryPacket(packet);
     }
 }

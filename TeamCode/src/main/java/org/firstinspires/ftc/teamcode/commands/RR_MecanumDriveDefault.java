@@ -54,7 +54,7 @@ public class RR_MecanumDriveDefault extends CommandBase {
             newValue = 0;
         } else {
             // scale and translate the value [deadband] .. [max]
-            newValue = ( Math.abs(value) - deadband )/ ( 1 - deadband);
+            newValue = (Math.abs(value) - deadband ) / ( 1 - deadband);
             // apply the original sign
             newValue = newValue * (Math.abs(value) / value);
         }
@@ -69,7 +69,6 @@ public class RR_MecanumDriveDefault extends CommandBase {
     private double valueCubed(double value) {
         return (value * value * value);
     }
-
 }
 
 

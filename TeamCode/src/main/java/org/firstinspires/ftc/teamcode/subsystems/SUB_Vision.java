@@ -60,14 +60,20 @@ public class SUB_Vision extends SubsystemBase {
         return m_detections;
     }
 
+    public boolean hasTarget(){
+        for (AprilTagDetection detection : getDetections()){
+            if ((detection.id == 24 && GlobalVariables.m_red) || (detection.id == 20 && !GlobalVariables.m_red)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double getDistToTag(){
         double dist = 0;
 
         for(AprilTagDetection detection: getDetections()){
-            if(detection.id == 20 && !GlobalVariables.m_red){
-                dist = detection.ftcPose.range;
-            }
-            if(detection.id == 24 && GlobalVariables.m_red){
+            if((detection.id == 20 && !GlobalVariables.m_red) || (detection.id == 24 && GlobalVariables.m_red)){
                 dist = detection.ftcPose.range;
             }
         }
@@ -81,7 +87,7 @@ public class SUB_Vision extends SubsystemBase {
             m_detections = m_aprilTagProcessor.getDetections();
             GlobalVariables.m_distToTag = getDistToTag();
 
-            if (m_detections != null) {
+            if (!m_detections.isEmpty()) {
                 m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
 
                 for (AprilTagDetection detection : m_detections) {

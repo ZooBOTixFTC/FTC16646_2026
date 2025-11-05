@@ -22,8 +22,6 @@ public class SUB_Intake extends SubsystemBase {
     }
 
     public void setMotorPower(double Speed) {
-
         m_intakeMotor.setPower(Speed);
     }
-
 }

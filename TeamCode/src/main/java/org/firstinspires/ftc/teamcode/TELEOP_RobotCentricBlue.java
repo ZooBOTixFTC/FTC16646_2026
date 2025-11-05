@@ -7,5 +7,6 @@ public class TELEOP_RobotCentricBlue extends TELEOP_RobotCentric {
     @Override
     public void setSide(){
         m_robot.setBlueSide();
+        m_robot.drivetrain.setFieldCentric(false);
     }
 }

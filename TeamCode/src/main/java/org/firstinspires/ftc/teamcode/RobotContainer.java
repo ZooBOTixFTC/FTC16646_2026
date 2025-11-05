@@ -14,16 +14,18 @@ public class RobotContainer {
      public GlobalVariables GlobalVariables;
      public SUB_ShooterLeft m_shooterLeft;
      public SUB_ShooterRight m_shooterRight;
+     public SUB_Shooter m_shooter;
      public SUB_Intake m_intake;
      public SUB_Vision m_vision;
      public SUB_Lift m_lift;
 
      public RobotContainer(OpMode p_opMode) {
-          drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), true);
+          drivetrain = new MecanumDriveSubsystem(new SampleMecanumDrive(p_opMode.hardwareMap), p_opMode);
           GlobalVariables = new GlobalVariables();
           m_intake = new SUB_Intake(p_opMode);
           m_shooterLeft = new SUB_ShooterLeft(p_opMode);
           m_shooterRight = new SUB_ShooterRight(p_opMode);
+          m_shooter = new SUB_Shooter(m_shooterLeft, m_shooterRight);
           m_vision = new SUB_Vision(p_opMode, GlobalVariables);
           m_lift = new SUB_Lift(p_opMode);
      };

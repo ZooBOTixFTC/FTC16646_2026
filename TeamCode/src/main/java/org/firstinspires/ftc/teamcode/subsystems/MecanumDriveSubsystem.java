@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.localization.Localizer;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
@@ -21,15 +22,24 @@ import java.util.List;
 public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.SubsystemBase {
 
     private final SampleMecanumDrive drive;
-    private boolean fieldCentric;
+    private boolean fieldCentric = true;
+    private final OpMode m_opMode;
 
-    public MecanumDriveSubsystem(SampleMecanumDrive drive, boolean isFieldCentric) {
+    public MecanumDriveSubsystem(SampleMecanumDrive drive, OpMode p_opMode) {
         this.drive = drive;
-        fieldCentric = isFieldCentric;
+        m_opMode = p_opMode;
     }
 
     public void setMode(DcMotor.RunMode mode) {
         drive.setMode(mode);
+    }
+
+    public void setMotorTargetPositions(int pos, int pos1, int pos2, int pos3){
+        drive.setMotorTargetPositions(pos, pos1, pos2, pos3);
+    }
+
+    public void setMotorPowers(double v, double v1, double v2, double v3){
+        drive.setMotorPowers(v, v1, v2, v3);
     }
 
     public void setPIDFCoefficients(DcMotor.RunMode mode, PIDFCoefficients coefficients) {
@@ -52,11 +62,11 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
         Vector2d input = new Vector2d(-leftY, -leftX);
 
         drive.setWeightedDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -rightX
-                )
+            new Pose2d(
+                input.getX(),
+                input.getY(),
+                -rightX
+            )
         );
     }
 
@@ -64,15 +74,15 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
         Pose2d poseEstimate = getPoseEstimate();
 
         Vector2d input = new Vector2d(-leftY, -leftX).rotated(
-                fieldCentric ? -poseEstimate.getHeading() + Math.toRadians(driverOffsetAngle) : 0
+            fieldCentric ? -poseEstimate.getHeading() + Math.toRadians(driverOffsetAngle) : 0
         );
 
         drive.setWeightedDrivePower(
-                new Pose2d(
-                        input.getX(),
-                        input.getY(),
-                        -rightX
-                )
+            new Pose2d(
+                input.getX(),
+                input.getY(),
+                -rightX
+            )
         );
     }
 
@@ -112,6 +122,10 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
         return drive.getWheelVelocities();
     }
 
+    public List<Double> getWheelPositions(){
+        return drive.getWheelPositions();
+    }
+
     public void stop() {
         drive(0, 0, 0);
     }
@@ -126,5 +140,14 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
 
     public void setFieldCentric(boolean p_fieldCentric) {
         fieldCentric = p_fieldCentric;
+    }
+
+    @Override
+    public void periodic(){
+        int i = 0;
+        for(double pos : getWheelPositions()){
+            m_opMode.telemetry.addData("Motor " + i, pos);
+            i++;
+        }
     }
 }

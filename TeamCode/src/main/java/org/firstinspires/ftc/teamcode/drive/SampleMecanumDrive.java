@@ -299,6 +299,13 @@ public class SampleMecanumDrive extends MecanumDrive {
         rightFront.setPower(v3);
     }
 
+    public void setMotorTargetPositions(int pos, int pos1, int pos2, int pos3){
+        leftFront.setTargetPosition(pos);
+        leftRear.setTargetPosition(pos1);
+        rightFront.setTargetPosition(pos2);
+        rightFront.setTargetPosition(pos3);
+    }
+
     @Override
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;

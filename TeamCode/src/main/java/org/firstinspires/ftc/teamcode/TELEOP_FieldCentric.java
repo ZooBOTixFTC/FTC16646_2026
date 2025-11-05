@@ -66,46 +66,46 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           m_driverOp = new GamepadEx(gamepad1);
           m_toolOp = new GamepadEx(gamepad2);
 
-          setSide();
-          GlobalVariables.m_red = m_robot.getRedSide();
-
           m_robot.drivetrain.setFieldCentric(true);
+          m_robot.drivetrain.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
                   m_robot.getRedSide() ? -90 : 90,0.05, m_robot.GlobalVariables));
 
-          if (!Constants.ShooterConstants.kTuningMode) m_robot.m_shooterLeft.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_intake));
+         setSide();
+         GlobalVariables.m_red = m_robot.getRedSide();
+
+          if (!Constants.ShooterConstants.kTuningMode)
+              m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter, m_robot.m_intake));
 
           configureButtonBindings();
      }
 
      public void configureButtonBindings() {
           AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
-               new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(2500))
-               .andThen(new InstantCommand(()-> m_robot.m_shooterRight.setGoal(2500)))
+               new InstantCommand(()-> m_robot.m_shooter.setGoal(2500))
                .andThen(new CMD_Shoot(m_robot.drivetrain,
-                  m_robot.m_shooterLeft, m_robot.m_shooterRight, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp)));
+                    m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp)));
 
           AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
           );
 
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.drivetrain.stop()));
+
           AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.BACK,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
-                  new InstantCommand(()-> m_robot.m_shooterLeft.setGoal(0))
-                  .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.setGoal(0)))
+                  new InstantCommand(()-> m_robot.m_shooter.setGoal(0))
           );
 
           AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,
-                  new InstantCommand(()-> m_robot.m_shooterLeft.unjam())
-                     .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.unjam())),
+                  new InstantCommand(()-> m_robot.m_shooter.unjam()),
 
-                  new InstantCommand(()-> m_robot.m_shooterLeft.stop())
-                     .alongWith(new InstantCommand(()-> m_robot.m_shooterRight.stop()))
+                  new InstantCommand(()-> m_robot.m_shooter.stop())
           );
      }
 

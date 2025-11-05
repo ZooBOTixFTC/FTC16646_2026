@@ -5,21 +5,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Intake;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_ShooterLeft;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_ShooterRight;
+import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 public class CMD_ShooterDefault extends CommandBase {
-    private final SUB_ShooterLeft m_shooterLeft;
-    private final SUB_ShooterRight m_shooterRight;
+    private final SUB_Shooter m_shooter;
     private final SUB_Intake m_intake;
     private final ElapsedTime timer = new ElapsedTime();
     private boolean triggered;
-    public CMD_ShooterDefault(SUB_ShooterLeft p_shooterLeft, SUB_ShooterRight p_shooterRight, SUB_Intake p_intake){
-        m_shooterLeft = p_shooterLeft;
-        m_shooterRight = p_shooterRight;
+    public CMD_ShooterDefault(SUB_Shooter p_shooter, SUB_Intake p_intake){
+        m_shooter = p_shooter;
         m_intake = p_intake;
 
-        addRequirements(m_shooterLeft, m_shooterRight);
+        addRequirements(m_shooter);
     }
 
     @Override
@@ -30,9 +27,8 @@ public class CMD_ShooterDefault extends CommandBase {
 
     @Override
     public void execute(){
-        if (timer.milliseconds() > 500 && !triggered) {
-            m_shooterLeft.setGoal(0);
-            m_shooterRight.setGoal(0);
+        if (timer.milliseconds() > 250 && !triggered) {
+            m_shooter.setGoal(0);
             m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff);
             triggered = true;
         }
