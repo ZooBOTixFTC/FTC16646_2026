@@ -28,7 +28,7 @@ public class SUB_ShooterRight extends SubsystemBase {
 
     public static double kP, kD, kS, kV, vel = 0;
 
-    private boolean unjamming;
+    private boolean unjamming = false;
 
     public SUB_ShooterRight(OpMode p_opMode) {
         m_opMode = p_opMode;
@@ -64,7 +64,7 @@ public class SUB_ShooterRight extends SubsystemBase {
         double currentTime = m_time.seconds();
         deltaTime = (currentTime - lastTime);
 
-        if(deltaTime > .1) {
+        if(deltaTime > .05) {
             int currentPos = m_shooter.getCurrentPosition();
             int deltaTicks = currentPos - lastPos;
 
@@ -77,7 +77,6 @@ public class SUB_ShooterRight extends SubsystemBase {
             lastPos = currentPos;
             lastTime = currentTime;
         }
-
         return smoothedVel;
     }
 

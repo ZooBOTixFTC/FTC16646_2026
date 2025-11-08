@@ -28,7 +28,7 @@ public class SUB_ShooterLeft extends SubsystemBase {
 
     public static double kP, kD, kS, kV, vel = 0;
 
-    private boolean unjamming;
+    private boolean unjamming = false;
 
     public SUB_ShooterLeft(OpMode p_opMode) {
         m_opMode = p_opMode;
@@ -64,7 +64,7 @@ public class SUB_ShooterLeft extends SubsystemBase {
         double currentTime = m_time.seconds();
         deltaTime = (currentTime - lastTime);
 
-        if(deltaTime > .1) {
+        if(deltaTime > .05) {
             int currentPos = m_shooter.getCurrentPosition();
             int deltaTicks = currentPos - lastPos;
 
@@ -77,7 +77,6 @@ public class SUB_ShooterLeft extends SubsystemBase {
             lastPos = currentPos;
             lastTime = currentTime;
         }
-//        return Math.round(smoothedVel);
         return smoothedVel;
     }
 
@@ -99,10 +98,10 @@ public class SUB_ShooterLeft extends SubsystemBase {
                 kD * errorRate;
         }else {
             volts =
-                Constants.ShooterConstants.kSRight +
-                Constants.ShooterConstants.kVRight * targetVel +
-                Constants.ShooterConstants.kPRight * error +
-                Constants.ShooterConstants.kDRight * errorRate;
+                Constants.ShooterConstants.kSLeft +
+                Constants.ShooterConstants.kVLeft * targetVel +
+                Constants.ShooterConstants.kPLeft * error +
+                Constants.ShooterConstants.kDLeft * errorRate;
         }
 
         double power;

@@ -11,6 +11,8 @@ public class SUB_Lift extends SubsystemBase {
     private final DcMotor m_LiftMotor;
     private final OpMode m_opMode;
 
+    private double m_targetPos;
+
     public SUB_Lift(OpMode p_opmode) {
        m_opMode = p_opmode;
        m_LiftMotor = m_opMode.hardwareMap.get(DcMotor.class, "liftMotor");
@@ -24,6 +26,7 @@ public class SUB_Lift extends SubsystemBase {
     }
 
     public void setTargetPos(double angDeg){
+        m_targetPos = angDeg;
         double targetTicks = (angDeg/360) * LiftConstants.kTicksPerRev;
         m_LiftMotor.setTargetPosition((int) targetTicks);
         m_LiftMotor.setPower(1);
@@ -31,6 +34,10 @@ public class SUB_Lift extends SubsystemBase {
 
     public double getPos(){
         return (m_LiftMotor.getCurrentPosition() / LiftConstants.kTicksPerRev) * 360;
+    }
+
+    public double getTargetPos(){
+        return m_targetPos;
     }
 
     @Override

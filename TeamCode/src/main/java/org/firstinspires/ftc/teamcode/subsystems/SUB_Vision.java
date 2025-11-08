@@ -85,7 +85,8 @@ public class SUB_Vision extends SubsystemBase {
     public void periodic(){
         try {
             m_detections = m_aprilTagProcessor.getDetections();
-            GlobalVariables.m_distToTag = getDistToTag();
+
+            if(!(getDistToTag() == 0)) GlobalVariables.m_distToTag = getDistToTag();
 
             if (!m_detections.isEmpty()) {
                 m_opMode.telemetry.addData("# AprilTags detected", m_detections.size());
@@ -103,5 +104,7 @@ public class SUB_Vision extends SubsystemBase {
         } catch (Exception e) {
             m_opMode.telemetry.addData("vision error", e.getStackTrace());
         }
+
+        m_opMode.telemetry.addData("Global tag dist", GlobalVariables.m_distToTag);
     }
 }

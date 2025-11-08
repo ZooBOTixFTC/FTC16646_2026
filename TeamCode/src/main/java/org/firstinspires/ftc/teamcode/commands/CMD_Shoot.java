@@ -18,19 +18,14 @@ public class CMD_Shoot extends SequentialCommandGroup {
         addRequirements(p_drive, p_shooter);
 
         addCommands(
-//            new CMD_AlignTarget(p_drive, p_vision, p_driverOp)
-            new CMD_AdjustTargetVel(p_shooter)
+            new CMD_AlignTarget(p_drive, p_vision, p_driverOp)
+            ,new CMD_AdjustTargetVel(p_shooter)
             ,new CMD_GetShooterAtVelocity(p_shooter)
-            ,new InstantCommand(()-> p_lift.setTargetPos(Constants.LiftConstants.kKick))
-            ,new WaitCommand(250)
-            ,new InstantCommand(()-> p_lift.setTargetPos(Constants.LiftConstants.kHome))
+            ,new CMD_Kick(p_lift)
             ,new WaitCommand(500)
             ,new CMD_GetShooterAtVelocity(p_shooter)
             ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-            ,new InstantCommand(()-> p_lift.setTargetPos(Constants.LiftConstants.kKick))
-            ,new WaitCommand(750)
-            ,new InstantCommand(()-> p_lift.setTargetPos(Constants.LiftConstants.kHome))
-            ,new WaitCommand(500)
+            ,new CMD_Kick(p_lift)
         );
     }
 }

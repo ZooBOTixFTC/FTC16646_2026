@@ -13,7 +13,6 @@ public class CMD_GetShooterAtVelocity extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(m_shooter.getLeftVel() - m_shooter.getTargetVel()) < ShooterConstants.kTolerance)
-                && (Math.abs(m_shooter.getRightVel() - m_shooter.getTargetVel()) < ShooterConstants.kTolerance);
+        return (Math.abs(m_shooter.getVel() - m_shooter.getTargetVel()) < ShooterConstants.kTolerance);
     }
 }

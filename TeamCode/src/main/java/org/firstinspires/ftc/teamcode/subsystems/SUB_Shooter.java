@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 
+@Config
 public class SUB_Shooter extends SubsystemBase {
     private final SUB_ShooterLeft m_shooterLeft;
     private final SUB_ShooterRight m_shooterRight;
+
     public SUB_Shooter(SUB_ShooterLeft p_shooterLeft, SUB_ShooterRight p_shooterRight) {
         m_shooterLeft = p_shooterLeft;
         m_shooterRight = p_shooterRight;
@@ -19,12 +22,8 @@ public class SUB_Shooter extends SubsystemBase {
         return m_shooterLeft.getTargetVel();
     }
 
-    public double getLeftVel(){
+    public double getVel(){
         return m_shooterLeft.getVel();
-    }
-
-    public double getRightVel(){
-        return m_shooterRight.getVel();
     }
 
     public void unjam(){
