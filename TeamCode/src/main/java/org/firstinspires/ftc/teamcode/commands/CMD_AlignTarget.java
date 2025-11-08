@@ -58,14 +58,12 @@ public class CMD_AlignTarget extends CommandBase {
         lastTime = System.currentTimeMillis() / 1000.0;
         stableCount = 0;
         lostTargetCount = 0;
-
-        if(GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold) cancel();
     }
 
     @Override
     public void execute() {
         // Check for manual override first
-        if (isManualOverride()) {
+        if (isManualOverride() || GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold) {
             m_drive.drive(0.0, 0.0, 0.0);
             isFinished = true;
             return;
@@ -104,7 +102,7 @@ public class CMD_AlignTarget extends CommandBase {
         lostTargetCount = 0;
 
         // Calculate optimal aiming angle (may be different from AprilTag bearing)
-        double bearing = calculateOptimalAiming(currentDetection);
+        double bearing = calculateOptimalAiming(currentDetection) - (GlobalVariables.m_red ? -1 : 1);
 
         double currentTime = System.currentTimeMillis() / 1000.0;
         double deltaTime = currentTime - lastTime;

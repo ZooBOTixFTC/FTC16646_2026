@@ -141,13 +141,4 @@ public class MecanumDriveSubsystem extends com.arcrobotics.ftclib.command.Subsys
     public void setFieldCentric(boolean p_fieldCentric) {
         fieldCentric = p_fieldCentric;
     }
-
-    @Override
-    public void periodic(){
-        int i = 0;
-        for(double pos : getWheelPositions()){
-            m_opMode.telemetry.addData("Motor " + i, pos);
-            i++;
-        }
-    }
 }

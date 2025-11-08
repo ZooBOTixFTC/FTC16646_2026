@@ -35,7 +35,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
 
-//          m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(GlobalVariables.m_red ? Math.toRadians(-90) : Math.toRadians(90))));
+          m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(GlobalVariables.m_red ? 90 : -90)));
 
           while (!opModeIsActive() && !isStopRequested()) {
                telemetry.update();
@@ -99,7 +99,11 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
-                  new InstantCommand(()-> m_robot.m_shooter.setGoal(0))
+                  new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kLift))
+          );
+
+          AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK,
+                  new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kHome))
           );
 
           AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,

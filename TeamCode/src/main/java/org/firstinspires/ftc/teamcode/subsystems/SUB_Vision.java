@@ -99,12 +99,9 @@ public class SUB_Vision extends SubsystemBase {
                 }
             }
 
-            m_opMode.telemetry.addData("vision portal status", m_visionPortal.getCameraState());
             m_opMode.telemetry.addData("fps", m_visionPortal.getFps());
         } catch (Exception e) {
             m_opMode.telemetry.addData("vision error", e.getStackTrace());
         }
-
-        m_opMode.telemetry.addData("Global tag dist", GlobalVariables.m_distToTag);
     }
 }

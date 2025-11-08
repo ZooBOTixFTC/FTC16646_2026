@@ -128,5 +128,9 @@ public class SUB_ShooterRight extends SubsystemBase {
         packet.put("Right Volts", volts * m_voltageSensor.getVoltage());
 
         m_dashboard.sendTelemetryPacket(packet);
+
+        m_opMode.telemetry.addData("Right Vel", getVel());
+        m_opMode.telemetry.addData("Right Target Vel", getTargetVel());
+        m_opMode.telemetry.addData("Right Volts", volts);
     }
 }
