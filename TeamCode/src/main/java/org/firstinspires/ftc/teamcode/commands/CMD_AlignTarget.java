@@ -51,6 +51,14 @@ public class CMD_AlignTarget extends CommandBase {
         addRequirements(drive);
     }
 
+    public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision) {
+        this.m_drive = drive;
+        this.m_vision = vision;
+        this.m_gamepad = null;
+
+        addRequirements(drive);
+    }
+
     @Override
     public void initialize() {
         isFinished = false;
@@ -200,6 +208,7 @@ public class CMD_AlignTarget extends CommandBase {
      */
     private boolean isManualOverride() {
         // Check all drive-related stick inputs using GamepadEx methods
+        if(m_gamepad == null) return false;
         double leftStickX = Math.abs(m_gamepad.getLeftX());
         double leftStickY = Math.abs(m_gamepad.getLeftY());
         double rightStickX = Math.abs(m_gamepad.getRightX());

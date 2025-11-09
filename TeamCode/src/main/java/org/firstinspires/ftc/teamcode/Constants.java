@@ -22,6 +22,7 @@ public class Constants {
 
     public static final class IntakeConstants {
         public static final double kIntakeOn = 1;
+        public static final double kIntakeAuto = 0.75;
         public static final double kIntakeOff = 0;
         public static final double kIntakeReverse = -1;
     }
@@ -44,6 +45,10 @@ public class Constants {
         public static final double kCloseTolerance = 2; // deg
         public static final double kFarTolerance = 2; // deg
         public static final double kDistanceThreshold = 90; // close vs. far, in.
+    }
+
+    public static class SystemConstants{
+        public static final int kSysUpdateRateHz = 10;
     }
 }
 

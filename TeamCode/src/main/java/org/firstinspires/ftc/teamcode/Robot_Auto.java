@@ -7,8 +7,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.commands.CMD_ShooterDefault;
-
 public abstract class Robot_Auto extends LinearOpMode {
 
      public RobotContainer m_robot;

@@ -61,23 +61,23 @@ public class SUB_ShooterLeft extends SubsystemBase {
     }
 
     public double getVel() {
-        double currentTime = m_time.seconds();
-        deltaTime = (currentTime - lastTime);
+//        double currentTime = m_time.seconds();
+//        deltaTime = (currentTime - lastTime);
 
-        if(deltaTime > .05) {
-            int currentPos = m_shooter.getCurrentPosition();
-            int deltaTicks = currentPos - lastPos;
+//        if(deltaTime > .05) {
+//            int currentPos = m_shooter.getCurrentPosition();
+//            int deltaTicks = currentPos - lastPos;
 
-            double ticksPerRev = 28.0; // 1:1 GoBilda motor
-            double revs = deltaTicks / ticksPerRev;
-            double rawVelocity = (revs * 60) / deltaTime;
+//            double ticksPerRev = 28.0; // 1:1 GoBilda motor
+//            double revs = deltaTicks / ticksPerRev;
+//            double rawVelocity = (revs * 60) / deltaTime;
 
-            smoothedVel = Constants.ShooterConstants.kAlpha * rawVelocity + (1 - Constants.ShooterConstants.kAlpha) * smoothedVel;
-
-            lastPos = currentPos;
-            lastTime = currentTime;
-        }
-        return smoothedVel;
+//            smoothedVel = Constants.ShooterConstants.kAlpha * rawVelocity + (1 - Constants.ShooterConstants.kAlpha) * smoothedVel;
+//
+//            lastPos = currentPos;
+//            lastTime = currentTime;
+//        }
+        return (m_shooter.getVelocity() * 60) / 28;
     }
 
     public void setGoal(double targetVel){
