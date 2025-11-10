@@ -28,7 +28,7 @@ public class CMD_ShooterDefault extends CommandBase {
     @Override
     public void execute(){
         if (timer.milliseconds() > 250 && !triggered) {
-            m_shooter.setGoal(0);
+            m_shooter.setShootingVelocity(0);
             m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff);
             triggered = true;
         }

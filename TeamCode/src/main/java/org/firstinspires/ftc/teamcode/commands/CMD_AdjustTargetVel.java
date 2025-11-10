@@ -15,9 +15,9 @@ public class CMD_AdjustTargetVel extends CommandBase {
     @Override
     public void initialize(){
         if(GlobalVariables.m_distToTag < 90){
-            m_shooter.setGoal(Constants.ShooterConstants.kMidFieldVel);
+            m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel);
         }else{
-            m_shooter.setGoal(Constants.ShooterConstants.kMaxVel);
+            m_shooter.setShootingVelocity(Constants.ShooterConstants.kMaxVel);
         }
     }
 

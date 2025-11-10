@@ -33,10 +33,10 @@ public class AUTO_FarRed extends Robot_Auto {
 
     private SequentialCommandGroup firstVolley(){
         return new SequentialCommandGroup(
-            new InstantCommand(()-> m_robot.m_shooter.setGoal(2000))
+            new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
             ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -16, Math.toRadians(-20)), false)
             ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-            ,new InstantCommand(()-> m_robot.m_shooter.setGoal(Constants.ShooterConstants.kMaxVel))
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMaxVel))
             ,new WaitCommand(500)
             ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
             ,new CMD_Kick(m_robot.m_lift)
@@ -44,7 +44,7 @@ public class AUTO_FarRed extends Robot_Auto {
             ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
             ,new CMD_Kick(m_robot.m_lift)
             ,new WaitCommand(750)
-            ,new InstantCommand(()-> m_robot.m_shooter.setGoal(0))
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
 
@@ -62,16 +62,16 @@ public class AUTO_FarRed extends Robot_Auto {
     private SequentialCommandGroup secondVolley(){
         return new SequentialCommandGroup(
             new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -16, Math.toRadians(-20)), false)
-            ,new InstantCommand(()-> m_robot.m_shooter.setGoal(2000))
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
             ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-            ,new InstantCommand(()-> m_robot.m_shooter.setGoal(Constants.ShooterConstants.kMaxVel))
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMaxVel))
             ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
             ,new CMD_Kick(m_robot.m_lift)
             ,new WaitCommand(500)
             ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
             ,new CMD_Kick(m_robot.m_lift)
             ,new WaitCommand(750)
-            ,new InstantCommand(()-> m_robot.m_shooter.setGoal(0))
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
 
@@ -89,16 +89,16 @@ public class AUTO_FarRed extends Robot_Auto {
     private SequentialCommandGroup thirdVolley(){
         return new SequentialCommandGroup(
                 new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -16, Math.toRadians(-20)), false)
-                ,new InstantCommand(()-> m_robot.m_shooter.setGoal(2000))
+                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
                 ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-                ,new InstantCommand(()-> m_robot.m_shooter.setGoal(Constants.ShooterConstants.kMaxVel))
+                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMaxVel))
                 ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
                 ,new CMD_Kick(m_robot.m_lift)
                 ,new WaitCommand(500)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new CMD_Kick(m_robot.m_lift)
                 ,new WaitCommand(750)
-                ,new InstantCommand(()-> m_robot.m_shooter.setGoal(0))
+                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
 }

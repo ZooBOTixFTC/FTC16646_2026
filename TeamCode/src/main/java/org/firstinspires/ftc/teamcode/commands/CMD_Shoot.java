@@ -23,6 +23,7 @@ public class CMD_Shoot extends SequentialCommandGroup {
             ,new CMD_GetShooterAtVelocity(p_shooter)
             ,new CMD_Kick(p_lift)
             ,new WaitCommand(500)
+//            ,new InstantCommand(()-> p_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
             ,new CMD_GetShooterAtVelocity(p_shooter)
             ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
             ,new CMD_Kick(p_lift)

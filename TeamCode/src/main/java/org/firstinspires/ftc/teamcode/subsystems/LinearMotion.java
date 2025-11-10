@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.arcrobotics.ftclib.command.Subsystem;
-import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -17,16 +16,13 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     private final DcMotorEx encoder;
     private final boolean encoderReversed;
     private final double maximumSpeed;
-    private final PIDFController controller;
     //private final double kG, kV, kS;
-    private final double kp, ki, kd,kf;
+    private double kp, ki, kd,kf;
     private double setPoint;
 
     private double previousError = 0;
     private double  integralSum = 0;
-    private double targetVelocity = 0;
-
-    private double previousSetPoint = 0;
+    private double targetVelocity;
 
     public LinearMotion(
             String name,
@@ -50,8 +46,6 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
         this.ki = kI;
         this.kd = kD;
         this.kf = kF;
-        this.controller = new PIDFController(kP,0,0,0);
-
 
         for (DcMotor motor:motors) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -59,12 +53,8 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
         }
         encoder.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        this.targetVelocity = 0;  //initalize
-
+        this.targetVelocity = 0;  //initialize
     }
-
-
-    private double encoderZeroPosition = 0.0;
 
     //(-1.0 to 1.0)
     public void setTargetVelocity(double targetVelocity) {
@@ -82,16 +72,11 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     public void resetController() {
         this.integralSum = 0;
         this.previousError = 0;
-        this.targetVelocity = 0; // 将目标速度也设为0
+        this.targetVelocity = 0;
     }
 
     public void periodic(){
-
         double currentVelocity = getCurrentVelocity();
-        //  double desiredVelocity = (setPoint - previousSetPoint) * SystemConstants.ROBOT_UPDATE_RATE_HZ;
-
-        previousSetPoint = setPoint;
-
 
         double error = targetVelocity - currentVelocity;
 
@@ -133,8 +118,8 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     }
 
     public void setMotorsStop(){
-        for (int i = 0; i < motors.length; i++) {
-            motors[i].setPower(0);
+        for (DcMotorEx motor : motors) {
+            motor.setPower(0);
         }
     }
     public double getTargetVelocity() {
@@ -150,16 +135,17 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     }
 
     public double getOutputPower() {
-        // 计算当前所有马达的平均功率
-        double total = 0;
-        for (DcMotorEx motor : motors) {
-            total += motor.getPower();
-        }
-        return total / motors.length;
+        return motors[0].getPower();
     }
 
     public double getPosition() {
         return encoder.getCurrentPosition();
     }
 
+    public void setPIDF(double p, double i, double d, double f){
+        this.kp = p;
+        this.ki = i;
+        this.kd = d;
+        this.kf = f;
+    }
 }
