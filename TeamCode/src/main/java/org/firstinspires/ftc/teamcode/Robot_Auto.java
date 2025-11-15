@@ -38,18 +38,14 @@ public abstract class Robot_Auto extends LinearOpMode {
           while (!isStopRequested() && opModeIsActive()) {
                m_robot.run(); // run the scheduler
                m_robot.drivetrain.update();
+
                Pose2d poseEstimate = m_robot.drivetrain.getPoseEstimate();
+
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
                telemetry.update();
           }
-
-          endOfOpMode();
-          m_robot.reset();
-     }
-
-     public void endOfOpMode() {
-          GlobalVariables.m_autoEndPose = m_robot.drivetrain.getPoseEstimate();
-          m_robot.reset();
+         GlobalVariables.m_autoEndHeading = m_robot.drivetrain.getPoseEstimate().getHeading();
+         m_robot.reset();
      }
 
      public void initializeSubsystems() {

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -35,8 +37,6 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      public void runOpMode() throws InterruptedException {
           initializeSubsystems();
 
-          m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(GlobalVariables.m_red ? -90 : 90)));
-
           while (!opModeIsActive() && !isStopRequested()) {
                telemetry.update();
           }
@@ -50,6 +50,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(),
                        poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
 
+               telemetry.addData("end heading", GlobalVariables.m_autoEndHeading);
                telemetry.update();
           }
 
@@ -69,8 +70,8 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           m_robot.drivetrain.setFieldCentric(true);
           m_robot.drivetrain.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-          m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,
-                  m_robot.getRedSide() ? -90 : 90,0.05, m_robot.GlobalVariables));
+          m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.03));
+          m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, GlobalVariables.m_autoEndHeading));
 
          setSide();
          GlobalVariables.m_red = m_robot.getRedSide();
@@ -82,29 +83,57 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      }
 
      public void configureButtonBindings() {
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
-               new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-               .andThen(new CMD_Shoot(m_robot.drivetrain,
-                    m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp)));
+         AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
+                 new CMD_AdjustTargetVel(m_robot.m_shooter)
+                 .andThen(new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)));
 
-          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
+         AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                   ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-          );
+         );
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_DriveInterrupt(m_robot.drivetrain));
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_DriveInterrupt(m_robot.drivetrain));
 
-          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
-                  new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
-                  ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
+         AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
+                 new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
+                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
-                  new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kLift))
-          );
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
+                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kLift))
+         );
 
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK,
-                  new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kHome))
-          );
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK,
+                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kHome)));
+
+         AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,
+                  new InstantCommand(()-> m_robot.m_shooter.unjam())
+                  ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
+
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_KickReset(m_robot.m_lift));
+
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));
+
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.Y,
+                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
+                 .andThen(new CMD_Shoot(m_robot.drivetrain,
+                         m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake, m_robot.m_vision, m_driverOp)));
+
+         // Operator
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.BACK, new CMD_KickReset(m_robot.m_lift));
+
+         AddButtonToggleCommand(m_toolOp, GamepadKeys.Button.X,
+                 new InstantCommand(()-> m_robot.m_shooter.unjam())
+                 ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.A,
+                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kLift))
+         );
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.B,
+                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kHome))
+         );
      }
 
      public void setSide() {

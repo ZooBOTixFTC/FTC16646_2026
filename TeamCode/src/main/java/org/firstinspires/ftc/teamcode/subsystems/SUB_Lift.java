@@ -36,6 +36,22 @@ public class SUB_Lift extends SubsystemBase {
         return (m_LiftMotor.getCurrentPosition() / LiftConstants.kTicksPerRev) * 360;
     }
 
+    public int getTicks(){
+        return m_LiftMotor.getCurrentPosition();
+    }
+
+    public void startReset(){
+        m_LiftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        m_LiftMotor.setPower(.67);
+    }
+
+    public void reset(){
+        m_LiftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        m_LiftMotor.setTargetPosition(m_LiftMotor.getCurrentPosition());
+        m_LiftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m_LiftMotor.setPower(0);
+    }
+
     public double getTargetPos(){
         return m_targetPos;
     }

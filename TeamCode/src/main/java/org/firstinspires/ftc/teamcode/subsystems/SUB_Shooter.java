@@ -36,7 +36,7 @@ public class SUB_Shooter extends SubsystemBase {
                 new boolean[]{false},
                 m_opMode.hardwareMap.get(DcMotorEx.class,"shooterMotorLeft"),
                 false,
-                2600,
+                Constants.ShooterConstants.kMaxVel,
                 Constants.ShooterConstants.kP,
                 0.0,
                 0.0,
@@ -51,7 +51,7 @@ public class SUB_Shooter extends SubsystemBase {
                 new boolean[]{true},
                 m_opMode.hardwareMap.get(DcMotorEx.class,"shooterMotorRight"),
                 true,
-                2600,
+                Constants.ShooterConstants.kMaxVel,
                 Constants.ShooterConstants.kP,
                 0.0,
                 0.0,
@@ -62,21 +62,19 @@ public class SUB_Shooter extends SubsystemBase {
         m_dashboard.setTelemetryTransmissionInterval(20);
     }
 
-//    @Override
     public void periodic() {
         m_shooterLeft.periodic();
         m_shooterRight.periodic();
-        m_opMode.telemetry.addData("=== SHOOTER ===", "");
+
         m_opMode.telemetry.addData("Target Vel", "%.0f RPM", m_shooterLeft.getTargetVelocity());
+
         m_opMode.telemetry.addData("Left Vel", "%.0f RPM", m_shooterLeft.getCurrentVelocityRaw());
         m_opMode.telemetry.addData("Right Power", "%.3f", m_shooterLeft.getOutputPower());
 
         m_opMode.telemetry.addData("Right Vel", "%.0f RPM", m_shooterRight.getCurrentVelocityRaw());
         m_opMode.telemetry.addData("Left Power", "%.3f", m_shooterRight.getOutputPower());
 
-        m_opMode.telemetry.addData("===== SHOOTER STATUS =====", "");
-        m_opMode.telemetry.addData("ready to short shoot?", isReadyToShortLaunch());
-        m_opMode.telemetry.addData("ready to far shoot?", isReadyToFarLaunch());
+        m_opMode.telemetry.addData("ready to launch?", isReadyToLaunch());
 
         if(Constants.ShooterConstants.kTuningMode){
             if(kPLeft != lastPLeft || kDLeft != lastDLeft || kFLeft != lastFLeft){
@@ -119,32 +117,18 @@ public class SUB_Shooter extends SubsystemBase {
         m_shooterRight.setMotorsStop();
     }
 
+    public void unjam(){
+        m_shooterLeft.unjam();
+        m_shooterRight.unjam();
+    }
+
     public void setShootingVelocity(double velocity){
         m_shooterLeft.setTargetVelocity(velocity);
         m_shooterRight.setTargetVelocity(velocity);
     }
 
-    public Command m_shooterStop(){
-        return new InstantCommand(m_shooterLeft::setMotorsStop)
-                .alongWith(new InstantCommand(m_shooterRight::setMotorsStop));
-    }
-
-    public Command m_shooterFarLaunch(){
-        return new RunCommand(() -> m_shooterLeft.setTargetVelocity(Constants.ShooterConstants.kMaxVel));
-    }
-
-    public boolean isReadyToFarLaunch(){
-        return m_shooterLeft.getCurrentVelocity() >= Constants.ShooterConstants.kMaxVel
-                && m_shooterRight.getCurrentVelocity() >= Constants.ShooterConstants.kMaxVel;
-    }
-
-    public boolean isReadyToShortLaunch(){
-        return m_shooterLeft.getCurrentVelocity() >= Constants.ShooterConstants.kMidFieldVel
-                && m_shooterRight.getCurrentVelocity() >= Constants.ShooterConstants.kMidFieldVel;
-    }
-
     public boolean isReadyToLaunch(){
-        return m_shooterLeft.getCurrentVelocity() >= m_shooterLeft.getTargetVelocity()
-                && m_shooterRight.getCurrentVelocity() >= m_shooterRight.getTargetVelocity();
+        return m_shooterLeft.getCurrentVelocity() >= (m_shooterLeft.getTargetVelocity() - Constants.ShooterConstants.kTolerance)
+                && (m_shooterRight.getCurrentVelocity() >= m_shooterRight.getTargetVelocity() - Constants.ShooterConstants.kTolerance);
     }
 }

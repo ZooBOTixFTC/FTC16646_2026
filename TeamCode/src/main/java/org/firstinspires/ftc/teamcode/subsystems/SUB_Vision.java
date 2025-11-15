@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
-import org.firstinspires.ftc.teamcode.GlobalVariables.patternTypes;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
@@ -38,35 +37,8 @@ public class SUB_Vision extends SubsystemBase {
         m_visionPortal.resumeStreaming();
     }
 
-    public void readPattern(){
-        for (AprilTagDetection detection : getDetections()){
-            switch (detection.id){
-                case 21:
-                    m_variables.setPatternType(patternTypes.GPP);
-                    break;
-                case 22:
-                    m_variables.setPatternType(patternTypes.PGP);
-                    break;
-                case 23:
-                    m_variables.setPatternType(patternTypes.PPG);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
     public List<AprilTagDetection> getDetections(){
         return m_detections;
-    }
-
-    public boolean hasTarget(){
-        for (AprilTagDetection detection : getDetections()){
-            if ((detection.id == 24 && GlobalVariables.m_red) || (detection.id == 20 && !GlobalVariables.m_red)){
-                return true;
-            }
-        }
-        return false;
     }
 
     public double getDistToTag(){

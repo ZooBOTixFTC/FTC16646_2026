@@ -11,16 +11,12 @@ public class RR_MecanumDriveDefault extends CommandBase {
 
     MecanumDriveSubsystem m_drivetrain;
     private final GamepadEx m_driverOp;
-    private final double m_driverOffsetAngle;
     private final double m_deadband;
-    GlobalVariables m_variables;
     public RR_MecanumDriveDefault(MecanumDriveSubsystem p_drive, GamepadEx driverOp,
-                                  double driverOffsetAngle, double joystickMin, GlobalVariables p_variables) {
+            double joystickMin) {
         m_drivetrain = p_drive;
         m_driverOp = driverOp; // gamepad of driver
-        m_driverOffsetAngle = driverOffsetAngle;
         m_deadband = joystickMin;
-        m_variables = p_variables;
         addRequirements(m_drivetrain);
     }
 
@@ -43,7 +39,7 @@ public class RR_MecanumDriveDefault extends CommandBase {
             turn *= slowMax / slowMo;
         }
 
-        m_drivetrain.drive(speed, strafe, turn, m_driverOffsetAngle);
+        m_drivetrain.drive(speed, strafe, turn, GlobalVariables.m_red ? -90 : 90);
     }
 
     private double handleDeadband(double value, double deadband) {

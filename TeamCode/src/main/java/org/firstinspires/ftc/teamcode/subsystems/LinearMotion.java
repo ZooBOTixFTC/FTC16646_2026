@@ -24,6 +24,8 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     private double  integralSum = 0;
     private double targetVelocity;
 
+    private boolean unjamming;
+
     public LinearMotion(
             String name,
             DcMotorEx[] motors, boolean[] motorsReversed,
@@ -99,7 +101,7 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
 
         totalPower = Math.min(Math.max(totalPower, -1.0), 1.0);
 
-        runPower(totalPower);
+        if(!unjamming) runPower(totalPower);
     }
 
     public void runPower(double power){
@@ -121,6 +123,7 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
         for (DcMotorEx motor : motors) {
             motor.setPower(0);
         }
+        unjamming = false;
     }
     public double getTargetVelocity() {
         return targetVelocity;
@@ -147,5 +150,10 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
         this.ki = i;
         this.kd = d;
         this.kf = f;
+    }
+
+    public void unjam(){
+        unjamming = true;
+        runPower(-1);
     }
 }

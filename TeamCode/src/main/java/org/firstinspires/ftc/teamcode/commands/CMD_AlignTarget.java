@@ -95,13 +95,13 @@ public class CMD_AlignTarget extends CommandBase {
 
             // Only give up after losing target for multiple consecutive frames
             if (lostTargetCount > MAX_LOST_FRAMES) {
-                m_drive.drive(0.0, 0.0, 0.0);
+                m_drive.stop();
                 isFinished = true;
                 return;
             }
             else {
                 // Brief loss - hold position and wait for target to reappear
-                m_drive.drive(0.0, 0.0, 0.0);
+                m_drive.stop();
             }
             return;
         }
@@ -110,7 +110,8 @@ public class CMD_AlignTarget extends CommandBase {
         lostTargetCount = 0;
 
         // Calculate optimal aiming angle (may be different from AprilTag bearing)
-        double bearing = calculateOptimalAiming(currentDetection) - (GlobalVariables.m_red ? -1 : 1);
+        double bearing = calculateOptimalAiming(currentDetection)
+                + (GlobalVariables.m_red ? -1 : 1);
 
         double currentTime = System.currentTimeMillis() / 1000.0;
         double deltaTime = currentTime - lastTime;

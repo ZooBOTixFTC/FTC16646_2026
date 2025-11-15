@@ -1,23 +1,57 @@
 package org.firstinspires.ftc.teamcode.autos;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
-import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 
 @Autonomous(name = "Close Blue", preselectTeleOp = "Teleop Blue", group = "Auto Blue")
 public class AUTO_CloseBlue extends Robot_Auto {
 
+    private Trajectory firstVolley, lineupFirstSpikeMark, intakeFirstSpikeMark, secondVolley,
+            lineupSecondSpikeMark, intakeSecondSpikeMark, thirdVolley, park;
+
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(40, 54.5, Math.toRadians(0)));
-        GlobalVariables.m_red = true;
+
+        firstVolley = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(45)))
+                .build();
+
+        lineupFirstSpikeMark = m_robot.drivetrain.trajectoryBuilder(firstVolley.end(), false)
+                .lineToLinearHeading(new Pose2d(12, 30, Math.toRadians(90)))
+                .build();
+
+        intakeFirstSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupFirstSpikeMark.end(), false)
+                .lineToLinearHeading(new Pose2d(8, 50, Math.toRadians(90)))
+                .build();
+
+        secondVolley = m_robot.drivetrain.trajectoryBuilder(intakeFirstSpikeMark.end(), false)
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(45)))
+                .build();
+
+        lineupSecondSpikeMark = m_robot.drivetrain.trajectoryBuilder(secondVolley.end(), false)
+                .lineToLinearHeading(new Pose2d(-13, 30, Math.toRadians(90)))
+                .build();
+
+        intakeSecondSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupSecondSpikeMark.end(), false)
+                .lineToLinearHeading(new Pose2d(-18, 54, Math.toRadians(90)))
+                .build();
+
+        thirdVolley = m_robot.drivetrain.trajectoryBuilder(intakeSecondSpikeMark.end(), false)
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(45)))
+                .build();
+
+        park = m_robot.drivetrain.trajectoryBuilder(thirdVolley.end(), false)
+                .strafeLeft(24)
+                .build();
     }
 
     @Override
@@ -34,16 +68,9 @@ public class AUTO_CloseBlue extends Robot_Auto {
     private SequentialCommandGroup firstVolley(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
-//                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-                ,new WaitCommand(500)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(500)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(750)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, firstVolley)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
@@ -51,8 +78,10 @@ public class AUTO_CloseBlue extends Robot_Auto {
     private SequentialCommandGroup intakeFirstSpikeMark(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 30, Math.toRadians(90)), false)
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(8, 50, Math.toRadians(90)), false)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 30, Math.toRadians(90)), false)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(8, 50, Math.toRadians(90)), false)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupFirstSpikeMark)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeFirstSpikeMark)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
                 ,new WaitCommand(67)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
@@ -61,16 +90,10 @@ public class AUTO_CloseBlue extends Robot_Auto {
 
     private SequentialCommandGroup secondVolley(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
+//                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
+                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-//                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(500)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(750)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
@@ -78,8 +101,10 @@ public class AUTO_CloseBlue extends Robot_Auto {
     private SequentialCommandGroup intakeSecondSpikeMark(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-16, 30, Math.toRadians(90)), false)
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-20, 54, Math.toRadians(90)), false)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-12, 30, Math.toRadians(90)), false)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-18, 54, Math.toRadians(90)), false)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupSecondSpikeMark)
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeSecondSpikeMark)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
                 ,new WaitCommand(67)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
@@ -88,17 +113,13 @@ public class AUTO_CloseBlue extends Robot_Auto {
 
     private SequentialCommandGroup thirdVolley(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
+//                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
+                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, thirdVolley)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-//                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(500)
-                ,new CMD_GetShooterAtVelocity(m_robot.m_shooter)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                ,new CMD_Kick(m_robot.m_lift)
-                ,new WaitCommand(750)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
+//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(0, 24, Math.toRadians(0)), false)
         );
     }
 }
