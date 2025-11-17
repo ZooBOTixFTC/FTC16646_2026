@@ -7,6 +7,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -17,6 +18,8 @@ public class AUTO_FarRed extends Robot_Auto {
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(-64.75, -9.25, Math.toRadians(0)));
+        GlobalVariables.m_far = true;
+        GlobalVariables.m_red = true;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class AUTO_FarRed extends Robot_Auto {
                 firstVolley()
                 ,intakeFirstSpikeMark()
                 ,secondVolley()
-                ,intakeSecondSpikeMark()
+//                ,intakeSecondSpikeMark()
 //            ,thirdVolley()
         );
     }
@@ -60,6 +63,7 @@ public class AUTO_FarRed extends Robot_Auto {
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -48, Math.toRadians(-90)), false, DriveConstants.MAX_VEL)
         );
     }
 

@@ -5,7 +5,7 @@ public class Constants {
         public static final boolean kTuningMode = false;
         public static final double kFarVel = 0.665;//.65 orange
         public static final double kCloseVel = .5;
-        public static final double kMidFieldVel = 0.56;
+        public static final double kMidFieldVel = 0.555;
         public static final double kPreRev = .45;
         public static final double kTolerance = 0.01;
         public static final double kMaxVel = 2600;

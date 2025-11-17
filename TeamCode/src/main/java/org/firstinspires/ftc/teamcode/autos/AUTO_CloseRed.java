@@ -8,8 +8,11 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Constants;
+import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name = "Close Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_CloseRed extends Robot_Auto {
@@ -19,7 +22,9 @@ public class AUTO_CloseRed extends Robot_Auto {
 
     @Override
     public void prebuildTasks() {
-        setStartingPose(new Pose2d(40, -54.5, Math.toRadians(0)));
+        setStartingPose(new Pose2d(41.5, -54.5, Math.toRadians(0)));
+        GlobalVariables.m_far = false;
+        GlobalVariables.m_red = true;
 
         firstVolley = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
                 .lineToLinearHeading(new Pose2d(12, -12, Math.toRadians(-45)))
@@ -30,7 +35,9 @@ public class AUTO_CloseRed extends Robot_Auto {
                 .build();
 
         intakeFirstSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupFirstSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(8, -50, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(8, -50, Math.toRadians(-90))
+                ,SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL / 2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH)
+                ,SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL / 2))
                 .build();
 
         secondVolley = m_robot.drivetrain.trajectoryBuilder(intakeFirstSpikeMark.end(), false)
@@ -42,7 +49,9 @@ public class AUTO_CloseRed extends Robot_Auto {
                 .build();
 
         intakeSecondSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupSecondSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(-18, -54, Math.toRadians(-90)))
+                .lineToLinearHeading(new Pose2d(-18, -54, Math.toRadians(-90))
+                ,SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL / 2, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH)
+                ,SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL / 2))
                 .build();
 
         thirdVolley = m_robot.drivetrain.trajectoryBuilder(intakeSecondSpikeMark.end(), false)
