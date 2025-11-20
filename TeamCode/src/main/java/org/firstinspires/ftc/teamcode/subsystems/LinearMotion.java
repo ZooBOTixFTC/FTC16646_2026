@@ -16,8 +16,7 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
     private final DcMotorEx encoder;
     private final boolean encoderReversed;
     private final double maximumSpeed;
-    //private final double kG, kV, kS;
-    private double kp, ki, kd,kf;
+    private double kp, ki, kd, kf;
     private double setPoint;
 
     private double previousError = 0;
@@ -35,7 +34,6 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
             double kI,
             double kD,
             double kF
-            // double kG,double kV,double kS, double kP
     ){
         this.name = name;
 
@@ -125,6 +123,7 @@ public class LinearMotion implements SimpleMechanism, Subsystem {
         }
         unjamming = false;
     }
+
     public double getTargetVelocity() {
         return targetVelocity;
     }

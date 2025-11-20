@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
-        public static final double kFarVel = 0.665;//.65 orange
+        public static final double kFarVel = 0.65;//.65 orange
         public static final double kCloseVel = .5;
         public static final double kMidFieldVel = 0.555;
         public static final double kPreRev = .45;
@@ -26,7 +26,8 @@ public class Constants {
 
         public static final int kLift = 35;
         public static final int kHome = 0;
-        public static final int kKick = -22;//-17 orange -15 grey
+        public static final int kKick = -22;
+        public static final int kLevel = -18;
     }
 
     public static final class AutoAlignConstants{

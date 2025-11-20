@@ -112,6 +112,11 @@ public class SUB_Shooter extends SubsystemBase {
         m_dashboard.sendTelemetryPacket(packet);
     }
 
+    public void runPower(double power){
+        m_shooterLeft.runPower(power);
+        m_shooterRight.runPower(power);
+    }
+
     public void setShooterStop(){
         m_shooterLeft.setMotorsStop();
         m_shooterRight.setMotorsStop();

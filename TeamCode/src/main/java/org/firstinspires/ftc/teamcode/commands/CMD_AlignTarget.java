@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import androidx.core.math.MathUtils;
-
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants.AutoAlignConstants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
@@ -25,11 +24,9 @@ public class CMD_AlignTarget extends CommandBase {
     private static final double MIN_SCORING_ANGLE = 5.0;   // Minimum acceptable scoring angle (degrees)
     private static final double SAFETY_MARGIN = 2.0;       // Safety margin from goal edges (inches)
     private static final boolean USE_OPTIMAL_AIMING = true; // Enable/disable optimal aiming
-    private static final int STABLE_COUNT = 5; // Number of consecutive stable cycles required to finish
-    private static final int MAX_LOST_FRAMES = 15; // Allow brief target loss before giving up
 
     // Manual override parameters - TUNE THESE FOR DRIVER COMFORT
-    private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override (increased to prevent false triggers)
+    private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override
 
     // =====================================================================
 
@@ -37,11 +34,8 @@ public class CMD_AlignTarget extends CommandBase {
     private final SUB_Vision m_vision;
     private final GamepadEx m_gamepad;
 
-    private boolean isFinished;
-    private double lastError = 0.0;
-    private double lastTime = 0.0;
-    private int stableCount = 0;
-    private int lostTargetCount = 0;
+    private boolean isFinished = false;
+    private boolean turnStarted = false;
 
     public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision, GamepadEx gamepad) {
         this.m_drive = drive;
@@ -62,22 +56,15 @@ public class CMD_AlignTarget extends CommandBase {
     @Override
     public void initialize() {
         isFinished = false;
-        lastError = 0.0;
-        lastTime = System.currentTimeMillis() / 1000.0;
-        stableCount = 0;
-        lostTargetCount = 0;
-    }
+        turnStarted = false;
 
-    @Override
-    public void execute() {
         // Check for manual override first
         if (isManualOverride() || GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold) {
-            m_drive.drive(0.0, 0.0, 0.0);
             isFinished = true;
             return;
         }
 
-        // Get fresh AprilTag detections every cycle
+        // Get target AprilTag detection
         int targetId = GlobalVariables.m_red ? 24 : 20;
         AprilTagDetection currentDetection = null;
 
@@ -89,72 +76,32 @@ public class CMD_AlignTarget extends CommandBase {
             }
         }
 
-        // If no target tag detected, handle gracefully
+        // If no target tag detected, fail immediately
         if (currentDetection == null) {
-            lostTargetCount++;
-
-            // Only give up after losing target for multiple consecutive frames
-            if (lostTargetCount > MAX_LOST_FRAMES) {
-                m_drive.stop();
-                isFinished = true;
-                return;
-            }
-            else {
-                // Brief loss - hold position and wait for target to reappear
-                m_drive.stop();
-            }
+            isFinished = true;
             return;
         }
 
-        // Target found - reset lost counter
-        lostTargetCount = 0;
-
-        // Calculate optimal aiming angle (may be different from AprilTag bearing)
-        double bearing = calculateOptimalAiming(currentDetection)
-                + (GlobalVariables.m_red ? -1 : 1);
-
-        double currentTime = System.currentTimeMillis() / 1000.0;
-        double deltaTime = currentTime - lastTime;
-
-        // Control parameters
-        double deadband = GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold
-                ? AutoAlignConstants.kCloseTolerance : AutoAlignConstants.kFarTolerance;
-
-        // Check if we're within the deadband (smaller than tolerance)
-        if (Math.abs(bearing) < deadband) {
-            m_drive.drive(AutoAlignConstants.kDrive, 0.0,
-                    GlobalVariables.m_red ? AutoAlignConstants.kTurn : -AutoAlignConstants.kTurn);
-            stableCount++;
-
-            // Require stability for several cycles before finishing
-            if (stableCount >= STABLE_COUNT) {
-                isFinished = true;
-            }
-
-            lastError = bearing;
-            lastTime = currentTime;
-            return;
-        } else {
-            stableCount = 0; // Reset stability counter if we move out of deadband
+        double bearing;
+        if(currentDetection.ftcPose.bearing < 0){
+           bearing = currentDetection.ftcPose.bearing - 2;
+        }else{
+            bearing = currentDetection.ftcPose.bearing + 2;
         }
 
-        // Calculate derivative term
-        double derivative = 0.0;
-        if (deltaTime > 0) {
-            derivative = (bearing - lastError) / deltaTime;
+        m_drive.turn(Math.toRadians(bearing));
+        turnStarted = true;
+    }
+
+    @Override
+    public void execute() {
+        // Update RoadRunner drive system (required for async operations)
+        m_drive.update();
+
+        // Check if turn is complete
+        if (turnStarted && !m_drive.isBusy()) {
+            isFinished = true;
         }
-
-        // PD control calculation
-        double turnPower = -(AutoAlignConstants.kP * bearing + AutoAlignConstants.kD * derivative);
-
-        turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower),
-                AutoAlignConstants.kMinTurn, AutoAlignConstants.kMaxTurn), turnPower);
-
-        // Store values for next cycle
-        lastError = bearing;
-        lastTime = currentTime;
-
-        m_drive.drive(AutoAlignConstants.kDrive, 0.0, turnPower);
     }
 
     /**
@@ -199,7 +146,6 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         // Optimal aiming point: aim at the center of the available scoring window
-
         return (angleToLeft + angleToRight) / 2.0;
     }
 
@@ -224,7 +170,11 @@ public class CMD_AlignTarget extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        m_drive.stop();
+        // Only stop if interrupted AND we actually started a turn
+        // RoadRunner automatically stops when turn completes normally
+        if (interrupted && turnStarted) {
+            m_drive.stop();
+        }
     }
 
     @Override

@@ -2,14 +2,12 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
+import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 public class CMD_ShootInterrupt extends CommandBase {
-    private final SUB_Shooter m_shooter;
-    public CMD_ShootInterrupt(SUB_Shooter p_shooter){
-        m_shooter = p_shooter;
-
-        addRequirements(m_shooter);
+    public CMD_ShootInterrupt(MecanumDriveSubsystem p_drive, SUB_Shooter p_shooter){
+        addRequirements(p_drive, p_shooter);
     }
 
     @Override
