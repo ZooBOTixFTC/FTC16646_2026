@@ -104,20 +104,9 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                  new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
                  ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.START,
-                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kLift))
-         );
-
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK,
-                 new InstantCommand(()-> m_robot.m_lift.setTargetPos(Constants.LiftConstants.kHome)));
-
-         AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,
-                  new InstantCommand(()-> m_robot.m_shooter.unjam())
-                  ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
-
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_KickReset(m_robot.m_lift));
-
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));
+         AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.A
+         ,new InstantCommand(()-> m_robot.m_shooter.setStopperClosed())
+         ,new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()));
 
          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y,
                  new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))

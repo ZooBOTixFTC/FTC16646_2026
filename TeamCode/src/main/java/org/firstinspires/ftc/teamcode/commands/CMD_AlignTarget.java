@@ -83,10 +83,12 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         double bearing;
+        double offset = 2 * (GlobalVariables.m_red ? 1 : -1);
+
         if(currentDetection.ftcPose.bearing < 0){
-           bearing = currentDetection.ftcPose.bearing - 2;
+           bearing = currentDetection.ftcPose.bearing + offset;
         }else{
-            bearing = currentDetection.ftcPose.bearing + 2;
+            bearing = currentDetection.ftcPose.bearing - offset;
         }
 
         m_drive.turn(Math.toRadians(bearing));

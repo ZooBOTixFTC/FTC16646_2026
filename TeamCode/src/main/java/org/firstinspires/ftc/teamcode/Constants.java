@@ -31,14 +31,6 @@ public class Constants {
     }
 
     public static final class AutoAlignConstants{
-        public static final double kP = 0.01;
-        public static final double kD = 0.0;
-        public static final double kTurn = .07;
-        public static final double kDrive = -.03;
-        public static final double kMinTurn = .1;
-        public static final double kMaxTurn = .15;
-        public static final double kCloseTolerance = 2; // deg
-        public static final double kFarTolerance = 2; // deg
         public static final double kMidRangeThreshold = 45;
         public static final double kDistanceThreshold = 90; // close vs. far, in.
     }

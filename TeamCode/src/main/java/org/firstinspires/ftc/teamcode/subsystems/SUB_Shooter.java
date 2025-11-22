@@ -9,6 +9,7 @@ import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Constants;
 
@@ -25,9 +26,17 @@ public class SUB_Shooter extends SubsystemBase {
     public static double kPRight, kDRight, kFRight, velRight = 0;
     private double lastPRight, lastDRight, lastFRight;
 
+    private final Servo m_stopperLeft, m_stopperRight;
+
     public SUB_Shooter(OpMode p_opMode){
         m_opMode = p_opMode;
-        
+
+        m_stopperLeft = m_opMode.hardwareMap.get(Servo.class, "stopperLeft");
+        m_stopperRight = m_opMode.hardwareMap.get(Servo.class, "stopperRight");
+
+        m_stopperRight.setDirection(Servo.Direction.FORWARD);
+        m_stopperLeft.setDirection(Servo.Direction.REVERSE);
+
         this.m_shooterLeft = new LinearMotion(
                 "shooter",
                 new DcMotorEx[]{
@@ -135,5 +144,15 @@ public class SUB_Shooter extends SubsystemBase {
     public boolean isReadyToLaunch(){
         return m_shooterLeft.getCurrentVelocity() >= (m_shooterLeft.getTargetVelocity() - Constants.ShooterConstants.kTolerance)
                 && (m_shooterRight.getCurrentVelocity() >= m_shooterRight.getTargetVelocity() - Constants.ShooterConstants.kTolerance);
+    }
+
+    public void setStopperClosed(){
+        m_stopperLeft.setPosition(0);
+        m_stopperRight.setPosition(0);
+    }
+
+    public void setStopperOpen(){
+        m_stopperLeft.setPosition(100.0/300.0);
+        m_stopperRight.setPosition(100.0/300.0);
     }
 }
