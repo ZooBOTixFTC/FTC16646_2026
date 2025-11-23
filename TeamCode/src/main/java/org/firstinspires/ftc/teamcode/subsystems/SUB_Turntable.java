@@ -69,7 +69,7 @@ public class SUB_Turntable extends SubsystemBase {
 
         m_turntableMotor.setTargetPosition(bestTarget);
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        m_turntableMotor.setPower(0.75);
+        m_turntableMotor.setPower(1);
     }
 
     public void endIntakeMode() {
@@ -88,7 +88,7 @@ public class SUB_Turntable extends SubsystemBase {
 
     public void setTurntableIntakeMode() {
         m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.85);
+        m_turntableMotor.setPower(0.75);
     }
 
     public void setResetMode() {
