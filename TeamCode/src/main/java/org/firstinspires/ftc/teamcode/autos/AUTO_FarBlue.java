@@ -39,7 +39,7 @@ public class AUTO_FarBlue extends Robot_Auto {
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, 16, Math.toRadians(20)), false, DriveConstants.MAX_VEL)
                 ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
@@ -61,7 +61,7 @@ public class AUTO_FarBlue extends Robot_Auto {
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
                 ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, 48, Math.toRadians(90)), false, DriveConstants.MAX_VEL)
         );
@@ -84,7 +84,7 @@ public class AUTO_FarBlue extends Robot_Auto {
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
                 ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-40, 12, Math.toRadians(0)), false, DriveConstants.MAX_VEL)
         );

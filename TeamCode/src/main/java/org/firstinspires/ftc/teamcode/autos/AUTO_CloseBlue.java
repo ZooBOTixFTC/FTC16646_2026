@@ -79,7 +79,7 @@ public class AUTO_CloseBlue extends Robot_Auto {
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
 //                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, firstVolley)
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
@@ -102,7 +102,7 @@ public class AUTO_CloseBlue extends Robot_Auto {
 //                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
                 new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
@@ -125,7 +125,7 @@ public class AUTO_CloseBlue extends Robot_Auto {
 //                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
                 new RR_TrajectoryFollowerCommand(m_robot.drivetrain, thirdVolley)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_lift, m_robot.m_intake)
+                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
 //                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(0, 24, Math.toRadians(0)), false)

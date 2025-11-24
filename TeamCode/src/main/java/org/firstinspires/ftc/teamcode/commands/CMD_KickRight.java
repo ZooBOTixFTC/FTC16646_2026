@@ -7,14 +7,14 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Kicker;
 
 
-public class CMD_Kick extends CommandBase {
+public class CMD_KickRight extends CommandBase {
     private final ElapsedTime timer = new ElapsedTime();
     private final SUB_Kicker m_kicker;
 
     private boolean kicked;
     private boolean isFinished;
 
-    public CMD_Kick(SUB_Kicker p_kicker) {
+    public CMD_KickRight(SUB_Kicker p_kicker) {
         m_kicker = p_kicker;
         addRequirements(m_kicker);
     }
@@ -25,13 +25,13 @@ public class CMD_Kick extends CommandBase {
         kicked = false;
         isFinished = false;
 
-        m_kicker.kick();
+        m_kicker.kickRight();
     }
 
     @Override
     public void execute(){
         if(!kicked && timer.seconds() > Constants.KickConstants.kKickDur){
-            m_kicker.home();
+            m_kicker.homeRight();
             kicked = true;
 
             timer.reset();
