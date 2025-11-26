@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.CMD_ShootAll;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.RR_TurnCommand;
 
+@Disabled
 @Autonomous(name = "Close Wall Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_CloseWallRed extends Robot_Auto {
 

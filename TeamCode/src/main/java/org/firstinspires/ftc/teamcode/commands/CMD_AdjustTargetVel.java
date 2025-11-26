@@ -15,7 +15,7 @@ public class CMD_AdjustTargetVel extends CommandBase {
     public void initialize() {
         if (GlobalVariables.m_distToTag>105) m_shooter.setTargetVel(33500);
         else {
-            m_shooter.setTargetVel(20500 + (115 * GlobalVariables.m_distToTag));
+            m_shooter.setTargetVel(20500 + (105 * GlobalVariables.m_distToTag));
         }
     }
 

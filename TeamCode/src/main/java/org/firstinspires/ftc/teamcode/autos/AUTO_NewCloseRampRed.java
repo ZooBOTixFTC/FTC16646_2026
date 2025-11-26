@@ -15,13 +15,14 @@ import org.firstinspires.ftc.teamcode.commands.CMD_ReadMotif;
 import org.firstinspires.ftc.teamcode.commands.CMD_ShootAll;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.RR_TurnCommand;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Disabled
+
 @Autonomous(name = "New Close Ramp Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_NewCloseRampRed extends Robot_Auto {
 
 
-    private Trajectory readMotif, lineUpSpikeMark, intakeBallOne, intakeBallTwo, secondVolley, secondIntakeBallOne, secondIntakeBallTwo, park;
+    private Trajectory readMotif, lineUpSpikeMark, intakeBallOne, intakeBallTwo, secondVolley, secondIntakeBallOne, secondIntakeBallTwo, thirdVolley, thirdIntakeAllign,thirdIntake,fourthVolley, park;
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(41.5,-65,Math.toRadians(0)));
@@ -55,8 +56,20 @@ public class AUTO_NewCloseRampRed extends Robot_Auto {
         secondIntakeBallTwo = m_robot.drivetrain.trajectoryBuilder(secondIntakeBallOne.end(), false)
                 .forward(6)
                 .build();
-        park = m_robot.drivetrain.trajectoryBuilder(secondIntakeBallTwo.end(), false)
-                .forward(13)
+        thirdVolley = m_robot.drivetrain.trajectoryBuilder(secondIntakeBallTwo.end(),false)
+                .lineToLinearHeading(new Pose2d(12,-12, Math.toRadians(-42.5)))
+                .build();
+        thirdIntakeAllign = m_robot.drivetrain.trajectoryBuilder(secondVolley.end(),false)
+                .lineToLinearHeading(new Pose2d(-30,-36,Math.toRadians(-90)))
+                .build();
+        thirdIntake = m_robot.drivetrain.trajectoryBuilder(thirdIntakeAllign.end(),false)
+                .forward(21, SampleMecanumDrive.getVelocityConstraint(20,20,25),SampleMecanumDrive.getAccelerationConstraint(30))
+                .build();
+        fourthVolley = m_robot.drivetrain.trajectoryBuilder(thirdIntake.end(),false)
+                .lineToLinearHeading(new Pose2d(12,-12,Math.toRadians(-42.5)))
+                .build();
+        park = m_robot.drivetrain.trajectoryBuilder(fourthVolley.end(), false)
+                .lineToLinearHeading(new Pose2d(7, -33, Math.toRadians(-90)))
                 .build();
     }
 
@@ -68,7 +81,9 @@ public class AUTO_NewCloseRampRed extends Robot_Auto {
                 firstVolley()
                 ,intakeSpikeMark()
                 ,secondVolley()
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
+                ,thirdVolley()
+                ,fourthVolley()
+                ,park()
         );
         return completeTasks;
     }
@@ -114,7 +129,7 @@ public class AUTO_NewCloseRampRed extends Robot_Auto {
         );
     }
 
-    private SequentialCommandGroup park(){
+    private SequentialCommandGroup thirdVolley(){
         return new SequentialCommandGroup(
                 new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondIntakeBallOne)
@@ -124,6 +139,22 @@ public class AUTO_NewCloseRampRed extends Robot_Auto {
                 ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
                 ,new InstantCommand(()->m_robot.m_turntable.rotateRight())
                 ,new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+        );
+    }
+    private SequentialCommandGroup fourthVolley(){
+        return new SequentialCommandGroup(
+                new RR_TrajectoryFollowerCommand(m_robot.drivetrain,thirdIntakeAllign)
+                ,new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain,thirdIntake)
+                ,new InstantCommand(()->m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain,fourthVolley)
+                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable)
+        );
+    }
+    private SequentialCommandGroup park(){
+        return new SequentialCommandGroup(
+                new InstantCommand(()->m_robot.m_shooter.setTargetVel(0))
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain,park)
         );
     }
 }
