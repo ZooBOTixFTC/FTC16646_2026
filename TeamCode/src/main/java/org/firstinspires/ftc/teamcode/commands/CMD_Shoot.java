@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Turntable;
 
 public class CMD_Shoot extends SequentialCommandGroup {
     public CMD_Shoot (SUB_Shooter p_shooter, SUB_Turntable p_turntable) {
+        addRequirements(p_shooter,p_turntable);
         addCommands(
                 new CMD_AdjustTargetVel(p_shooter)
 //                ,new WaitCommand(150)

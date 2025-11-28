@@ -12,7 +12,7 @@ public class CMD_Intake extends CommandBase {
 
     public CMD_Intake(SUB_Turntable p_turntable){
         m_turntable = p_turntable;
-        addRequirements(m_turntable);
+        addRequirements(p_turntable);
     }
 
     @Override
@@ -23,11 +23,20 @@ public class CMD_Intake extends CommandBase {
     @Override
     public void execute(){
         if (GlobalVariables.m_intakeOn) {
-            if (m_timer.milliseconds() < 670) {
-                m_turntable.rotateRight();
-            } else {
+            if (m_timer.milliseconds() >= 500) {
+                m_turntable.intakeRotateRight();
                 m_timer.reset();
+
             }
         }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return !GlobalVariables.m_intakeOn;
+    }
+    @Override
+    public void end(boolean interrupted) {
+        m_turntable.stopMotor();
     }
 }

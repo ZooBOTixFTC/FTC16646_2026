@@ -18,7 +18,8 @@ import org.firstinspires.ftc.teamcode.Constants.ShooterConstants;
 @Config
 public class SUB_Shooter extends SubsystemBase {
     private final OpMode m_opMode;
-    private final DcMotorEx m_shooterMotor;
+    private final DcMotorEx m_shooterMotorLeft;
+    private final DcMotorEx m_shooterMotorRight;
     private final Servo m_kickServo;
     private final VoltageSensor m_voltageSensor;
     private final FtcDashboard m_dashboard;
@@ -32,16 +33,20 @@ public class SUB_Shooter extends SubsystemBase {
 
     public SUB_Shooter(OpMode p_opMode) {
         m_opMode = p_opMode;
-        m_shooterMotor = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotor");
+        m_shooterMotorLeft = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorLeft");
+        m_shooterMotorRight = m_opMode.hardwareMap.get(DcMotorEx.class, "shooterMotorRight");
 
         m_voltageSensor = m_opMode.hardwareMap.voltageSensor.iterator().next();
 
         m_dashboard = FtcDashboard.getInstance();
         m_dashboard.setTelemetryTransmissionInterval(20);
 
-        m_shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        m_shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        m_shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        m_shooterMotorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        m_shooterMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        m_shooterMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        m_shooterMotorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        m_shooterMotorRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        m_shooterMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         m_kickServo = m_opMode.hardwareMap.get(Servo.class, "kickerServo");
         m_kickServo.setDirection(Servo.Direction.REVERSE);
@@ -60,7 +65,7 @@ public class SUB_Shooter extends SubsystemBase {
         double deltaTimeSec = (currentTime - lastTime) / 1e9; // convert nanoseconds to milliseconds
 
         if (deltaTimeSec >= 0.02) { // 20ms loop
-            int currentPos = m_shooterMotor.getCurrentPosition();
+            int currentPos = m_shooterMotorLeft.getCurrentPosition();
             int deltaTicks = currentPos - lastPos;
 
             double ticksPerRev = 28.0; // 1:1 GoBilda motor
@@ -117,6 +122,7 @@ public class SUB_Shooter extends SubsystemBase {
 
         double CompensatedPower = MathUtils.clamp(Volts * (12 / m_voltageSensor.getVoltage()), 0, 1);
 
-        m_shooterMotor.setPower(CompensatedPower);
+        m_shooterMotorLeft.setPower(CompensatedPower);
+        m_shooterMotorRight.setPower(CompensatedPower);
     }
 }

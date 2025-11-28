@@ -36,15 +36,42 @@ public class SUB_Turntable extends SubsystemBase {
         else if (m_targetDegs >= 0) setPos(240);
     }
 
-    public void rotateRight(){
-            if (m_targetDegs >= 360) setPos(120);
-            else if (m_targetDegs >= 240) setPos(360);
-            else if (m_targetDegs >= 120) setPos(240);
-            else if (m_targetDegs >= 0) setPos(120);
+    public void rotateRight() {
+        double current = getPos();
+
+        // Normalize angle to 0–360
+        if (current < 0) current += 360;
+
+        if (current < 60) {
+            setPos(120);
+        } else if (current < 180) {
+            setPos(240);
+        } else if (current < 300) {
+            setPos(360);   // equivalent to 0°
+        } else {
+            setPos(120);
+        }
+    }
+    public void intakeRotateRight() {
+        double current = getPos();
+
+        // Normalize angle to 0–360
+        if (current < 60) current += 360;
+
+        if (current < 120) {
+            setPos(180);
+        } else if (current < 240) {
+            setPos(300);
+        } else if (current < 360) {
+            setPos(60);   // equivalent to 0°
+        } else {
+            setPos(180);
+        }
     }
 
     public void setPos(double targetDeg) {
         m_targetDegs = targetDeg;
+//        if (targetDeg == m_targetDegs) return;
         int currentTicks = m_turntableMotor.getCurrentPosition();
         double currentRev = (double) currentTicks / ShooterConstants.kTicksPerRev;
 
@@ -72,23 +99,26 @@ public class SUB_Turntable extends SubsystemBase {
         m_turntableMotor.setPower(1);
     }
 
-    public void endIntakeMode() {
-        double[] angToCheck = {0, 120, 240};
-        double current = getPos();
-        double closestAng = angToCheck[0];
-
-        for (int i = 1; i < angToCheck.length; i++) {
-            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
-                closestAng = angToCheck[i];
-            }
-        }
-
-        setPos(closestAng);
-    }
-
-    public void setTurntableIntakeMode() {
-        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        m_turntableMotor.setPower(0.75);
+//    public void endIntakeMode() {
+//        double[] angToCheck = {0, 120, 240};
+//        double current = getPos();
+//        double closestAng = angToCheck[0];
+//
+//        for (int i = 1; i < angToCheck.length; i++) {
+//            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
+//                closestAng = angToCheck[i];
+//            }
+//        }
+//
+//        setPos(closestAng);
+//    }
+//
+//    public void setTurntableIntakeMode() {
+//        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+//        m_turntableMotor.setPower(0.75);
+//    }
+    public void stopMotor(){
+        m_turntableMotor.setPower(0);
     }
 
     public void setResetMode() {
