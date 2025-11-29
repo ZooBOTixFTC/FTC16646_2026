@@ -15,16 +15,12 @@ import org.firstinspires.ftc.teamcode.Constants;
 
 @Config
 public class SUB_Shooter extends SubsystemBase {
-    private final LinearMotion m_shooterLeft;
-//    private final LinearMotion m_shooterRight;
+    private final LinearMotion m_shooter;
     private final FtcDashboard m_dashboard;
     private final OpMode m_opMode;
     
-    public static double kPLeft, kDLeft, kFLeft, velLeft = 0;
-    private double lastPLeft, lastDLeft, lastFLeft;
-
-//    public static double kPRight, kDRight, kFRight, velRight = 0;
-//    private double lastPRight, lastDRight, lastFRight;
+    public static double kP, kD, kF, vel = 0;
+    private double lastP, lastD, lastF;
 
     private final Servo m_stopperLeft, m_stopperRight;
 
@@ -37,7 +33,7 @@ public class SUB_Shooter extends SubsystemBase {
         m_stopperRight.setDirection(Servo.Direction.FORWARD);
         m_stopperLeft.setDirection(Servo.Direction.REVERSE);
 
-        this.m_shooterLeft = new LinearMotion(
+        this.m_shooter = new LinearMotion(
                 "shooter",
                 new DcMotorEx[]{
                     m_opMode.hardwareMap.get(DcMotorEx.class,"shooterMotorLeft"),
@@ -52,64 +48,64 @@ public class SUB_Shooter extends SubsystemBase {
                 0.0,
                 Constants.ShooterConstants.kF
         );
+
         m_dashboard = FtcDashboard.getInstance();
         m_dashboard.setTelemetryTransmissionInterval(20);
     }
 
     public void periodic() {
-        m_shooterLeft.periodic();
-//        m_shooterRight.periodic();
+        m_shooter.periodic();
 
-        m_opMode.telemetry.addData("Target Vel", "%.0f RPM", m_shooterLeft.getTargetVelocity());
+        m_opMode.telemetry.addData("Target Vel", "%.0f RPM", m_shooter.getTargetVelocity());
 
-        m_opMode.telemetry.addData("Vel", "%.0f RPM", m_shooterLeft.getCurrentVelocityRaw());
-        m_opMode.telemetry.addData("Power", "%.3f", m_shooterLeft.getOutputPower());
+        m_opMode.telemetry.addData("Vel", "%.0f RPM", m_shooter.getCurrentVelocityRaw());
+        m_opMode.telemetry.addData("Power", "%.3f", m_shooter.getOutputPower());
 
 
         m_opMode.telemetry.addData("ready to launch?", isReadyToLaunch());
 
         if(Constants.ShooterConstants.kTuningMode){
-            if(kPLeft != lastPLeft || kDLeft != lastDLeft || kFLeft != lastFLeft){
-                m_shooterLeft.setPIDF(kPLeft, 0, kDLeft, kFLeft);
+            if(kP != lastP || kD != lastD || kF != lastF){
+                m_shooter.setPIDF(kP, 0, kD, kF);
 
-                lastPLeft = kPLeft;
-                lastDLeft = kDLeft;
-                lastFLeft = kFLeft;
+                lastP = kP;
+                lastD = kD;
+                lastF = kF;
             }
 
-            m_shooterLeft.setTargetVelocity(velLeft);
+            m_shooter.setTargetVelocity(vel);
         }
 
         TelemetryPacket packet = new TelemetryPacket();
 
-        packet.put("Target Vel", m_shooterLeft.getTargetVelocity());
+        packet.put("Target Vel", m_shooter.getTargetVelocity());
 
-        packet.put("Vel", m_shooterLeft.getCurrentVelocity());
-        packet.put("Output", m_shooterLeft.getOutputPower());
-        packet.put("RPM", m_shooterLeft.getCurrentVelocityRaw());
+        packet.put("Vel", m_shooter.getCurrentVelocity());
+        packet.put("Output", m_shooter.getOutputPower());
+        packet.put("RPM", m_shooter.getCurrentVelocityRaw());
 
 
         m_dashboard.sendTelemetryPacket(packet);
     }
 
     public void runPower(double power){
-        m_shooterLeft.runPower(power);
+        m_shooter.runPower(power);
     }
 
     public void setShooterStop(){
-        m_shooterLeft.setMotorsStop();
+        m_shooter.setMotorsStop();
     }
 
     public void unjam(){
-        m_shooterLeft.unjam();
+        m_shooter.unjam();
     }
 
     public void setShootingVelocity(double velocity){
-        m_shooterLeft.setTargetVelocity(velocity);
+        m_shooter.setTargetVelocity(velocity);
     }
 
     public boolean isReadyToLaunch(){
-        return m_shooterLeft.getCurrentVelocity() >= (m_shooterLeft.getTargetVelocity() - Constants.ShooterConstants.kTolerance);
+        return m_shooter.getCurrentVelocity() >= (m_shooter.getTargetVelocity() - Constants.ShooterConstants.kTolerance);
     }
 
     public void setStopperClosed(){
