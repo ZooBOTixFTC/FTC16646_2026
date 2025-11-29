@@ -90,8 +90,9 @@ public class TELEOP_FieldCentric extends LinearOpMode {
 
      public void configureButtonBindings() {
          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
-                 new CMD_AdjustTargetVel(m_robot.m_shooter)
-                 .andThen(new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
+                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
+                 .andThen(new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp))
+                 .andThen(new CMD_ShootTiming(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
 
          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
                   new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
@@ -100,23 +101,15 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                          .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
          );
 
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_DriveInterrupt(m_robot.drivetrain));
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
                  new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
                  ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.A
-         ,new InstantCommand(()-> m_robot.m_shooter.setStopperClosed())
-         ,new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()));
-
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.Y,
-                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                 .andThen(new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp))
-                 .andThen(new CMD_ShootTiming(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
-
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.X, new CMD_Kick(m_robot.m_kicker));
-//         AddButtonCommand(m_driverOp, GamepadKeys.Button.B, new InstantCommand(()-> m_robot.m_kicker.kickLeft()));
+             ,new InstantCommand(()-> m_robot.m_shooter.setStopperClosed())
+             ,new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()));
 
          // Operator
          AddButtonCommand(m_toolOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));

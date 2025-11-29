@@ -20,10 +20,12 @@ public class CMD_ShootTiming extends SequentialCommandGroup {
             ,new InstantCommand(p_lift::kickLeft)
             ,new WaitCommand(250)
             ,new InstantCommand(p_lift::kickRight)
-            ,new WaitCommand(330)
-            ,new InstantCommand(p_lift::level)
-            ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+            ,new WaitCommand(250)
+            ,new InstantCommand(p_lift::home)
+            ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
             ,new WaitCommand(750)
+            ,new InstantCommand(p_lift::kick)
+            ,new WaitCommand(250)
             ,new InstantCommand(p_lift::home)
         );
     }

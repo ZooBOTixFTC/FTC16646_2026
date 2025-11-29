@@ -4,7 +4,7 @@ public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
         public static final double kFarVel = 0.72;
-        public static final double kCloseVel = .5;
+        public static final double kCloseVel = .55;
         public static final double kMidFieldVel = 0.555;
         public static final double kPreRev = .45;
 
@@ -16,7 +16,7 @@ public class Constants {
 
     public static final class IntakeConstants {
         public static final double kIntakeOn = 1;
-        public static final double kIntakeAuto = 0.75;
+        public static final double kIntakeAuto = 0.9;
         public static final double kIntakeOff = 0;
         public static final double kIntakeReverse = -0.67;
     }
@@ -27,8 +27,8 @@ public class Constants {
         public static final double kKickRight = 25.0 / 300.0;
         public static final double kKickLeft = 30.0 / 300.0;
 
-        public static final double kLevelRight = 20.0 / 300.0;
-        public static final double kLevelLeft = 25.0 / 300.0;
+        public static final double kLevelRight = 10.0 / 300.0;
+        public static final double kLevelLeft = 15.0 / 300.0;
 
         public static final double kHome = 0.0;
     }

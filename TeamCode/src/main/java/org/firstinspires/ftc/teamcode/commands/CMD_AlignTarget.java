@@ -57,9 +57,10 @@ public class CMD_AlignTarget extends CommandBase {
     public void initialize() {
         isFinished = false;
         turnStarted = false;
+        m_drive.stop();
 
         // Check for manual override first
-        if (isManualOverride() || GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold) {
+        if (GlobalVariables.m_distToTag < AutoAlignConstants.kDistanceThreshold) {
             isFinished = true;
             return;
         }
