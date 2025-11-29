@@ -4,6 +4,7 @@ public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
         public static final double kFarVel = 0.72;
+        public static final double kFarthestVel = 0.735;
         public static final double kCloseVel = .55;
         public static final double kMidFieldVel = 0.555;
         public static final double kPreRev = .45;
@@ -35,7 +36,8 @@ public class Constants {
 
     public static final class AutoAlignConstants{
         public static final double kMidRangeThreshold = 45;
-        public static final double kDistanceThreshold = 90; // close vs. far, in.
+        public static final double kDistanceThreshold = 90;
+        public static final double kFarthestThreshold = 130;
     }
 
     public static class SystemConstants{

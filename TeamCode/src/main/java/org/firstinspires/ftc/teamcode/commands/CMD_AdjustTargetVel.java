@@ -19,8 +19,10 @@ public class CMD_AdjustTargetVel extends CommandBase {
             m_shooter.setShootingVelocity(Constants.ShooterConstants.kCloseVel);
         }else if(GlobalVariables.m_distToTag < Constants.AutoAlignConstants.kDistanceThreshold){
             m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel);
+        }else if(GlobalVariables.m_distToTag < Constants.AutoAlignConstants.kFarthestThreshold){
+            m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel);
         }else{
-            m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel );
+            m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarthestVel);
         }
     }
 

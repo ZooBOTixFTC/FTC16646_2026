@@ -84,7 +84,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      public void configureButtonBindings() {
          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
                  new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                 .andThen(new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision, m_driverOp))
+                 .andThen(new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision))
                  .andThen(new CMD_ShootTiming(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
 
          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,

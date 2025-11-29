@@ -32,23 +32,13 @@ public class CMD_AlignTarget extends CommandBase {
 
     private final MecanumDriveSubsystem m_drive;
     private final SUB_Vision m_vision;
-    private final GamepadEx m_gamepad;
 
     private boolean isFinished = false;
     private boolean turnStarted = false;
 
-    public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision, GamepadEx gamepad) {
-        this.m_drive = drive;
-        this.m_vision = vision;
-        this.m_gamepad = gamepad;
-
-        addRequirements(drive);
-    }
-
     public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision) {
-        this.m_drive = drive;
-        this.m_vision = vision;
-        this.m_gamepad = null;
+        m_drive = drive;
+        m_vision = vision;
 
         addRequirements(drive);
     }
@@ -83,13 +73,11 @@ public class CMD_AlignTarget extends CommandBase {
             return;
         }
 
-        double bearing;
-        double offset = 2 * (GlobalVariables.m_red ? 1 : -1);
+        double bearing = currentDetection.ftcPose.bearing;
+        double offset = 8 * (GlobalVariables.m_red ? -1 : 1);
 
-        if(currentDetection.ftcPose.bearing < 0){
-           bearing = currentDetection.ftcPose.bearing + offset;
-        }else{
-            bearing = currentDetection.ftcPose.bearing - offset;
+        if(currentDetection.ftcPose.range < 130){
+           bearing += offset;
         }
 
         m_drive.turn(Math.toRadians(bearing));
@@ -150,25 +138,6 @@ public class CMD_AlignTarget extends CommandBase {
 
         // Optimal aiming point: aim at the center of the available scoring window
         return (angleToLeft + angleToRight) / 2.0;
-    }
-
-    /**
-     * Check if driver is providing manual input that should override alignment
-     * @return true if manual override detected
-     */
-    private boolean isManualOverride() {
-        // Check all drive-related stick inputs using GamepadEx methods
-        if(m_gamepad == null) return false;
-        double leftStickX = Math.abs(m_gamepad.getLeftX());
-        double leftStickY = Math.abs(m_gamepad.getLeftY());
-        double rightStickX = Math.abs(m_gamepad.getRightX());
-        double rightStickY = Math.abs(m_gamepad.getRightY());
-
-        // Return true if any stick exceeds threshold
-        return leftStickX > STICK_THRESHOLD ||
-                leftStickY > STICK_THRESHOLD ||
-                rightStickX > STICK_THRESHOLD ||
-                rightStickY > STICK_THRESHOLD;
     }
 
     @Override
