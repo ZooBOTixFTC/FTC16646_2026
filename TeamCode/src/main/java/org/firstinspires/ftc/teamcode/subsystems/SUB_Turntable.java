@@ -99,24 +99,24 @@ public class SUB_Turntable extends SubsystemBase {
         m_turntableMotor.setPower(1);
     }
 
-//    public void endIntakeMode() {
-//        double[] angToCheck = {0, 120, 240};
-//        double current = getPos();
-//        double closestAng = angToCheck[0];
-//
-//        for (int i = 1; i < angToCheck.length; i++) {
-//            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
-//                closestAng = angToCheck[i];
-//            }
-//        }
-//
-//        setPos(closestAng);
-//    }
-//
-//    public void setTurntableIntakeMode() {
-//        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-//        m_turntableMotor.setPower(0.75);
-//    }
+    public void endIntakeMode() {
+        double[] angToCheck = {0, 120, 240};
+        double current = getPos();
+        double closestAng = angToCheck[0];
+
+        for (int i = 1; i < angToCheck.length; i++) {
+            if (Math.abs(angToCheck[i] - current) < Math.abs(closestAng - current)) {
+                closestAng = angToCheck[i];
+            }
+        }
+
+        setPos(closestAng);
+    }
+
+    public void setTurntableIntakeMode() {
+        m_turntableMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        m_turntableMotor.setPower(0.75);
+    }
     public void stopMotor(){
         m_turntableMotor.setPower(0);
     }

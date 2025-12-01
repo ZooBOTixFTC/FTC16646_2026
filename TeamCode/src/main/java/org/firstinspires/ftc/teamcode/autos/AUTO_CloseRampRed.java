@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.CMD_AutoColorSwap;
-import org.firstinspires.ftc.teamcode.commands.CMD_IntakeToggle;
 import org.firstinspires.ftc.teamcode.commands.CMD_ReadMotif;
 import org.firstinspires.ftc.teamcode.commands.CMD_ShootAll;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;

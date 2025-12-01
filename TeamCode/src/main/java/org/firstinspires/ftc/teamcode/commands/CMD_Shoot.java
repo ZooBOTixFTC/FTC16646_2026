@@ -13,7 +13,7 @@ public class CMD_Shoot extends SequentialCommandGroup {
         addRequirements(p_shooter,p_turntable);
         addCommands(
                 new CMD_AdjustTargetVel(p_shooter)
-//                ,new WaitCommand(150)
+                ,new WaitCommand(50)
                 ,new CMD_GetShooterAtVelocity(p_shooter)
                 ,new CMD_Kick(p_shooter, p_turntable)
                 ,new WaitCommand((long) Constants.ShooterConstants.kKickDuration)

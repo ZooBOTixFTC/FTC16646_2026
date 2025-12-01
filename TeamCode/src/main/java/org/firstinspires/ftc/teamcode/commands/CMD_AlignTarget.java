@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode.commands;
 
-import androidx.core.math.MathUtils;
-
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.MecanumDriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
@@ -23,28 +21,21 @@ public class CMD_AlignTarget extends CommandBase {
     private static final double MIN_SCORING_ANGLE = 5.0;   // Minimum acceptable scoring angle (degrees)
     private static final double SAFETY_MARGIN = 2.0;       // Safety margin from goal edges (inches)
     private static final boolean USE_OPTIMAL_AIMING = true; // Enable/disable optimal aiming
-    private static final int STABLE_COUNT = 5; // Number of consecutive stable cycles required to finish
-    private static final int MAX_LOST_FRAMES = 15; // Allow brief target loss before giving up
 
     // Manual override parameters - TUNE THESE FOR DRIVER COMFORT
-    private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override (increased to prevent false triggers)
+    private static final double STICK_THRESHOLD = 0.3;     // Minimum stick movement to trigger override
 
     // =====================================================================
 
     private final MecanumDriveSubsystem m_drive;
     private final SUB_Vision m_vision;
-    private final GamepadEx m_gamepad;
 
-    private boolean isFinished;
-    private double lastError = 0.0;
-    private double lastTime = 0.0;
-    private int stableCount = 0;
-    private int lostTargetCount = 0;
+    private boolean isFinished = false;
+    private boolean turnStarted = false;
 
-    public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision, GamepadEx gamepad) {
-        this.m_drive = drive;
-        this.m_vision = vision;
-        this.m_gamepad = gamepad;
+    public CMD_AlignTarget(MecanumDriveSubsystem drive, SUB_Vision vision) {
+        m_drive = drive;
+        m_vision = vision;
 
         addRequirements(drive);
     }
@@ -52,22 +43,16 @@ public class CMD_AlignTarget extends CommandBase {
     @Override
     public void initialize() {
         isFinished = false;
-        lastError = 0.0;
-        lastTime = System.currentTimeMillis() / 1000.0;
-        stableCount = 0;
-        lostTargetCount = 0;
-    }
+        turnStarted = false;
+        m_drive.stop();
 
-    @Override
-    public void execute() {
         // Check for manual override first
-        if (isManualOverride()) {
-            m_drive.drive(0.0, 0.0, 0.0);
+        if (GlobalVariables.m_distToTag < 100) {
             isFinished = true;
             return;
         }
 
-        // Get fresh AprilTag detections every cycle
+        // Get target AprilTag detection
         int targetId = GlobalVariables.m_red ? 24 : 20;
         AprilTagDetection currentDetection = null;
 
@@ -79,76 +64,32 @@ public class CMD_AlignTarget extends CommandBase {
             }
         }
 
-        // If no target tag detected, handle gracefully
+        // If no target tag detected, fail immediately
         if (currentDetection == null) {
-            lostTargetCount++;
-
-            // Only give up after losing target for multiple consecutive frames
-            if (lostTargetCount > MAX_LOST_FRAMES) {
-                m_drive.drive(0.0, 0.0, 0.0);
-                isFinished = true;
-            } else {
-                // Brief loss - hold position and wait for target to reappear
-                m_drive.drive(0.0, 0.0, 0.0);
-            }
+            isFinished = true;
             return;
         }
 
-        // Target found - reset lost counter
-        lostTargetCount = 0;
+        double bearing = currentDetection.ftcPose.bearing;
+        double offset = 8 * (GlobalVariables.m_red ? -1 : 1);
 
-        // Calculate optimal aiming angle (may be different from AprilTag bearing)
-        double bearing = calculateOptimalAiming(currentDetection) - 1;
-        double currentTime = System.currentTimeMillis() / 1000.0;
-        double deltaTime = currentTime - lastTime;
-
-        // Control parameters
-        double deadband = 2; // degrees - deadband to prevent oscillation
-        double kP = 0.012;// Proportional gain (reduced to prevent overshoot)
-        double kD = 0.0;// Derivative gain to reduce oscillation (increased for damping)
-
-        // Check if we're within the deadband (smaller than tolerance)
-        if (Math.abs(bearing) < deadband) {
-            m_drive.drive(-0.03, 0.0, GlobalVariables.m_red ? .08 : -.08);
-            stableCount++;
-
-            // Require stability for several cycles before finishing
-            if (stableCount >= STABLE_COUNT) {
-                isFinished = true;
-            }
-
-            lastError = bearing;
-            lastTime = currentTime;
-            return;
-        } else {
-            stableCount = 0; // Reset stability counter if we move out of deadband
+        if(currentDetection.ftcPose.range < 130){
+            bearing += offset;
         }
 
-        // Calculate derivative term
-        double derivative = 0.0;
-        if (deltaTime > 0) {
-            derivative = (bearing - lastError) / deltaTime;
+        m_drive.turn(Math.toRadians(bearing));
+        turnStarted = true;
+    }
+
+    @Override
+    public void execute() {
+        // Update RoadRunner drive system (required for async operations)
+        m_drive.update();
+
+        // Check if turn is complete
+        if (turnStarted && !m_drive.isBusy()) {
+            isFinished = true;
         }
-
-        // PD control calculation
-        double turnPower = -(kP * bearing + kD * derivative);
-
-        // Apply power limits
-        double maxTurnPower = 0.15; // Maximum turn power (reduced to prevent overshoot)
-        double minTurnPower = 0.08; // Minimum power threshold (lowered for smoother approach)
-
-        turnPower = Math.copySign(MathUtils.clamp(Math.abs(turnPower), minTurnPower, maxTurnPower), turnPower);
-
-        // Apply minimum power threshold only for larger errors (beyond tolerance)
-//        if (Math.abs(bearing) > tolerance && Math.abs(turnPower) > 0 && Math.abs(turnPower) < minTurnPower) {
-//            turnPower = Math.copySign(minTurnPower, turnPower);
-//        }
-
-        // Store values for next cycle
-        lastError = bearing;
-        lastTime = currentTime;
-
-        m_drive.drive(-.03, 0.0, turnPower);
     }
 
     /**
@@ -193,31 +134,16 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         // Optimal aiming point: aim at the center of the available scoring window
-
         return (angleToLeft + angleToRight) / 2.0;
-    }
-
-    /**
-     * Check if driver is providing manual input that should override alignment
-     * @return true if manual override detected
-     */
-    private boolean isManualOverride() {
-        // Check all drive-related stick inputs using GamepadEx methods
-        double leftStickX = Math.abs(m_gamepad.getLeftX());
-        double leftStickY = Math.abs(m_gamepad.getLeftY());
-        double rightStickX = Math.abs(m_gamepad.getRightX());
-        double rightStickY = Math.abs(m_gamepad.getRightY());
-
-        // Return true if any stick exceeds threshold
-        return leftStickX > STICK_THRESHOLD ||
-                leftStickY > STICK_THRESHOLD ||
-                rightStickX > STICK_THRESHOLD ||
-                rightStickY > STICK_THRESHOLD;
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_drive.stop();
+        // Only stop if interrupted AND we actually started a turn
+        // RoadRunner automatically stops when turn completes normally
+        if (interrupted && turnStarted) {
+            m_drive.stop();
+        }
     }
 
     @Override
