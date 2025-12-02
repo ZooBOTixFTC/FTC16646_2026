@@ -3,10 +3,10 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
-        public static final double kFarVel = 0.72;
-        public static final double kFarthestVel = 0.735;
+        public static final double kFarVel = 0.715;
+        public static final double kFarthestVel = 0.73;
         public static final double kCloseVel = .55;
-        public static final double kMidFieldVel = 0.555;
+        public static final double kMidFieldVel = 0.575;
         public static final double kPreRev = .45;
 
         public static final double kTolerance = 0.01;

@@ -6,4 +6,5 @@ public class GlobalVariables {
      public static double m_distToTag = 0;
      public static boolean m_red = true;
      public static boolean m_far = false;
+     public static boolean aligned = false;
 }

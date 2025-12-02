@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
@@ -84,7 +86,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      public void configureButtonBindings() {
          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
                  new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                 .andThen(new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision))
+                 .andThen(new CMD_AutoAlignCheck(m_robot.drivetrain, m_robot.m_vision))
                  .andThen(new CMD_ShootTiming(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
 
          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
@@ -94,7 +96,8 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                          .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
          );
 
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter));
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER,
+                 new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_vision, m_robot.m_intake));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
                  new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 public class CMD_ShootTiming extends SequentialCommandGroup {
     public CMD_ShootTiming(SUB_Shooter p_shooter, SUB_Kicker p_lift, SUB_Intake p_intake){
-        addRequirements(p_shooter);
+        addRequirements(p_shooter, p_intake);
 
         addCommands(
             new CMD_AdjustTargetVel(p_shooter)
