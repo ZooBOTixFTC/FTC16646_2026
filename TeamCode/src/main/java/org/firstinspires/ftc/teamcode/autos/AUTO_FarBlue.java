@@ -28,8 +28,8 @@ public class AUTO_FarBlue extends Robot_Auto {
             firstVolley()
             ,intakeFirstSpikeMark()
             ,secondVolley()
-//            ,intakeSecondSpikeMark()
-//            ,thirdVolley()
+            ,intakeSecondSpikeMark()
+            ,thirdVolley()
         );
     }
 
@@ -46,7 +46,7 @@ public class AUTO_FarBlue extends Robot_Auto {
 
     private SequentialCommandGroup intakeFirstSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
+                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-37, 30, Math.toRadians(90)), false, DriveConstants.MAX_VEL)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-32, 54, Math.toRadians(90)), false, DriveConstants.MAX_VEL/3)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
@@ -63,13 +63,12 @@ public class AUTO_FarBlue extends Robot_Auto {
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, 48, Math.toRadians(90)), false, DriveConstants.MAX_VEL)
         );
     }
 
     private SequentialCommandGroup intakeSecondSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
+                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-13, 30, Math.toRadians(90)), false, DriveConstants.MAX_VEL)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-6, 54, Math.toRadians(90)), false, DriveConstants.MAX_VEL/3)
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))

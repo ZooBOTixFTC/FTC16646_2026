@@ -10,18 +10,23 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
 
 public class CMD_Shoot extends SequentialCommandGroup {
-    public CMD_Shoot(SUB_Shooter p_shooter, SUB_Kicker p_kicker, SUB_Intake p_intake){
-        addRequirements(p_shooter);
+    public CMD_Shoot(SUB_Shooter p_shooter, SUB_Kicker p_lift, SUB_Intake p_intake){
+        addRequirements(p_shooter, p_intake);
 
         addCommands(
-                new CMD_GetShooterAtVelocity(p_shooter)
-                ,new CMD_Kick(p_kicker)
-                ,new WaitCommand(500)
-                ,new CMD_GetShooterAtVelocity(p_shooter)
-                ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                ,new WaitCommand(150)
-                ,new CMD_Kick(p_kicker)
-                ,new WaitCommand(750)
+            new CMD_AdjustTargetVel(p_shooter)
+            ,new CMD_GetShooterAtVelocity(p_shooter)
+            ,new InstantCommand(p_lift::kickLeft)
+            ,new WaitCommand(250)
+            ,new InstantCommand(p_lift::homeLeft)
+            ,new InstantCommand(p_lift::kickRight)
+            ,new WaitCommand(250)
+            ,new InstantCommand(p_lift::home)
+            ,new InstantCommand(()-> p_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
+            ,new WaitCommand(500)
+            ,new InstantCommand(p_lift::kick)
+            ,new WaitCommand(250)
+            ,new InstantCommand(p_lift::home)
         );
     }
 }

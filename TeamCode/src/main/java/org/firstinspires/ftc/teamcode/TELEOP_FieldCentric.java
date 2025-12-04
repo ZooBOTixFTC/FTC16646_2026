@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.ConditionalCommand;
 import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -60,9 +57,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           m_robot.reset();
      }
 
-     public void endOfOpMode() {
-
-     }
+     public void endOfOpMode() {}
 
      public void initializeSubsystems() {
           m_robot = new RobotContainer(this);
@@ -84,31 +79,32 @@ public class TELEOP_FieldCentric extends LinearOpMode {
      }
 
      public void configureButtonBindings() {
-         AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER,
-                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                 .andThen(new CMD_AutoAlignCheck(m_robot.drivetrain, m_robot.m_vision))
-                 .andThen(new CMD_ShootTiming(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
+         AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new SequentialCommandGroup(
+             new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
+             ,new CMD_AutoAlignCheck(m_robot.drivetrain, m_robot.m_vision)
+             ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
 
          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
-                  new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
-                          .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperClosed()))
-                  ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-                         .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
+              new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+                  .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperClosed()))
+              ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+                 .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
          );
 
          AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER,
-                 new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_vision, m_robot.m_intake));
+             new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_vision, m_robot.m_intake));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
-                 new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
-                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
+             new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
+             ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff)));
 
          // Operator
-         AddButtonCommand(m_toolOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.START,
+             new InstantCommand(()-> m_robot.drivetrain.setPoseEstimate(new Pose2d(0, 0, 0))));
 
          AddButtonToggleCommand(m_toolOp, GamepadKeys.Button.X,
-                 new InstantCommand(()-> m_robot.m_shooter.unjam())
-                 ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
+             new InstantCommand(()-> m_robot.m_shooter.unjam())
+             ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
      }
 
      public void setSide() {

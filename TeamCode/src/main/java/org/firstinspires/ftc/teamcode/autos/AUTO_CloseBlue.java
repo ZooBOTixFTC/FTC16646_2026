@@ -76,59 +76,51 @@ public class AUTO_CloseBlue extends Robot_Auto {
 
     private SequentialCommandGroup firstVolley(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, firstVolley)
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
-                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+            new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, firstVolley)
+            ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
 
     private SequentialCommandGroup intakeFirstSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 30, Math.toRadians(90)), false)
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(8, 50, Math.toRadians(90)), false)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupFirstSpikeMark)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeFirstSpikeMark)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
-                ,new WaitCommand(67)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+            new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupFirstSpikeMark)
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeFirstSpikeMark)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
+            ,new WaitCommand(67)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
         );
     }
 
     private SequentialCommandGroup secondVolley(){
         return new SequentialCommandGroup(
-//                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
-                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
-                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
-                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, secondVolley)
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
+            ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );
     }
 
     private SequentialCommandGroup intakeSecondSpikeMark(){
         return new SequentialCommandGroup(
-                new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeAuto))
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-12, 30, Math.toRadians(90)), false)
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-18, 54, Math.toRadians(90)), false)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupSecondSpikeMark)
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeSecondSpikeMark)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
-                ,new WaitCommand(67)
-                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+            new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, lineupSecondSpikeMark)
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, intakeSecondSpikeMark)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(-.1))
+            ,new WaitCommand(67)
+            ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
         );
     }
 
     private SequentialCommandGroup thirdVolley(){
         return new SequentialCommandGroup(
-//                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(12, 12, Math.toRadians(45)), false)
-                new RR_TrajectoryFollowerCommand(m_robot.drivetrain, thirdVolley)
-                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
-                ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
-//                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(0, 24, Math.toRadians(0)), false)
+            new RR_TrajectoryFollowerCommand(m_robot.drivetrain, thirdVolley)
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
+            ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+            ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+            ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
         );
     }
 }

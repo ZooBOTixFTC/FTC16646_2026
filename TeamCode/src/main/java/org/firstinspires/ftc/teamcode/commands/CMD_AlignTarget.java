@@ -74,8 +74,8 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         double bearing = currentDetection.ftcPose.bearing;
-        double offsetClose = (GlobalVariables.m_red ? -3 : 8);
-        double offsetFar = (GlobalVariables.m_red ? -3 : 5);
+        double offsetClose = (GlobalVariables.m_red ? -5 : 8); // -5 : 8
+        double offsetFar = (GlobalVariables.m_red ? -5 : 8); // -3 : 5
 
         //if on far triangle and same side of the field rotate with a larger offset
         if(currentDetection.ftcPose.range < AutoAlignConstants.kFarthestThreshold){
@@ -91,7 +91,7 @@ public class CMD_AlignTarget extends CommandBase {
 
         //if red side and angled right of the tag, rotate farther to counteract RR tolerance
         if(currentDetection.ftcPose.bearing > 0 && GlobalVariables.m_red){
-            bearing += 4;
+            bearing += 10;
         }
 
         turnStarted = true;
