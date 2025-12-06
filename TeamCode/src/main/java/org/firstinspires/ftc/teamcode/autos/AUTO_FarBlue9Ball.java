@@ -5,14 +5,12 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 
-@Disabled
 @Autonomous(name = "Far Blue 9 Ball", preselectTeleOp = "Teleop Blue", group = "Auto Blue")
 public class AUTO_FarBlue9Ball extends Robot_Auto {
     private Trajectory moveAway;
@@ -38,14 +36,14 @@ public class AUTO_FarBlue9Ball extends Robot_Auto {
                 ,intakeCorner()
                 ,volley()
                 //run to corner one last time to grab any remaining balls for tele
-                ,intakeCorner()
+                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, 62, Math.toRadians(90)), false)
         );
     }
 
     private SequentialCommandGroup volley(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, moveAway)
+                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
                 ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
@@ -63,7 +61,7 @@ public class AUTO_FarBlue9Ball extends Robot_Auto {
 
     private SequentialCommandGroup intakeCorner(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, 60, Math.toRadians(90)), false)
+                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, 62, Math.toRadians(90)), false)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, 15, Math.toRadians(17.5)), false)
         );
     }

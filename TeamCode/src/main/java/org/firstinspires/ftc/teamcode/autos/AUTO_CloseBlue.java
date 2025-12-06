@@ -15,28 +15,28 @@ import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 @Autonomous(name = "Close Blue", preselectTeleOp = "Teleop Blue", group = "Auto Blue")
 public class AUTO_CloseBlue extends Robot_Auto {
     private Trajectory firstVolley,  lineupFirstSpikeMark, intakeFirstSpikeMark, secondVolley,
-            lineupSecondSpikeMark, intakeSecondSpikeMark, thirdVolley;
+            lineupSecondSpikeMark, intakeSecondSpikeMark, thirdVolley, park;
 
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(50, 47, Math.toRadians(50)));
         GlobalVariables.m_far = false;
-        GlobalVariables.m_red = true;
+        GlobalVariables.m_red = false;
 
         firstVolley = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), true)
-                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(42)))
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(41)))
                 .build();
 
         lineupFirstSpikeMark = m_robot.drivetrain.trajectoryBuilder(firstVolley.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 24,  Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(6, 24,  Math.toRadians(90)))
                 .build();
 
         intakeFirstSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupFirstSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 50, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(6, 52, Math.toRadians(90)))
                 .build();
 
         secondVolley = m_robot.drivetrain.trajectoryBuilder(intakeFirstSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(42)))
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(41)))
                 .build();
 
         lineupSecondSpikeMark = m_robot.drivetrain.trajectoryBuilder(secondVolley.end(), false)
@@ -44,11 +44,15 @@ public class AUTO_CloseBlue extends Robot_Auto {
                 .build();
 
         intakeSecondSpikeMark = m_robot.drivetrain.trajectoryBuilder(lineupSecondSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(-12, 50, Math.toRadians(90)))
+                .lineToLinearHeading(new Pose2d(-12, 58, Math.toRadians(90)))
                 .build();
 
         thirdVolley = m_robot.drivetrain.trajectoryBuilder(intakeSecondSpikeMark.end(), false)
-                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(42)))
+                .lineToLinearHeading(new Pose2d(12, 12, Math.toRadians(41)))
+                .build();
+
+        park = m_robot.drivetrain.trajectoryBuilder(thirdVolley.end(), false)
+                .lineToLinearHeading(new Pose2d(-12, 12, Math.toRadians(90)))
                 .build();
     }
 
@@ -61,13 +65,14 @@ public class AUTO_CloseBlue extends Robot_Auto {
                 ,volley()
                 ,intakeSecondSpikeMark()
                 ,volley()
+                //park
+                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, park)
         );
     }
 
     private SequentialCommandGroup volley(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-                ,new RR_TrajectoryFollowerCommand(m_robot.drivetrain, firstVolley)
                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
         );

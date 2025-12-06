@@ -21,7 +21,7 @@ public class AUTO_FarRed12Ball extends Robot_Auto {
     public void prebuildTasks() {
         setStartingPose(new Pose2d(-64.75, -15.5, Math.toRadians(0)));
         GlobalVariables.m_far = true;
-        GlobalVariables.m_red = false;
+        GlobalVariables.m_red = true;
 
         moveAway = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
                 .lineToLinearHeading(new Pose2d(-58, -15, Math.toRadians(-17.5)))
