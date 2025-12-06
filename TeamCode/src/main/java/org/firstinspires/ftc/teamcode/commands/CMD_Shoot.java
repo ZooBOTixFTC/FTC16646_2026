@@ -15,6 +15,7 @@ public class CMD_Shoot extends SequentialCommandGroup {
 
         addCommands(
             new CMD_AdjustTargetVel(p_shooter)
+            ,new InstantCommand(p_shooter::setStopperOpen)
             ,new CMD_GetShooterAtVelocity(p_shooter)
             ,new InstantCommand(p_lift::kickLeft)
             ,new WaitCommand(250)

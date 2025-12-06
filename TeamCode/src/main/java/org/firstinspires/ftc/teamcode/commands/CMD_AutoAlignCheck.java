@@ -20,8 +20,6 @@ public class CMD_AutoAlignCheck extends CommandBase {
 
     @Override
     public void initialize(){
-        GlobalVariables.aligned = false;
-
         if (GlobalVariables.m_distToTag > Constants.AutoAlignConstants.kDistanceThreshold){
             new CMD_AlignTarget(m_drive, m_vision).schedule();
         }

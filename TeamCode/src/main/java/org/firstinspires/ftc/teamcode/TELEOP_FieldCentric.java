@@ -105,6 +105,21 @@ public class TELEOP_FieldCentric extends LinearOpMode {
          AddButtonToggleCommand(m_toolOp, GamepadKeys.Button.X,
              new InstantCommand(()-> m_robot.m_shooter.unjam())
              ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.A, new SequentialCommandGroup(
+             new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
+             ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+         ));
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.B, new SequentialCommandGroup(
+                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
+                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+         ));
+
+         AddButtonCommand(m_toolOp, GamepadKeys.Button.Y, new SequentialCommandGroup(
+                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarthestVel))
+                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
+         ));
      }
 
      public void setSide() {

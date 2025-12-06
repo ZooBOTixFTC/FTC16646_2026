@@ -106,7 +106,6 @@ public class CMD_AlignTarget extends CommandBase {
         // Check if turn is complete
         if (turnStarted && !m_drive.isBusy()) {
             isFinished = true;
-            GlobalVariables.aligned = true;
         }
     }
 
