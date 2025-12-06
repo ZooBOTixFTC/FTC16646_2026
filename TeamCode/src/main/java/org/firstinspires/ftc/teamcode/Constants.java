@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 public class Constants {
     public static final class ShooterConstants {
         public static final boolean kTuningMode = false;
-        public static final double kTolerance = 400;
+        public static final double kTolerance = 250;
         public static final double kAlpha = 0.1;
 
         public static final double kP = 0.0001;

@@ -36,7 +36,7 @@ public class CMD_Intake extends CommandBase {
         if (m_gamepad.gamepad.left_trigger < 0.2) canBeCancelled = true;
         if (GlobalVariables.m_intakeOn) {
             m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn);
-            if (m_timer.milliseconds() >= 500) {
+            if (m_timer.milliseconds() >= 750) {
                 m_turntable.intakeRotateRight();
                 m_timer.reset();
 
@@ -46,7 +46,7 @@ public class CMD_Intake extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return m_gamepad.gamepad.left_trigger>0.5 && m_timer.milliseconds()>100 && canBeCancelled;
+        return m_gamepad.gamepad.left_trigger>0.5 && canBeCancelled;
     }
     @Override
     public void end(boolean interrupted) {

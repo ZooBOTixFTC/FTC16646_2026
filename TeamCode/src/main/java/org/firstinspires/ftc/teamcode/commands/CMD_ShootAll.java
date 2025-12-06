@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 public class CMD_ShootAll extends SequentialCommandGroup {
     public CMD_ShootAll(SUB_Shooter p_shooter, SUB_Turntable p_turntable, MecanumDriveSubsystem p_drive, SUB_Vision p_vision) {
         addCommands(
-            new CMD_AlignTarget(p_drive, p_vision)
-            ,new CMD_Shoot(p_shooter, p_turntable)
+//            new CMD_AlignTarget(p_drive, p_vision)
+            new CMD_Shoot(p_shooter, p_turntable)
             ,new InstantCommand(p_turntable::rotateRight)
             ,new CMD_Shoot(p_shooter,p_turntable)
             ,new InstantCommand(p_turntable::rotateRight)

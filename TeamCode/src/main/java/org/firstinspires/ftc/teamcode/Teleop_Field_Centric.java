@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.InstantCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.command.button.Trigger;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -10,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.apache.commons.math3.analysis.function.Add;
 import org.firstinspires.ftc.teamcode.commands.*;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -84,14 +86,17 @@ public class Teleop_Field_Centric extends LinearOpMode {
      }
 
      public void configureButtonBindings() {
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_TargetLock(m_robot.drivetrain,m_robot.m_vision,m_driverOp));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.A, new CMD_Shoot(m_robot.m_shooter, m_robot.m_turntable));
 
-          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable,m_robot.drivetrain,m_robot.m_vision));
+          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new SequentialCommandGroup(
+                  new CMD_AutoAlighnCheck(m_robot.drivetrain,m_robot.m_vision)
+                  ,new CMD_ShootAll(m_robot.m_shooter,m_robot.m_turntable,m_robot.drivetrain,m_robot.m_vision)
+          ));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateRight()));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER, new InstantCommand(()-> m_robot.m_turntable.rotateLeft()));
           AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER, new CMD_Intake(m_robot.m_turntable, m_robot.m_intake, m_driverOp));
-          AddButtonCommand(m_driverOp, GamepadKeys.Button.Y, new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision));
 
           AddButtonCommand(m_driverOp, GamepadKeys.Button.START, new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0)));
           AddButtonCommand(m_driverOp, GamepadKeys.Button.BACK, new CMD_IntakeReverse(m_robot.m_intake));

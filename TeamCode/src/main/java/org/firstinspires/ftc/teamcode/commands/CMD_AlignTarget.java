@@ -47,7 +47,7 @@ public class CMD_AlignTarget extends CommandBase {
         m_drive.stop();
 
         // Check for manual override first
-        if (GlobalVariables.m_distToTag < 100) {
+        if (GlobalVariables.m_distToTag < 105) {
             isFinished = true;
             return;
         }
@@ -71,14 +71,28 @@ public class CMD_AlignTarget extends CommandBase {
         }
 
         double bearing = currentDetection.ftcPose.bearing;
-        double offset = 8 * (GlobalVariables.m_red ? -1 : 1);
+        double offsetClose = 0;//(GlobalVariables.m_red ? -5 : 8);  -5 : 8
+        double offsetFar = 0;// (GlobalVariables.m_red ? -5 : 8);  -3 : 5
 
-        if(currentDetection.ftcPose.range < 130){
-            bearing += offset;
+        //if on far triangle and same side of the field rotate with a larger offset
+        if(currentDetection.ftcPose.range < 100){
+            bearing += offsetClose;
+        }else{
+            bearing += offsetFar;
         }
 
-        m_drive.turn(Math.toRadians(bearing));
+        //if blue side and angled left of the tag, rotate farther to counteract RR tolerance
+        if(currentDetection.ftcPose.bearing < 0 && !GlobalVariables.m_red){
+            bearing -= 0;
+        }
+
+        //if red side and angled right of the tag, rotate farther to counteract RR tolerance
+        if(currentDetection.ftcPose.bearing > 0 && GlobalVariables.m_red){
+            bearing += 0;
+        }
+
         turnStarted = true;
+        m_drive.turn(Math.toRadians(bearing));
     }
 
     @Override

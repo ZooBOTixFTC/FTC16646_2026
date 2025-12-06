@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.commands.CMD_ShootAll;
 import org.firstinspires.ftc.teamcode.commands.RR_TrajectoryFollowerCommand;
 import org.firstinspires.ftc.teamcode.commands.RR_TurnCommand;
 
-@Autonomous(name = "Close Ramp Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
+@Autonomous(name = "6 ball Close Ramp Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_CloseRampRed extends Robot_Auto {
 
 
@@ -78,8 +78,8 @@ public class AUTO_CloseRampRed extends Robot_Auto {
                 ,new CMD_ReadMotif(m_robot.m_vision)
                 ,new CMD_AutoColorSwap(m_robot.m_turntable)
                 ,new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(-45))
-                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable, 27000)
-                ,new WaitCommand(250)
+                ,new CMD_ShootAll(m_robot.m_shooter, m_robot.m_turntable, m_robot.drivetrain,m_robot.m_vision)
+//                ,new WaitCommand(250)
                 ,new InstantCommand(()-> m_robot.m_shooter.setTargetVel(0))
         );
     }
