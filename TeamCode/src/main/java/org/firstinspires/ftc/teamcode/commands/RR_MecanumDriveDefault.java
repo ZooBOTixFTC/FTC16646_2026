@@ -31,12 +31,12 @@ public class RR_MecanumDriveDefault extends CommandBase {
 
         double speed = leftY, turn = rightX, strafe = leftX;
 
-        final double slowMax = 0.50;
-        double slowMo = m_driverOp.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER);
-        if (slowMo > slowMax) {
-            speed *= slowMax / slowMo;
-            strafe *= slowMax / slowMo;
-            turn *= slowMax / slowMo;
+//        final double slowMax = 0.50;
+        boolean slowMo = m_driverOp.gamepad.right_bumper;
+        if (slowMo) {
+            speed *=  0.5;//slowMax / slowMo;
+            strafe *=  0.5;//slowMax / slowMo;
+            turn *= 0.35; //slowMax / slowMo;
         }
 
         m_drivetrain.drive(speed, strafe, turn, GlobalVariables.m_red ? -90 : 90);

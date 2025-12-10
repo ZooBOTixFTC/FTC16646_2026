@@ -75,6 +75,8 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           if (!Constants.ShooterConstants.kTuningMode)
               m_robot.m_shooter.setDefaultCommand(new CMD_ShooterDefault(m_robot.m_shooter, m_robot.m_intake, m_robot.m_kicker));
 
+          m_robot.m_shooter.setStopperOpen();
+
           configureButtonBindings();
      }
 
@@ -91,7 +93,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                  .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
          );
 
-         AddButtonCommand(m_driverOp, GamepadKeys.Button.RIGHT_BUMPER,
+         AddButtonCommand(m_driverOp, GamepadKeys.Button.A,
              new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_vision, m_robot.m_intake));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
