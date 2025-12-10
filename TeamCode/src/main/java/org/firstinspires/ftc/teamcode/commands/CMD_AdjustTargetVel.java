@@ -5,7 +5,6 @@ import com.arcrobotics.ftclib.command.CommandBase;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.subsystems.SUB_Shooter;
-import org.firstinspires.ftc.teamcode.subsystems.SUB_Vision;
 
 public class CMD_AdjustTargetVel extends CommandBase {
     private final SUB_Shooter m_shooter;

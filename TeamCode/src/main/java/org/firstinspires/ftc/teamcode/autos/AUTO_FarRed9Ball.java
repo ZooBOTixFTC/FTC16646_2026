@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 
-@Autonomous(name = "Far Red 9 Ball", preselectTeleOp = "Teleop Red", group = "Auto Red")
+@Autonomous(name = "Far Red", preselectTeleOp = "Teleop Red", group = "Auto Red")
 public class AUTO_FarRed9Ball extends Robot_Auto {
     private Trajectory moveAway;
 
@@ -48,12 +48,13 @@ public class AUTO_FarRed9Ball extends Robot_Auto {
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
+                ,new InstantCommand(m_robot.m_shooter::setStopperClosed)
         );
     }
 
     private SequentialCommandGroup intakeFirstSpikeMark(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-36, -30, Math.toRadians(-90)), false)
+                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-32, -30, Math.toRadians(-90)), false)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-36, -62, Math.toRadians(-90)), false)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -15, Math.toRadians(-17.5)), false)
         );

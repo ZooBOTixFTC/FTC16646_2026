@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.command.Command;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
 import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -109,12 +106,12 @@ public class SUB_Shooter extends SubsystemBase {
     }
 
     public void setStopperClosed(){
-        m_stopperLeft.setPosition(100.0/300.0);
-        m_stopperRight.setPosition(100.0/300.0);
+        m_stopperLeft.setPosition(250.0/300.0);
+        m_stopperRight.setPosition(250.0/300.0);
     }
 
     public void setStopperOpen(){
-        m_stopperLeft.setPosition(0);
-        m_stopperRight.setPosition(0);
+        m_stopperLeft.setPosition(150.0/300.0);
+        m_stopperRight.setPosition(150.0/300.0);
     }
 }
