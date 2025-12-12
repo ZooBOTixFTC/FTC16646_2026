@@ -49,7 +49,7 @@ public class TELEOP_FieldCentric extends LinearOpMode {
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(),
                        poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
 
-               telemetry.addData("end heading", GlobalVariables.m_autoEndHeading);
+               telemetry.addData("end heading", GlobalVariables.m_autoEndPose);
                telemetry.update();
           }
 
@@ -69,6 +69,8 @@ public class TELEOP_FieldCentric extends LinearOpMode {
           m_robot.drivetrain.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
           m_robot.drivetrain.setDefaultCommand(new RR_MecanumDriveDefault(m_robot.drivetrain, m_driverOp,0.03));
 
+          m_robot.drivetrain.setPoseEstimate(GlobalVariables.m_autoEndPose);
+
          setSide();
          GlobalVariables.m_red = m_robot.getRedSide();
 
@@ -82,19 +84,21 @@ public class TELEOP_FieldCentric extends LinearOpMode {
 
      public void configureButtonBindings() {
          AddTriggerCommand(m_driverOp, GamepadKeys.Trigger.RIGHT_TRIGGER, new SequentialCommandGroup(
-             new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-             ,new CMD_AutoAlignCheck(m_robot.drivetrain, m_robot.m_vision)
-             ,new CMD_Shoot(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
+             new CMD_AutoAlignCheck(m_robot.drivetrain, m_robot.m_limelight)
+             ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)));
 
          AddTriggerToggleCommand(m_driverOp, GamepadKeys.Trigger.LEFT_TRIGGER,
               new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOn))
                   .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperClosed()))
               ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-                 .andThen(new InstantCommand(()-> m_robot.m_shooter.setStopperOpen()))
          );
 
          AddButtonCommand(m_driverOp, GamepadKeys.Button.A,
-             new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_vision, m_robot.m_intake));
+             new CMD_ShootInterrupt(m_robot.drivetrain, m_robot.m_shooter, m_robot.m_limelight, m_robot.m_intake));
+
+         AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.X,
+                 new InstantCommand(()-> m_robot.m_shooter.unjam())
+                 ,new InstantCommand(()-> m_robot.m_shooter.setShooterStop()));
 
          AddButtonToggleCommand(m_driverOp, GamepadKeys.Button.LEFT_BUMPER,
              new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeReverse))
@@ -110,17 +114,14 @@ public class TELEOP_FieldCentric extends LinearOpMode {
 
          AddButtonCommand(m_toolOp, GamepadKeys.Button.A, new SequentialCommandGroup(
              new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kMidFieldVel))
-             ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
          ));
 
          AddButtonCommand(m_toolOp, GamepadKeys.Button.B, new SequentialCommandGroup(
                  new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
-                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
          ));
 
          AddButtonCommand(m_toolOp, GamepadKeys.Button.Y, new SequentialCommandGroup(
                  new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarthestVel))
-                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
          ));
      }
 

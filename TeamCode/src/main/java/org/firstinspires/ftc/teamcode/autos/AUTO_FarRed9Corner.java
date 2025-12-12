@@ -13,8 +13,8 @@ import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 
 @Disabled
-@Autonomous(name = "Far Red 12 Ball", preselectTeleOp = "Teleop Red", group = "Auto Red")
-public class AUTO_FarRed12Ball extends Robot_Auto {
+@Autonomous(name = "Far Red 9 Corner", preselectTeleOp = "Teleop Red", group = "Auto Red")
+public class AUTO_FarRed9Corner extends Robot_Auto {
     private Trajectory moveAway;
 
     @Override
@@ -33,22 +33,20 @@ public class AUTO_FarRed12Ball extends Robot_Auto {
         return new SequentialCommandGroup(
                 new RR_TrajectoryFollowerCommand(m_robot.drivetrain, moveAway)
                 ,volley()
-                ,intakeFirstSpikeMark()
-                ,volley()
                 ,intakeCorner()
                 ,volley()
-                //run to corner and shoot again
                 ,intakeCorner()
                 ,volley()
                 //run to corner one last time to grab any remaining balls for tele
-                ,intakeCorner()
+                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, -62, Math.toRadians(-90)), false)
         );
     }
 
     private SequentialCommandGroup volley(){
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
-                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
+                ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
+                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_limelight)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))
@@ -65,7 +63,7 @@ public class AUTO_FarRed12Ball extends Robot_Auto {
 
     private SequentialCommandGroup intakeCorner(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, -60, Math.toRadians(-90)), false)
+                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, -62, Math.toRadians(-90)), false)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -15, Math.toRadians(-17.5)), false)
         );
     }

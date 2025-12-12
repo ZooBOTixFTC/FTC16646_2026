@@ -301,13 +301,11 @@ public class SampleMecanumDrive extends MecanumDrive {
     @Override
     public double getRawExternalHeading() {
         return imu.getAngularOrientation().firstAngle;
-//        return m_odometry.getHeadingRad();
     }
 
     @Override
     public Double getExternalHeadingVelocity() {
         return (double) imu.getAngularVelocity().zRotationRate;
-//        return m_odometry.getRotationRateRad();
     }
 
     public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel, double trackWidth) {

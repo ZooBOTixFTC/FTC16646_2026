@@ -44,7 +44,7 @@ public abstract class Robot_Auto extends LinearOpMode {
                telemetry.addData("ODM","x[%3.2f] y[%3.2f] heading(%3.2f)", poseEstimate.getX(), poseEstimate.getY(), Math.toDegrees(poseEstimate.getHeading()));
                telemetry.update();
           }
-         GlobalVariables.m_autoEndHeading = m_robot.drivetrain.getPoseEstimate().getHeading();
+         GlobalVariables.m_autoEndPose = m_robot.drivetrain.getPoseEstimate();
          m_robot.reset();
      }
 

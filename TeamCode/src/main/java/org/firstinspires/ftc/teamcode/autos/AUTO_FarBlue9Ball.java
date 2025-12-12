@@ -31,9 +31,9 @@ public class AUTO_FarBlue9Ball extends Robot_Auto {
         return new SequentialCommandGroup(
                 new RR_TrajectoryFollowerCommand(m_robot.drivetrain, moveAway)
                 ,volley()
-                ,intakeFirstSpikeMark()
-                ,volley()
                 ,intakeCorner()
+                ,volley()
+                ,intakeFirstSpikeMark()
                 ,volley()
                 //run to corner one last time to grab any remaining balls for tele
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, 62, Math.toRadians(90)), false)
@@ -44,7 +44,7 @@ public class AUTO_FarBlue9Ball extends Robot_Auto {
         return new SequentialCommandGroup(
                 new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kPreRev))
                 ,new InstantCommand(()-> m_robot.m_intake.setMotorPower(Constants.IntakeConstants.kIntakeOff))
-                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_vision)
+                ,new CMD_AlignTarget(m_robot.drivetrain, m_robot.m_limelight)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(Constants.ShooterConstants.kFarVel))
                 ,new CMD_ShootAuto(m_robot.m_shooter, m_robot.m_kicker, m_robot.m_intake)
                 ,new InstantCommand(()-> m_robot.m_shooter.setShootingVelocity(0))

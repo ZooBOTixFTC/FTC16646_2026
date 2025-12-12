@@ -5,16 +5,18 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.GlobalVariables;
 import org.firstinspires.ftc.teamcode.Robot_Auto;
 import org.firstinspires.ftc.teamcode.commands.*;
 
-@Autonomous(name = "Far Red 9 Ball", preselectTeleOp = "Teleop Red", group = "Auto Red")
-public class AUTO_FarRed9Ball extends Robot_Auto {
-    private Trajectory moveAway;
+@Disabled
+@Autonomous(name = "Far Red Corner", preselectTeleOp = "Teleop Red", group = "Auto Red")
+public class AUTO_FarRedCorner extends Robot_Auto {
 
+    private Trajectory moveAway;
     @Override
     public void prebuildTasks() {
         setStartingPose(new Pose2d(-64.75, -15.5, Math.toRadians(0)));
@@ -24,6 +26,7 @@ public class AUTO_FarRed9Ball extends Robot_Auto {
         moveAway = m_robot.drivetrain.trajectoryBuilder(getStartingPose(), false)
                 .lineToLinearHeading(new Pose2d(-58, -15, Math.toRadians(-17.5)))
                 .build();
+
     }
 
     @Override
@@ -33,10 +36,12 @@ public class AUTO_FarRed9Ball extends Robot_Auto {
                 ,volley()
                 ,intakeCorner()
                 ,volley()
-                ,intakeFirstSpikeMark()
+                ,intakeCorner()
                 ,volley()
-                //run to corner one last time to grab any remaining balls for tele
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, -62, Math.toRadians(-90)), false)
+                ,intakeCorner()
+                ,volley()
+                //park
+                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-66, -62, Math.toRadians(-90)), false)
         );
     }
 
@@ -51,17 +56,10 @@ public class AUTO_FarRed9Ball extends Robot_Auto {
         );
     }
 
-    private SequentialCommandGroup intakeFirstSpikeMark(){
-        return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-36, -30, Math.toRadians(-90)), false)
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-36, -62, Math.toRadians(-90)), false)
-                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -15, Math.toRadians(-17.5)), false)
-        );
-    }
-
     private SequentialCommandGroup intakeCorner(){
         return new SequentialCommandGroup(
-                new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-64, -62, Math.toRadians(-90)), false)
+                new RR_TurnCommand(m_robot.drivetrain, Math.toRadians(-72.5))
+                ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-66, -62, Math.toRadians(-90)), false)
                 ,new RR_TrajectoryLineToLinearHeading(m_robot.drivetrain, new Pose2d(-60, -15, Math.toRadians(-17.5)), false)
         );
     }
